@@ -1,0 +1,53 @@
+<ion-view view-title="نداء : {{classroom}}" >
+
+    <ion-content  scroll="false">
+	
+    
+            <div class="list" style="margin-bottom: 0px;">
+
+                  <div class="item item-button-left" dir="rtl" 
+                        style="padding: 6px;padding-right: 12px">
+                    <div dir="rtl" style="font-size: 0.8em;" class="positive">تاريخ اليوم </span> <b>{{today}} </b></div>
+                    <span style="font-size: 0.8em !important;">أرقام المتغيبين </span><span ng-repeat="student in absentStudents" style="font-size: 0.8em !important;"><b> {{student.number| hdrnumber}}</b>,</span>
+                    
+                    <button class="button button-positive" ng-show="isLastSlide" ng-click="showPopup()">
+                      <i class="icon ion-ios-keypad"></i>
+                    </button>
+                    
+                  </div>
+
+            </div>
+
+    <ion-slide-box on-slide-changed="slideHasChanged($index)">
+   		
+      <ion-slide ng-repeat="subArray in studentsDistribuedBy4InArray" ng-style="{'height': (deviceHeight*(4/5))+'px' ,'background-color':'#E3DCDC'}" >
+        <hdr-student-card-appeal ng-repeat="student in subArray "></hdr-student-card-appeal>
+        
+        <div class="list" ng-show="$last">
+        	<div class="item item-icon-right" href="#">
+			   نهاية اللائحة
+			     <span class="item-note">
+			    التفاصيل
+			    </span>
+			    <i class="icon ion-chevron-right" ng-click="goDetailSlide(numOfSlides)"> </i>
+			</div>
+        </div>
+      </ion-slide>
+		
+      <ion-slide ng-style="{'height': (deviceHeight*(4/5))+'px' ,'background-color':'#E3DCDC'}">
+        <div class="list">
+
+	        <div class="item item-divider">
+	        <h2 style="text-align: center">التلاميذ المتغيبون</h2>
+	        </div>
+
+	        <hdr-student ng-repeat="student in absentStudents"></hdr-student>
+
+		</div>
+      </ion-slide>
+
+    </ion-slide-box>
+        
+       
+	</ion-content>
+</ion-view>

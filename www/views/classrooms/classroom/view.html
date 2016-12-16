@@ -1,0 +1,20 @@
+<ion-view  view-title="القسم : {{classroom.issm}}">
+  <div class="bar bar-subheader">
+  <div class="title" dir="rtl" style="font-size: 0.9em"><b>  العدد الإجمالي للتلاميذ : {{classroom.talaamiid.length}}</b></div>
+</div>
+
+  <ion-content has-subheader="true">
+  
+
+    <div class="list">
+	 <div class="item item-divider">
+    
+  	</div>
+	
+	<hdr-student ng-repeat="student in classroom.talaamiid"></hdr-student>
+
+	</div>
+
+
+  </ion-content>
+</ion-view>

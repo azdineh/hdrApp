@@ -1,0 +1,1 @@
+cordova build --release android platforms/android/build/output/apk/android-release-unsigned.apk

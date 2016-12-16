@@ -1,0 +1,57 @@
+<ion-view view-title="الأقسام" cache-view="false">
+    <ion-content>
+        <div class="list" ng-show="classrooms.length> 0">
+            <div ng-repeat="level in levels|orderBy:'name'">
+                <div class="item item-divider dark" dir="rtl">
+                    <b>
+                        المستوى :
+                    </b>
+                    <span style="font-size: 1em">
+                        {{ level.name }}
+                    </span>
+                </div>
+                <div class="item " ng-repeat="classroom in classrooms | filter: level.name">
+                    <hdr-classroom>
+                    </hdr-classroom>
+                </div>
+            </div>
+            <div style="text-align: center">
+                <a class="item" style="border: 0">
+                    <button class="button icon-right ion-minus button-gray button-outline" style="height: 60;" ng-click="clear()">
+                        إستبدال البيانات الحالية
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div ng-show="classrooms.length==0">
+            <div style="text-align: center;display:table-cell;vertical-align: middle">
+                <br/>
+                <p dir="rtl" style="padding: 18px">
+                    لا يتوفر التطبيق بعد على البيانات الضرورية.
+                    <br/>
+                    لإنجاز ذلك، قم بوضع ملفات الإكسل الخاصة بالأقسام (المقدمة من طرف منظومة مسار) في الذاكرة الداخلية للهاتف مجموعةً في ملف واحد ومسمى ب
+                    <b>
+                        "hodoor-classrooms"
+                    </b>
+                    .
+                    <br/>
+                    ثم بعد ذلك قم بالضغط على الزر "إستخراج البيانات".
+                </p>
+
+                    <button class="button icon-right ion-plus button-assertive" style="width:60%;"  ng-click="importClassrooms()">
+                        إستخراج البيانات الخاصة
+                    </button>
+
+                <br/><br/>
+                <p dir="rtl" style="padding: 18px;color:#999999">يمكن كذلك استعمال بيانات محاكاتية مدمجة مع التطبيق، هذه البيانات تمكن من أخذ فكرة عملية حول التطبيق قبل استخدام معلومات الأقسام الخاصة بالأستاذ. 
+                </p>
+               
+                    <button class="button icon-right ion-plus " style="width:60%" ng-click="importSimulatedClassrooms()">
+                        استعمال بيانات محاكاتية
+                    </button>
+
+                <br/><br/><br/>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
