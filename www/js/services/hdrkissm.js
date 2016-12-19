@@ -16,7 +16,7 @@ angular.module('hdrApp')
     that.defaultSheet = '';
     that.tilmiid = function() {
         var thati           = {};
-        thati.ra9mTasjiil   = 0;
+        thati.ra9mTasjiil   = 0; // student ID
         thati.ra9mMasar     = 0;
         thati.issmKamel     = '';
         thati.tarii5Izdiad = '';
