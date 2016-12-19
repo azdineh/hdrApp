@@ -1,0 +1,10 @@
+// {type:class}
+// {direction:leftToRight}
+// {generate:true}
+[Student|id;ra9mTasjiil;ra9mMasar;issmKamel;tarii5Izdiad]
+[Session|id;title ]
+[Absence|id;date]
+[Student]0..*-0..*[Session|][Absence]
+[AdditionalMark|id;value]
+[Bonus|id;date]
+[AdditionalMark]0..*-0..*[Student][Bonus] 
