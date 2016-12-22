@@ -20,4 +20,5 @@ In google play : https://goo.gl/z33iyN
     cordova plugin add cordova-plugin-file
     cordova plugin add cordova-plugin-splashscreen 
     cordova plugin add cordova-plugin-compat
+    cordova plugin add cordova-plugin-sqlite
     
