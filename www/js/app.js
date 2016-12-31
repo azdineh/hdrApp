@@ -64,6 +64,15 @@ angular.module('hdrApp', ['ionic','hdrFilters','ngCordova'])
                 }
             }
         })
+        .state('tab.absencehistory', {
+            url: '/absencehistory',
+            views: {
+                'tab-absencehistory': {
+                    templateUrl: 'views/absencehistory/view.html',
+                    controller: 'AbsencehistoryController'
+                }
+            }
+        })
 
         .state('tab.user', {
             url: '/user',

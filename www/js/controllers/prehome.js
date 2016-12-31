@@ -3,5 +3,6 @@ angular.module('hdrApp')
 	$rootScope.deviceWidth=$window.innerWidth;
 	$rootScope.deviceHeight=$window.innerHeight;
 	$rootScope.today= moment().local('ar-ma').format('dddd Do MMMM YYYY');
+	
 	//$rootScope.today= moment().local('ar-ma').format('LLLL');
 });

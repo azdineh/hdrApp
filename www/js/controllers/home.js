@@ -1,13 +1,15 @@
-angular.module('hdrApp').controller('HomeController', function($scope, hdrFileSystem) {
+angular.module('hdrApp')
+.controller('HomeController', function($scope, hdrFileSystem,hdrdb) {
     $scope.page="home";
+    hdrdb.initTables();
+
+	//console.log("cerating hdr db");
+    //var db=new hdrdb();
+	//console.log("Test db ");
+	/*console.log(" Stident table "+ hdrdb.absentStudents);
+	console.log(" Session table "+ hdrdb.sessions);*/
 
 });
-
-
-
-
-
-
 angular.module('hdrFilters',[])
 .filter('hdrage',function(){
 

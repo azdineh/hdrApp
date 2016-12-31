@@ -55,12 +55,15 @@ angular.module('hdrApp')
 				buttons: [
 					{
 						text: 'رجوع',
-						type: 'button'
+						type: 'button',
+						onTap: function (e) {
+							e.preventDefault();
+						}
 					},
 					{
 						text: 'حفظ',
 						type: 'button-positive',
-						onTap: function(e){
+						onTap: function (e) {
 							//e.preventDefault();
 						}
 					}

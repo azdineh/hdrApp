@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-.directive('hdrStudentCardAppeal', [function ($scope) {
+.directive('hdrStudentCardAppeal', [function ($scope,$rootscope) {
 	return {
 		restrict: 'E',
 		templateUrl:"js/directives/hdrstudentcardappeal.html",
@@ -12,7 +12,7 @@ angular.module('hdrApp')
 				if($scope.tapped){
 					$scope.tapped=false;
 					$scope.absentStudents.splice($scope.absentStudents.indexOf(student),1);
-					//$scope.absentStudents.push(student);
+					//$rootscope.absentStudents.push(student);
 			 		$scope.cardInRed="";
 				}else{
 					$scope.tapped=true;
