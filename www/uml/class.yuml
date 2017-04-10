@@ -1,9 +1,10 @@
 // {type:class}
 // {direction:leftToRight}
 // {generate:true}
-[Student|id;ra9mTasjiil;ra9mMasar;issmKamel;tarii5Izdiad]
-[Session|id;title ]
-[Absence|id;unix_time;student_ordered_number]
+[Classroom|id;name;level]
+[Classroom]1..1-1..*[Student|id;registration_number;massar_number;full_name;date_birth]
+[Session|id;title;unix_time ]
+[Absence|id]
 [Student]0..*-0..*[Session|][Absence]
 [AdditionalMark|id;value]
 [Bonus|id;date]

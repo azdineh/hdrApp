@@ -1,7 +1,6 @@
 angular.module('hdrApp')
 .controller('HomeController', function($scope, hdrFileSystem,hdrdb) {
     $scope.page="home";
-    hdrdb.initTables();
 
 	//console.log("cerating hdr db");
     //var db=new hdrdb();
@@ -25,7 +24,7 @@ angular.module('hdrFilters',[])
         var yyyy=parseInt(str.substr(6,4));
 
         return new Date(yyyy,mm,dd);
-    }
+    };
 
     /**
      * calculate the age from a simple string format of the date
@@ -48,7 +47,7 @@ angular.module('hdrFilters',[])
         }
         return age;
 
-    }
+    };
 
     return function(input){     
         return calculateAge(input);

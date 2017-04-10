@@ -11,6 +11,10 @@ angular.module('hdrApp')
 			$scope.onDoubleTap=function(student){
 				if($scope.tapped){
 					$scope.tapped=false;
+					/**
+					 * push a new absent student, all with skiping duplicat item in absentStudents array
+					 * see splice array method for more details
+					 */
 					$scope.absentStudents.splice($scope.absentStudents.indexOf(student),1);
 					//$rootscope.absentStudents.push(student);
 			 		$scope.cardInRed="";
