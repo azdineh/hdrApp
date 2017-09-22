@@ -87,7 +87,7 @@ angular.module('hdrApp')
 								$scope.absentStudents.push(studentnull);
 							}
 							$scope.saveSession($scope.absentStudents);
-							
+
 							//e.preventDefault();
 						}
 					}
@@ -135,7 +135,7 @@ angular.module('hdrApp')
 		};
 		$scope.catchedSessions = $scope.catchSessions();
 
-		$scope.removeTables=function(){
+		$scope.removeTables = function () {
 			hdrdb.dropTables();
 		};
 
@@ -146,7 +146,7 @@ angular.module('hdrApp')
 		$scope.saveSession = function (absentStudents) {
 			//save session
 			//hdrdb.initDB();
-			
+
 			hdrdb.initTables()
 				.then(function (res) {
 					var session = hdrdb.createSession();
@@ -188,11 +188,11 @@ angular.module('hdrApp')
 							}, function (err) {
 								console.log('Error while saving absence ' + err.code + " " + err.message);
 							});
-							$scope.absentStudents.shift();
-							if(i==absentStudents.length-1){
-							$state.go("tab.classrooms",{}, {reload: true});
+						$scope.absentStudents.shift();
+						if (i == absentStudents.length - 1) {
+							$state.go("tab.classrooms", {}, { reload: true });
 							//$state.go($state.current, $stateParams, {reload: true, inherit: false});
-							}
+						}
 
 
 					}, function (err) {

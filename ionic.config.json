@@ -1,4 +1,14 @@
 {
   "name": "hdrApp",
-  "app_id": "27fa0870"
+  "app_id": "27fa0870",
+  "type": "ionic1",
+  "integrations": {
+    "cordova": {}
+  },
+  "watchPatterns": [
+    "scss/**/*",
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ]
 }
