@@ -3,9 +3,6 @@
 // {generate:true}
 [Classroom|id;name;level]
 [Classroom]1..1-1..*[Student|id;registration_number;massar_number;full_name;date_birth]
-[Session|id;title;unix_time ]
-[Absence|id]
-[Student]0..*-0..*[Session|][Absence]
-[AdditionalMark|id;value]
-[Bonus|id;date]
-[AdditionalMark]0..*-0..*[Student][Bonus] 
+[Session|id;title;unix_time]
+[Student]*-*[Session]
+[Absence|id][note: associatio  class Student-Session]
