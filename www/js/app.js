@@ -17,11 +17,6 @@ angular.module('hdrApp', ['ionic','hdrFilters','ngCordova'])
     //$ionicConfigProvider.views.transition('none');    
 
     $stateProvider
-        .state('prehome',{
-            url:'/prehome',
-            templateUrl :'views/prehome.html',
-            controller :'PrehomeController'
-        })
     // setup an abstract state for the tabs directive
         .state('tab', {
             url: '/tab',
@@ -64,13 +59,13 @@ angular.module('hdrApp', ['ionic','hdrFilters','ngCordova'])
                 }
             }
         })
-        .state('tab.absencehistory', {
-            url: '/absencehistory',
+        .state('tab.sessionshistory', {
+            url: '/sessionshistory',
             cache:false,
             views: {
-                'tab-absencehistory': {
+                'tab-sessionshistory': {
                     templateUrl: 'views/absencehistory/view.html',
-                    controller: 'AbsencehistoryController'
+                    controller: 'SessionshistoryController'
                 }
             }
         })

@@ -1,6 +1,6 @@
 
 angular.module('hdrApp')
-    .controller('AbsencehistoryController', function ($scope, hdrdb) {
+    .controller('SessionshistoryController', function ($scope, hdrdb) {
 
         //$state.go($state.current, $stateParams, {reload: true, inherit: false});
         //$watch

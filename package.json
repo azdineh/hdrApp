@@ -1,6 +1,6 @@
 {
     "name": "hdrApp",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "description": "hdrApp: An Ionic project",
     "dependencies": {
         "cordova-android": "^6.2.3",

@@ -11,6 +11,11 @@ angular.module('hdrApp')
             that.kissm = function () { };
             that.kissm.prototype.issm = '';
             that.kissm.prototype.mostawa = '';
+            that.kissm.prototype.academy = '';
+            that.kissm.prototype.rd = '';
+            that.kissm.prototype.school = '';
+            that.kissm.prototype.teachername = '';
+            that.kissm.prototype.teachersubject = '';
             //that.kissm.prototype.ostade = '';
             that.kissm.prototype.talaamiid = [];
 
@@ -64,6 +69,31 @@ angular.module('hdrApp')
                 var sheet = sheet || that.defaultSheet;
                 return sheet[cell].v;
             };
+            that.readAcademy = function (sheet, cell) {
+                var cell = cell || 'D7';
+                var sheet = sheet || that.defaultSheet;
+                return sheet[cell].v;
+            };
+            that.readRD = function (sheet, cell) {
+                var cell = cell || 'I7';
+                var sheet = sheet || that.defaultSheet;
+                return sheet[cell].v;
+            };
+            that.readSchool = function (sheet, cell) {
+                var cell = cell || 'O7';
+                var sheet = sheet || that.defaultSheet;
+                return sheet[cell].v;
+            };
+            that.readTeacherName = function (sheet, cell) {
+                var cell = cell || 'O9';
+                var sheet = sheet || that.defaultSheet;
+                return sheet[cell].v;
+            };
+            that.readTeacherSubject = function (sheet, cell) {
+                var cell = cell || 'O11';
+                var sheet = sheet || that.defaultSheet;
+                return sheet[cell].v;
+            };
             that.readTalaamiid = function (sheett) {
                 var talaamiid = [];
                 // reading info from sheet vertically
@@ -99,6 +129,11 @@ angular.module('hdrApp')
                 var kis = new that.kissm();
                 kis.issm = that.readIssm(sheet);
                 kis.mostawa = that.readMostawa(sheet);
+                kis.academy = that.readAcademy(sheet);
+                kis.rd = that.readRD(sheet);
+                kis.school = that.readSchool(sheet);
+                kis.teachername = that.readTeacherName(sheet);
+                kis.teachersubject = that.readTeacherSubject(sheet);
                 kis.talaamiid = that.readTalaamiid(sheet);
                 return kis;
             };
