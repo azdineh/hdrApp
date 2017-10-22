@@ -1,0 +1,40 @@
+
+<ion-view view-title="تفاصيل حول : {{student.full_name}}">
+  <ion-content dir="rtl" style="padding: 16px">
+    <div>
+      <table id="table-student-view" class="classroom_item">
+        <tr>
+          <td colspan="2">
+            <img src="img/user-alt-128.png" alt="" style="width: 20vmax">
+          </td>
+        </tr>
+        <tr>
+          <td>الإسم الكامل</td>
+          <td>: {{student.full_name}}</td>
+        </tr>
+        <tr>
+          <td>السن</td>
+          <td>: {{student.birth_date|hdrage}}</td>
+        </tr>
+        <tr>
+          <td>رقم مسار</td>
+          <td>: {{student.massar_number}}</td>
+        </tr>
+        <tr>
+          <td>القسم</td>
+          <td>: {{classroom.title}}</td>
+        </tr>
+        <tr>
+          <td>الرقم الترتيبي</td>
+          <td>: {{student.queuing_number}}</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div  style="margin-top: 26px;margin-bottom: 6px;padding-right: 4px;font-size: 2.25vmax">ملاحظات عامة </div>
+            <textarea name="" id="" cols="30" rows="10" style="width: 100%;background-color: lightyellow;border: 1px solid lightgray"></textarea>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </ion-content>
+</ion-view>

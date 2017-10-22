@@ -202,10 +202,22 @@ angular.module('hdrApp')
 
                 return q.promise;
             };
-
-            vm.selectRowsAsObj = function (table) {
+            /**
+             * @return promise array of row objects 
+             * @param table stringname of table
+             * @param critere string 
+             */
+            vm.selectRows = function (table, critere) {
                 var q = $q.defer();
-                $cordovaSQLite.execute(vm.db, "select * from " + table + "", [])
+                var query = "";
+                if (critere) {
+
+                    query = "select * from " + table + " where " + critere;
+                }
+                else {
+                    query = "select * from " + table;
+                }
+                $cordovaSQLite.execute(vm.db, query, [])
                     .then(function (res) {
                         var jsontexte = "";
                         var objarray = [];
@@ -220,6 +232,25 @@ angular.module('hdrApp')
                     }, function (err) {
                         q.reject(err);
                         console.log(err);
+                    });
+
+                return q.promise;
+            };
+            /**
+             * return array of classrooms view (id, title, level, count)
+             */
+            vm.selectClassroomsView = function () {
+                var q = $q.defer();
+                var query = "select c.id c.title c.level s.count(s.id) as students_count from classroom c inner join student s on c.id=s.id_classroom grouped by c.id order by c.title";
+                $cordovaSQLite.execute(vm.db, query, [])
+                    .then(function (res) {
+                        var classrooms_view = [];
+                        for (var i = 0, len = res.rows.length; i < len; i++) {
+                            classrooms_view.push(res.rows.item(i));
+                        }
+                        q.resolve(classrooms_view);
+                    }, function (err) {
+                        q.reject(err);
                     });
 
                 return q.promise;
@@ -319,24 +350,30 @@ angular.module('hdrApp')
              * @param index index to start by.
              * @param callBack a callback function called when last kissm inserted in db is done 
              */
-            vm.fillDB = function (aksaam, index,callBack) {                
-                vm.fillOne(aksaam, index)
-                    .then(function (promiseindex) {
-                        if (promiseindex == aksaam.length-1) {
-                            console.log("fill database is done");
-                            //execut callBack
-                            callBack()
-                        }
-                        // verify is the next index is available
-                        else if (promiseindex + 1 < aksaam.length) {
-                            vm.fillDB(aksaam, promiseindex + 1,callBack);
-                        }
+            vm.fillDB = function (aksaam, index, callBack) {
+                vm.cleardb()
+                    .then(function (res) {
+                        console.log(res);
+                        vm.fillOne(aksaam, index)
+                            .then(function (promiseindex) {
+                                if (promiseindex == aksaam.length - 1) {
+                                    console.log("fill database is done");
+                                    //execut callBack
+                                    callBack()
+                                }
+                                // verify is the next index is available
+                                else if (promiseindex + 1 < aksaam.length) {
+                                    vm.fillDB(aksaam, promiseindex + 1, callBack);
+                                }
+                            }, function (err) {
+                                console.log(err);
+                            });
                     }, function (err) {
                         console.log(err);
                     });
             };
 
-            
+
 
             return vm;
         }

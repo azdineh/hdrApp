@@ -1,18 +1,19 @@
-<div dir="rtl" class="card " on-double-tap="onDoubleTap(student)" ng-class="cardInRed" ng-class-even="cardInGray" style="height: 60px">
-    <div class="item item-text-wrap" >
-        <div>
-            <div style="padding-right: 4px;width: 50px;height: 50px;float:right;font-size: 1.4em" >
-                <b>
-                    {{student.number}}
-                </b>
-            </div>
-            <div style="float:clear;font-size: 1.4em">
-                {{student.issmKamel}}
-            </div>
-            <div style="color:#9C9C9C;font-size: 0.85em">
-                {{ student.tari5Izdiad || "04/08/1986" | hdrage }} عاما
-            </div>
-        </div>
-        
+<div dir="rtl" class="card" on-double-tap="onDoubleTap(student)" ng-class="cardInRed" ng-class-even="cardInGray" style="height: 10vh;padding: 0">
+    <div class="item item-text-wrap" style="padding: 0;height: 10vh">
+        <table class="classroom_item" style="height: 100%">
+            <tr>
+                <td style="text-align: center;vertical-align: middle;width: 12%;font-size: 3vmax;">
+                    <div >
+                        <div>{{student.queuing_number|hdrnumber}} </div>
+                    </div>
+                </td>
+                <td width="88%" style="vertical-align: middle;padding-right: 4px;">
+                    <div>
+                        <div class="hdr-main-text positive">{{student.full_name}}</div>
+                        <div class="hdr-sub-text"> <i class="ion-android-bookmark"></i> {{student.birth_date|hdrage}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

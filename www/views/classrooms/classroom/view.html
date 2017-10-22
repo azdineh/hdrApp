@@ -1,20 +1,38 @@
-<ion-view  view-title="القسم : {{classroom.issm}}">
-  <div class="bar bar-subheader">
-  <div class="title" dir="rtl" style="font-size: 0.9em"><b>  العدد الإجمالي للتلاميذ : {{classroom.talaamiid.length}}</b></div>
-</div>
+<ion-view view-title="القسم : {{classroom.title}}">
 
-  <ion-content has-subheader="true">
-  
+  <ion-content dir="rtl">
 
-    <div class="list">
-	 <div class="item item-divider">
-    
-  	</div>
-	
-	<hdr-student ng-repeat="student in classroom.talaamiid"></hdr-student>
 
-	</div>
+    <!--     <ul class="list" ui-sref="" ng-repeat="student in students_view">
+      <hdr-student ng-repeat="student in students_view"></hdr-student>
+    </ul> -->
 
+    <div class="item item-divider dark title hdr-sub-title" style="font-size: 13px;">
+      عدد التلاميذ : {{classroom.students_count}}
+    </div>
+
+    <ul class="list">
+      <li class="item hdr-list-item" ng-repeat="student in students"  ng-class="student.id%2==0 ?'hdr-item-odd':'hdr-item-even'" id="{{student.id}}" on-double-tap="goToStudentView(student)">
+       
+          <table class="classroom_item">
+            <tr>
+              <td style="text-align: center;height: 6vh;font-size: 3vmax;">
+                <div style="width: 6vh">
+                  <div>{{student.queuing_number|hdrnumber}} </div>
+                </div>
+              </td>
+              <td width="94%" style="padding-right: 10px;">
+                <div>
+                  <div class="hdr-main-text positive">{{student.full_name}}</div>
+                  <div class="hdr-sub-text"> <i class="ion-android-bookmark"></i> {{student.birth_date|hdrage}}</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        
+      </li>
+      <div style="font-size: 2vmax;" class="dark padding"> <i class="ion-information-circled"></i> للإطلاع على مزيد من التفاصيل، قم بنقر التلميذ مرتين. </div>
+    </ul>
 
   </ion-content>
 </ion-view>

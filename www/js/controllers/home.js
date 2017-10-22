@@ -1,23 +1,30 @@
 angular.module('hdrApp')
     .controller('HomeController', function ($scope, $rootScope, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
+
         $scope.page = "home";
         $rootScope.deviceWidth = $window.innerWidth;
         $rootScope.deviceHeight = $window.innerHeight;
         $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY');
         $rootScope.isDBThere = false;
 
-        $ionicPlatform.ready(function () {
+        if (ionic.Platform.isWebView()) {
+            $ionicPlatform.ready(function () {
 
-            if (!$rootScope.isDBThere) {
-                hdrdbx.createTables()
-                    .then(function (res) {
-                        $rootScope.isDBThere = true;
-                        console.log(res);
-                    }, function (err) {
-                        console.log(err);
-                    });
-            }
-        });
+                if (!$rootScope.isDBThere) {
+                    hdrdbx.createTables()
+                        .then(function (res) {
+                            $rootScope.isDBThere = true;
+                            console.log(res);
+                        }, function (err) {
+                            console.log(err);
+                        });
+                }
+            });
+        }
+        else {// browser 
+            //console.log('home page..');
+
+        }
 
 
     });
@@ -53,10 +60,12 @@ angular.module('hdrFilters', [])
             var ageDate = new Date(ageDifMs); // miliseconds from epoch
             var ageYear = Math.abs(ageDate.getUTCFullYear() - 1970);
             var ageMonth = ageDate.getUTCMonth();
+
             if (ageMonth <= 6) {
-                age = ageYear;
-            } else {
-                age = ageYear + "½";
+                age = ageYear + " عام ";
+            }
+            else {
+                age = ageYear + " عام ونصف";
             }
             return age;
 
