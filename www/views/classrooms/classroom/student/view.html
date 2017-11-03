@@ -1,4 +1,3 @@
-
 <ion-view view-title="تفاصيل حول : {{student.full_name}}">
   <ion-content dir="rtl" style="padding: 16px">
     <div>
@@ -14,7 +13,10 @@
         </tr>
         <tr>
           <td>السن</td>
-          <td>: {{student.birth_date|hdrage}}</td>
+          <td>: {{student.birth_date|hdrage}}<br/>
+            <span class="hdr-sub-text">({{student.birth_date}})</span>
+          </td>
+
         </tr>
         <tr>
           <td>رقم مسار</td>
@@ -30,7 +32,7 @@
         </tr>
         <tr>
           <td colspan="2">
-            <div  style="margin-top: 26px;margin-bottom: 6px;padding-right: 4px;font-size: 2.25vmax">ملاحظات عامة </div>
+            <div style="margin-top: 26px;margin-bottom: 6px;padding-right: 4px;font-size: 2.25vmax">ملاحظات عامة </div>
             <textarea name="" id="" cols="30" rows="10" style="width: 100%;background-color: lightyellow;border: 1px solid lightgray"></textarea>
           </td>
         </tr>

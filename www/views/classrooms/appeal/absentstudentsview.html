@@ -1,26 +1,47 @@
 <style type="text/css">
-
-	.appeal-abstent-student{
+	.appeal-abstent-student {
 		display: inline-block;
 		font-size: 1.6em;
 		width: 100%;
 		color: crimson
 	}
 
-	.appeal-abstent-student span{
+	.appeal-abstent-student span {
 		display: inline-block;
-		padding:12px 4px 6px 0px;
+		padding: 12px 4px 6px 0px;
+		margin: 4px;
+	}
+
+	#hdr-cnt-checkbox {
+		height: 50px;
+		margin: 8px 0 8px 0;
 	}
 </style>
 
 
 <div class="appeal-abstent-student" style="border: 1px solid lightgray;;padding: 8px;padding-top: 0px">
-	<span ng-repeat="student in absentStudents"><b>{{student.queuing_number | hdrnumber}}</b><i ng-show="!$last">, </i><i ng-show="$last">.</i></span>
+	<div ng-show="choiceIndexOfFastCase==-1">
+		<span ng-repeat="student in absentStudents" ng-show="absentStudents.length>0 && students.length>absentStudents.length" ><b>{{student.queuing_number | hdrnumber}}</b><i ng-show="!$last">, </i><i ng-show="$last">.</i></span>
+		<span ng-show="0==absentStudents.length" style="float: right">حضر جميع التلاميذ</span>
+		<span ng-show="students.length==absentStudents.length" style="float: right">تغيب جميع التلاميذ</span>
+
+	</div>
+	<span ng-show="choiceIndexOfFastCase==0" style="float: right">حضر جميع التلاميذ</span>
+<!-- 	<span ng-show="choiceIndexOfFastCase==1" style="float: right">أدخل أرقام التلاميذ الذين تغيبوا</span> -->
+	<span ng-show="choiceIndexOfFastCase==1" style="float: right">تغيب جميع التلاميذ</span>
+<!-- 	<span ng-show="choiceIndexOfFastCase==3" style="float: right">أدخل أرقام التلاميذ الذين حضروا</span> -->
 </div>
 <div dir="rtl" style="margin-top: 30px;font-size: 0.8em">قبل تسجيل الغياب، حدد الحصة الزمنية المناسية. </div>
 <div style="font-size: 12em; background: none;margin: auto;margin-top: 10px;width: 100%">
-	<ion-list >
+	<ion-list>
 		<ion-radio ng-model="data.choice" ng-value="catchedSessions[0]"><i class="icon ion-android-time"> {{catchedSessions[0]}}</i> <span>(ساعة)</span></ion-radio>
-		<ion-radio ng-model="data.choice" ng-value="catchedSessions[1]" ><i class="icon ion-android-time"> {{catchedSessions[1]}}</i> <span>(ساعتين)</span></ion-radio>
+		<ion-radio ng-model="data.choice" ng-value="catchedSessions[1]"><i class="icon ion-android-time"> {{catchedSessions[1]}}</i> <span>(ساعتين)</span></ion-radio>
+
 	</ion-list>
+
+
+</div>
+<div id="hdr-cnt-checkbox" dir="rtl">
+
+	<ion-checkbox ng-model="data.isExamSession" class="checkbox-dark" style="padding-right: 46px;background-color: transparent;border: 1px solid lightgray;">حصة اختبار</ion-checkbox>
 </div>

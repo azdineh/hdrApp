@@ -1,10 +1,12 @@
 angular.module('hdrApp')
 	.controller('AppealController', function ($scope, $stateParams, $rootScope, $filter, $ionicPopup,
-		$ionicSlideBoxDelegate, hdrdbx) {
+		$ionicSlideBoxDelegate, hdrdbx, $timeout, $state) {
 
 
 		//$rootScope.today already defined in home controller
 		$scope.classroom = $stateParams.classroom;
+		$scope.choiceIndexOfFastCase = $stateParams.index;
+
 		$scope.students = [];
 		$scope.numOfSlides = 0;
 		$scope.catchedSessions = [];
@@ -12,6 +14,7 @@ angular.module('hdrApp')
 
 		/** @param this param is for be allimented in dr-student-card-appeal directive*/
 		$scope.hdriterator = "all";
+		$scope.pagename = $scope.choiceIndexOfFastCase == -1 ? "نداء القسم" : "تحديد تغيبات القسم";
 
 		$scope.studentsDistribuedBy5InArray = [];
 
@@ -58,7 +61,7 @@ angular.module('hdrApp')
 
 
 
-						
+
 					}, function (err) {
 						console.log(err);
 					});
@@ -110,15 +113,15 @@ angular.module('hdrApp')
 			$scope.students.push({ id: '41', full_name: 'لحبيب نظيف', registration_number: '159986', massar_number: "S12345687", birth_date: "12/05/2000", queuing_number: '41' });
 			$scope.students.push({ id: '42', full_name: 'لحبيب نظيف', registration_number: '159986', massar_number: "S12345687", birth_date: "12/05/2000", queuing_number: '42' });
 			$scope.students.push({ id: '43', full_name: 'لحبيب نظيف', registration_number: '159986', massar_number: "S12345687", birth_date: "12/05/2000", queuing_number: '43' });
-
+ 
 			$scope.numOfSlides = Math.ceil($scope.students.length / 5);
 			//fill $scope.studentsDistribuedBy5InArray
 			$scope.distributeStudentsBy5($scope.students);
-			
+
 		}
 
 
-		$scope.showPopup = function () {
+		$scope.showPopup = function (index) {
 			$scope.data = {
 				choice: $scope.catchedSessions[0]
 			};
@@ -134,7 +137,11 @@ angular.module('hdrApp')
 						text: 'رجوع',
 						type: 'button',
 						onTap: function (e) {
-
+							if (index == -1) {
+							}
+							else {
+							$state.go('tab.classrooms');
+							}
 							//e.preventDefault();
 						}
 					},
@@ -143,6 +150,7 @@ angular.module('hdrApp')
 						type: 'button-positive',
 						onTap: function (e) {
 							console.log($scope.data.choice);
+
 
 							//$scope.saveSession($scope.absentStudents);
 
@@ -160,9 +168,16 @@ angular.module('hdrApp')
 			});
 		};
 
-		$scope.$on('$ionicView.enter', function(){
-			$ionicSlideBoxDelegate.slide($scope.numOfSlides-1,1750);
-		  });
+		$scope.$on('$ionicView.afterEnter', function () {
+			if ($scope.choiceIndexOfFastCase == -1) {
+
+				$ionicSlideBoxDelegate.slide($scope.numOfSlides - 1, 30);
+			}
+			else {
+				$scope.showPopup($scope.choiceIndexOfFastCase);
+			}
+
+		});
 
 		$scope.slideHasChanged = function (index) {
 			if (index == $scope.numOfSlides - 1) {

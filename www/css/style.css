@@ -38,13 +38,25 @@ html,body{
 
 .classroom_item td {
     vertical-align: middle;
+    padding-left: 4px;
+}
+.classroom_item td a{
   /* border:1px solid;*/
-
+  padding: 0px;
+ background-color: lawngreen;
+  border: 0;
+  display: table;
+  width: 100%;
+  height: 100%;
 }
 
-.classroom_item div {
-
+.hdr-classroom-item{
+display: table-cell;
+vertical-align: middle;
+height: 100%;
+width: 100%
 }
+
 
 .hdr-list-item{
   padding: 2vmax;
@@ -52,11 +64,11 @@ html,body{
 }
 
 .hdr-main-text{
-  font-size:3vmax;margin-bottom: -3px;
+  font-size:110%;
 }
 
 .hdr-sub-text{
-  font-size:1.75vmax;
+  font-size:80%;
   color: gray
 }
 
@@ -69,9 +81,6 @@ background-color: rgb(250,250,250);
 }
 
 
-#table-student-view {
- 
-}
 
 #table-student-view td {
  font-size: 2.75vmax;
@@ -84,12 +93,54 @@ background-color: rgb(250,250,250);
 }
 
 #hdr-last-slide-btn{
-  position: fixed;z-index: 1000;
+  position: fixed;
+  z-index: 1000;
   top: 8vh;
   left: 6vw
 }
 
 #hdr-last-slide-btn i{
 }
+
+.hdr-to-right{
+  text-align: right;
+  font-size: 16px!important;
+  padding: 4px;
+  padding-right: 16px;
+}
 /*http://stackoverflow.com/questions/30457776/ionicons-how-to-add-custom-icons*/
 /*http://fontawesome.io/examples*/
+
+.hdr-classroom-container{
+  display: flex;
+  width: 100%;
+  height: inherit;
+ /*  border: 1px solid darkgoldenrod; */
+  justify-content: space-between;
+  
+}
+
+.hdr-classroom-container .hdr-item{
+/*   background-color: lightseagreen;
+  border: 1px solid blue; */
+  height: inherit;
+  align-items: center;
+}
+
+.hdr-classroom-container #hdr-item1{
+flex-grow: 1;
+}
+
+.hdr-classroom-container .hdr-item button{
+height: 100%; 
+width: 100%;
+border: 0;
+}
+
+.hdr-classroom-container #hdr-item1 button{
+ text-align: right;
+ line-height: 20px;
+ padding: 18px;
+ padding-right: 4px;
+ }
+  

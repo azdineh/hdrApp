@@ -14,7 +14,10 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
 
         $ionicConfigProvider.tabs.position('bottom');
         $ionicConfigProvider.navBar.alignTitle('center');
-        //$ionicConfigProvider.views.transition('none');    
+        $ionicConfigProvider.views.transition('android');    
+        $ionicConfigProvider.form.checkbox('square');        
+        //$ionicConfigProvider.form.toggle('large');
+        
 
         $stateProvider
             // setup an abstract state for the tabs directive
@@ -63,7 +66,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             })
             .state('tab.appeal', {
                 url: '/classrooms/appeal',
-                params:{classroom:null},
+                params:{classroom:null,index:null},
                 views: {
                     'tab-classrooms': {
                         templateUrl: 'views/classrooms/appeal/view.html',
