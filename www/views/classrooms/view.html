@@ -5,35 +5,39 @@
 
             <div class="item item-divider dark title hdr-sub-title" style="font-size: 13px;">
 
-                هناك {{students_count_global}} تلميذ وتلميذة موزعون على {{classrooms_view.length}} أقسام، بمعدل {{students_count_global/classrooms_view.length}}
-                تلميذ في القسم.
+                هناك {{students_count_global}} تلميذ وتلميذة موزعين على {{classrooms_view.length}} أقسام.
+                <br/> بمعدل {{students_count_global/classrooms_view.length}} تلميذ في القسم.
             </div>
-            <div style="font-size: 2vmax;" class="dark padding"> <i class="ion-information-circled"></i> <span> </span> لبدء عملية النداء، قم بنقر القسم مرتين. </div>
-            <ul class="list"> 
 
-                <li class="item hdr-list-item" style="padding:0;margin-bottom: 6px-" ng-class="classroom.id%2==0 ?'hdr-item-odd':'hdr-item-even'"
-                    ng-repeat="classroom in classrooms_view">
+            <ul class="list">
+
+                <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view">
 
                     <div class="hdr-classroom-container">
                         <div id="hdr-item0" class="hdr-item">
-                            <button class="button button-outline"  on-tap="showActionSheet(classroom)">
-                                    <i class="ion-android-more-vertical"></i>
+                            <button class="button button-outline" on-tap="showActionSheet(classroom)">
+                                <i class="ion-android-more-vertical"></i>
                             </button>
                         </div>
                         <div id="hdr-item1" class="hdr-item">
                             <button class="button button-outline" on-double-tap="startAttendanceCall(classroom,-1)">
-                                        <div class="hdr-main-text"><span class="positive">{{classroom.title}}</span></div>
-                                        <div class="hdr-sub-text dark">{{classroom.level}}</div>
+                                <div class="hdr-main-text">
+                                    <span class="positive">{{classroom.title}}</span>
+                                </div>
+                                <div class="hdr-sub-text dark">{{classroom.level}}</div>
                             </button>
                         </div>
                         <div id="hdr-item2" class="hdr-item">
-                            <button class="button button-outline" on-tap="goToStudentsView(classroom)">
-                                    {{classroom.students_count}} تلميذ <i class="ion-chevron-left"></i>
+                            <button class="button button-outline button-dark" on-tap="goToStudentsView(classroom)">
+                                {{classroom.students_count}} تلميذ
+                                <i class="ion-chevron-left"></i>
                             </button>
                         </div>
                     </div>
                 </li>
-
+                <div class="dark padding">
+                    <i class="ion-information-circled"></i>
+                    <span> </span> لبدء عملية النداء، قم بنقر القسم مرتين. </div>
             </ul>
         </div>
 
@@ -43,8 +47,8 @@
                 <br/>
                 <p dir="rtl" style="padding: 18px">
                     لا يتوفر التطبيق بعد على البيانات الضرورية.
-                    <br/> لإنجاز ذلك، قم بوضع ملفات الإكسل الخاصة بالأقسام (المقدمة من طرف منظومة مسار) في الذاكرة الداخلية
-                    للهاتف مجموعةً في ملف واحد ومسمى ب
+                    <br/> لإنجاز ذلك، قم بوضع ملفات الإكسل الخاصة بالأقسام (المقدمة من طرف منظومة مسار) في الذاكرة الداخلية للهاتف
+                    مجموعةً في ملف واحد ومسمى ب
                     <b>
                         "hodoor-classrooms"
                     </b> .
@@ -52,19 +56,22 @@
                 </p>
 
                 <button class="button icon-right ion-plus button-assertive" style="width:60%;" ng-click="importClassrooms()">
-                        إستخراج البيانات الخاصة
-                    </button>
+                    إستخراج البيانات الخاصة
+                </button>
 
-                <br/><br/>
+                <br/>
+                <br/>
                 <p dir="rtl" style="padding: 18px;color:#999999">يمكن كذلك استعمال بيانات محاكاتية مدمجة مع التطبيق، هذه البيانات تمكن من أخذ فكرة عملية حول التطبيق قبل استخدام
                     معلومات الأقسام الخاصة بالأستاذ.
                 </p>
 
                 <button class="button icon-right ion-plus " style="width:60%" ng-click="importSimulatedClassrooms()">
-                        استعمال بيانات محاكاتية
-                    </button>
+                    استعمال بيانات محاكاتية
+                </button>
 
-                <br/><br/><br/>
+                <br/>
+                <br/>
+                <br/>
             </div>
         </div>
     </ion-content>

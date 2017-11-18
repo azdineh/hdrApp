@@ -173,5 +173,5 @@ angular.module('hdrApp')
 
 
 
-        return fct;
+        return fct();
     });

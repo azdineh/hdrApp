@@ -4,21 +4,17 @@ angular.module('hdrApp')
         $scope.page = "home";
         $rootScope.deviceWidth = $window.innerWidth;
         $rootScope.deviceHeight = $window.innerHeight;
+
         $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY');
+        $rootScope.academy = {};
+        $rootScope.rd = {};
+        $rootScope.school = {};
+        $rootScope.teacher = {};
         $rootScope.isDBThere = false;
 
         if (ionic.Platform.isWebView()) {
             $ionicPlatform.ready(function () {
-
-                if (!$rootScope.isDBThere) {
-                    hdrdbx.createTables()
-                        .then(function (res) {
-                            $rootScope.isDBThere = true;
-                            console.log(res);
-                        }, function (err) {
-                            console.log(err);
-                        });
-                }
+                
             });
         }
         else {// browser 

@@ -1,6 +1,6 @@
 <ion-view view-title="{{pagename}} : {{classroom.title}}">
 
-  <ion-content scroll="false" style="background-color: #E3DCDC">
+  <ion-content scroll="false">
 
     <div ng-show="choiceIndexOfFastCase==-1">
 
@@ -29,7 +29,7 @@
         <div id="hdr-slide-box" style="opacity: 1">
           <ion-slide-box on-slide-changed="slideHasChanged($index)">
 
-            <ion-slide ng-repeat="subArray in studentsDistribuedBy5InArray" ng-style="{'height': (deviceHeight*(4/5))+'px' ,'background-color':'#E3DCDC'}">
+            <ion-slide ng-repeat="subArray in studentsDistribuedBy5InArray" ng-style="{'height': (deviceHeight*(4/5))+'px' }">
               <hdr-student-card-appeal ng-repeat="student in subArray "></hdr-student-card-appeal>
 
               <div dir="rtl" ng-show="$first" style="font-size: 2vmax;padding-right: 3vmax;position: relative;top:-2vh" class="dark"> <i class="ion-record"></i> نهاية اللائحة </div>

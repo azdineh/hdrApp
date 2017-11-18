@@ -3,7 +3,12 @@ angular.module('hdrApp').controller('ClassroomsController',
 
         $scope.page = "Classrooms";
         $scope.classrooms_view = $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : [];
-        $rootScope.students_count_global = 0;
+        $rootScope.students_count_global = $window.localStorage['hdr.students_count_global'] ? angular.fromJson($window.localStorage['hdr.students_count_global']) : 0;
+
+        $rootScope.academy = $window.localStorage['hdr.academy'] ? angular.fromJson($window.localStorage['hdr.academy']) : {};
+        $rootScope.rd = $window.localStorage['hdr.rd'] ? angular.fromJson($window.localStorage['hdr.rd']) : {};
+        $rootScope.school = $window.localStorage['hdr.school'] ? angular.fromJson($window.localStorage['hdr.school']) : {};
+        $rootScope.teacher = $window.localStorage['hdr.teacher'] ? angular.fromJson($window.localStorage['hdr.teacher']) : {};
 
         /**
          * go to the appel page with the classroom and choice index of rappid call
@@ -31,43 +36,83 @@ angular.module('hdrApp').controller('ClassroomsController',
         $scope.goToStudentsView = function (classroom) {
             $state.go('tab.classroom', { 'classroom': classroom });
         }
+
         $scope.importSimulatedClassrooms = function () {
             $scope.clear();
             ionic.Platform.ready(function () {
+                hdrdbx.openAndInit();
+
                 $scope.show();
-                var hfs = new hdrFileSystem();
                 window.resolveLocalFileSystemURL("file:///android_asset/www/hodoor-classrooms-simulation", function (directoryentry) {
-                    hfs.readHdrFiles(directoryentry).then(function (akssam) {
-                        hdrdbx.fillDB(akssam, 0, function () {
+                    hdrFileSystem.readHdrFiles(directoryentry,
+                        function () {
+                            console.log("call back success..");
+                            console.log(hdrFileSystem.classrooms);
+                            hdrdbx.fillDB(hdrFileSystem.classrooms, 0, function () {
 
-                            hdrdbx.selectClassroomsView()
-                                .then(function (classrooms_view) {
-                                    $scope.classrooms_view = classrooms_view;
-                                    $window.localStorage['hdr.classrooms_view'] = $scope.classrooms_view;
-                                }, function (err) {
-                                    console.log(err);
-                                })
+                                hdrdbx.selectClassroomsView()
+                                    .then(function (classrooms_view) {
+                                        $scope.classrooms_view = classrooms_view;
+                                        $scope.classrooms_view.forEach(function (classroom) {
+                                            $rootScope.students_count_global += classroom.students_count;
+                                        }, this);
+                                        $window.localStorage['hdr.classrooms_view'] = angular.toJson($scope.classrooms_view);
+                                        $window.localStorage['hdr.students_count_global'] = angular.toJson($rootScope.students_count_global);
 
-                            $scope.hide();
-                        });
+                                        hdrdbx.selectRows('academy')
+                                            .then(function (res) {
+                                                $rootScope.academy = res.rows.item(0);
+                                                $window.localStorage['hdr.academy'] = angular.toJson($rootScope.academy);
+                                            }, function (err) {
+                                                console.log(err);
+                                            });
+                                        hdrdbx.selectRows('rd')
+                                            .then(function (res) {
+                                                $rootScope.rd = res.rows.item(0);
+                                                $window.localStorage['hdr.rd'] = angular.toJson($rootScope.rd);
+                                            }, function (err) {
+                                                console.log(err);
+                                            });
+                                        hdrdbx.selectRows('school')
+                                            .then(function (res) {
+                                                $rootScope.school = res.rows.item(0);
+                                                $window.localStorage['hdr.school'] = angular.toJson($rootScope.school);
+                                            }, function (err) {
+                                                console.log(err);
+                                            });
+                                        hdrdbx.selectRows('teacher')
+                                            .then(function (res) {
+                                                $rootScope.teacher = res.rows.item(0);
+                                                $window.localStorage['hdr.teacher'] = angular.toJson($rootScope.teacher);
+                                            }, function (err) {
+                                                console.log(err);
+                                            });
 
-                    }, function (error) {
-                        alert(error);
-                        $scope.hide();
-                    });
+                                        $scope.hide();
+                                        hdrFileSystem.classrooms = [];
+                                    }, function (err) {
+                                        console.log(err);
+                                    });
+
+
+                            });
+                        })
                 }, function (error) {
                     alert("problem with resolve local files system");
                 });
 
             });
         };
+
+
+
         $scope.importClassrooms = function () {
             $scope.clear();
             if (ionic.Platform.isWebView()) {
                 ionic.Platform.ready(function () {
-                    var hfs = new hdrFileSystem();
+                    //var hfs = new hdrFileSystem();
                     hfs.getFileSystem('0').then(function (fs) {
-                        hfs.isHdrDirectoryExist(fs).then(function (directory) {
+                        hdrFileSystem.isHdrDirectoryExist(fs).then(function (directory) {
                             //alert(" The " + directory.name + " is found in internal storage , now checking out the Masar files..");
                             $scope.show();
                             hfs.readHdrFiles(directory).then(function (akssam) {
@@ -82,7 +127,37 @@ angular.module('hdrApp').controller('ClassroomsController',
                                             $window.localStorage['hdr.classrooms_view'] = angular.toJson($scope.classrooms_view);
                                         }, function (err) {
                                             console.log(err);
-                                        })
+                                        });
+
+                                    hdrdbx.selectRows('academy')
+                                        .then(function (res) {
+                                            $rootScope.academy = res.rows.item(0);
+                                            $window.localStorage['hdr.academy'] = angular.toJson($rootScope.academy);
+                                        }, function (err) {
+                                            console.log(err);
+                                        });
+                                    hdrdbx.selectRows('rd')
+                                        .then(function (res) {
+                                            $rootScope.rd = res.rows.item(0);
+                                            $window.localStorage['hdr.rd'] = angular.toJson($rootScope.rd);
+                                        }, function (err) {
+                                            console.log(err);
+                                        });
+                                    hdrdbx.selectRows('school')
+                                        .then(function (res) {
+                                            $rootScope.school = res.rows.item(0);
+                                            $window.localStorage['hdr.school'] = angular.toJson($rootScope.school);
+                                        }, function (err) {
+                                            console.log(err);
+                                        });
+                                    hdrdbx.selectRows('teacher')
+                                        .then(function (res) {
+                                            $rootScope.teacher = res.rows.item(0);
+                                            $window.localStorage['hdr.teacher'] = angular.toJson($rootScope.teacher);
+                                        }, function (err) {
+                                            console.log(err);
+                                        });
+
 
                                     $scope.hide();
                                 });
@@ -112,7 +187,8 @@ angular.module('hdrApp').controller('ClassroomsController',
                     $rootScope.students_count_global += classroom.students_count;
                 }, this);
 
-                $window.localStorage['hdr.classrooms_view'] =angular.toJson($scope.classrooms_view);
+                $window.localStorage['hdr.classrooms_view'] = angular.toJson($scope.classrooms_view);
+                $window.localStorage['hdr.students_count_global'] = angular.toJson($rootScope.students_count_global);
             }
         };
 
@@ -125,7 +201,7 @@ angular.module('hdrApp').controller('ClassroomsController',
                     { text: '<div class="list"><a class="item hdr-to-right" href="#">حضر الجميع</a></div>' },/* 
                     { text: '<div class="list"><a class="item hdr-to-right" href="#">حضر الجميع إلا</a></div>' },
  */                    { text: '<div class="list"><a class="item hdr-to-right" href="#">تغيب الجميع</a></div>' },
-/*                     { text: '<div class="list"><a class="item hdr-to-right" href="#">تغيب الجميع إلا</a></div>' }, */
+                    /*                     { text: '<div class="list"><a class="item hdr-to-right" href="#">تغيب الجميع إلا</a></div>' }, */
                 ],
                 titleText: '<div><div class="hdr-to-right positive hdr-main-text">' + classroom.title + ' : القسم </div><div class="hdr-to-right hdr-sub-text">: تحديد المتغيبين بطريقة مختصرة حسب الحالات التالية </div></div>',
                 buttonClicked: function (index) {

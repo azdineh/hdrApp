@@ -85,6 +85,16 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
                 }
             })
 
+            .state('tab.teacher', {
+                url: '/teacher',
+                views: {
+                    'tab-teacher': {
+                        templateUrl: 'views/teacher/view.html',
+                        controller: 'TeacherController'
+                    }
+                }
+            })
+            
             .state('tab.user', {
                 url: '/user',
                 views: {
