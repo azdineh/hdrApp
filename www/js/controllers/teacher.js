@@ -21,6 +21,7 @@ angular.module('hdrApp')
             $window.localStorage.removeItem("hdr.rd");
             $window.localStorage.removeItem("hdr.school");
             $window.localStorage.removeItem("hdr.teacher");
+            $window.localStorage.removeItem("hdr.helpPopupShown");
             $ionicViewService.clearHistory();
 
         }

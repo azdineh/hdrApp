@@ -28,7 +28,8 @@ angular.module('hdrApp')
             "foreign key (id_school) references school(id));";
 
         var session_table_query = "CREATE TABLE IF NOT EXISTS session(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "id_classroom INTEGER,id_teacher INTEGER,unix_time TEXT(255),title TEXT(255)," +
+            "id_classroom INTEGER,classroom_title TEXT(255),id_teacher INTEGER,unix_time TEXT(255),title TEXT(255)," +
+            "students_count INTEGER,observation TEXT(1020)," +
             "foreign key (id_classroom) references classroom(id)," +
             "foreign key (id_teacher) references teacher(id));";
 
@@ -79,9 +80,12 @@ angular.module('hdrApp')
             vm.session = {
                 id: null,
                 id_classroom: "",
-                id_teacher: "",
+                classroom_title: "", // for establish the link between session and classroom tables after DB wippinge, wd can't satisfed with only id, because not necessery we will have the same id after new db populting.
+                id_teacher: "", // we can satisfed only with id teacher, because we hava on teacher by application.
                 unix_time: "",
-                title: "10-12"
+                title: "10-12",
+                students_count: 0,
+                observation: ""
             }
             vm.student = {
                 id: null,
@@ -96,52 +100,52 @@ angular.module('hdrApp')
                 id: null,
                 id_student: "",
                 id_session: "",
-                massar_number: "",
+                massar_number: "", // for establish the link between absenceline and session and student tables after DB wippinge, wd can't satisfed with only id, because not necessery we will have the same id after new db populting.
                 is_student_fix_problem: ""
             };
 
-            vm.openAndInit = function () {
-                vm.db = $window.sqlitePlugin.openDatabase({ name: 'hdrdb1986.db', location: 'default' }, function (db) {
-
-                    vm.db = db;
-
-                    cordova.plugins.sqlitePorter.importSqlToDb(vm.db, create_tables_query_sql, {
-                        successFn: function (count) {
-                            console.log("Successfully create " + count + " tables");
-                        },
-                        errorFn: function (err) {
-                            console.log("***Error while creating  tables ;" + err.message);
-                            console.log(err);
-                        },
-                        progressFn: function (current, total) {
-                            console.log(current + "/" + total);
-                        }
+            vm.openDB = function () {
+                vm.db = $window.sqlitePlugin.openDatabase({ name: 'hdrdb1986.db', location: 'default' },
+                    function (db) {
+                        console.log("DB opend..");
+                    },
+                    function (error) {
+                        console.log("Error while opening DB" + JSON.stringify(error));
                     });
-
-
-                }, function (error) {
-                    console.log('Open database ERROR: ' + JSON.stringify(error));
+            };
+            vm.initDB = function () {
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, create_tables_query_sql, {
+                    successFn: function (count) {
+                        console.log("Successfully create " + count + " tables");
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while creating  tables ;" + err.message);
+                        console.log(err);
+                    },
+                    progressFn: function (current, total) {
+                        console.log(current + "/" + total);
+                    }
                 });
             };
 
             /**
              * @param flag a boolean param, if true, drop absenceline table also.
              */
-/*             vm.cleardb = function (flag) {
-
-                vm.db.executeSql("drop table if exists session", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                vm.db.executeSql("drop table if exists student", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                vm.db.executeSql("drop table if exists teacher", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                vm.db.executeSql("drop table if exists classroom", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                vm.db.executeSql("drop table if exists school", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                vm.db.executeSql("drop table if exists rd", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                vm.db.executeSql("drop table if exists academy", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                if (flag == true) {
-                    vm.db.executeSql("drop table if exists absenceline", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
-                }
-
-
-            }; */
+            /*             vm.cleardb = function (flag) {
+            
+                            vm.db.executeSql("drop table if exists session", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            vm.db.executeSql("drop table if exists student", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            vm.db.executeSql("drop table if exists teacher", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            vm.db.executeSql("drop table if exists classroom", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            vm.db.executeSql("drop table if exists school", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            vm.db.executeSql("drop table if exists rd", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            vm.db.executeSql("drop table if exists academy", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            if (flag == true) {
+                                vm.db.executeSql("drop table if exists absenceline", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
+                            }
+            
+            
+                        }; */
             /**
              * remove all tables
              */
@@ -175,6 +179,10 @@ angular.module('hdrApp')
                 else if (table == "student") {
                     attributToCheck = "massar_number";
                     valueToCheckBy = obj.massar_number;
+                }
+                else if (table == "session") {
+                    attributToCheck = "unix_time";
+                    valueToCheckBy = obj.unix_time;
                 }
                 else {
                     attributToCheck = "title";
@@ -215,6 +223,7 @@ angular.module('hdrApp')
              * if success, return the last row as a json object
              * @param table string, the table name
              * @param obj json object to insert
+             * @return the last row of table
              */
             vm.insertRow = function (table, obj) {
                 console.log("Insert Row " + table);
@@ -272,6 +281,10 @@ angular.module('hdrApp')
                                 attributToCheck = "massar_number";
                                 valueToCheckBy = obj.massar_number;
                             }
+                            else if (table == "session") {
+                                attributToCheck = "unix_time";
+                                valueToCheckBy = obj.unix_time;
+                            }
                             else {
                                 attributToCheck = "title";
                                 valueToCheckBy = obj.title;
@@ -322,11 +335,11 @@ angular.module('hdrApp')
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [],
                         function (tx, res) {
-                            var students = [];
+                            var items_arr = [];
                             for (var i = 0, len = res.rows.length; i < len; i++) {
-                                students.push(res.rows.item(i));
+                                items_arr.push(res.rows.item(i));
                             }
-                            q.resolve(students);
+                            q.resolve(items_arr);
                         }, function (err) {
                             q.reject(err);
                         });
@@ -342,20 +355,20 @@ angular.module('hdrApp')
             };
 
             /**
-             * return array of classrooms view (id, title, level, count)
+             * return array of classrooms view (id, title, level)
              */
-            vm.selectClassroomsView = function () {
+            vm.selectClassrooms = function () {
                 var q = $q.defer();
-                var classrooms_view = [];
+                var classrooms = [];
                 //var query = "select c.id, c.title, c.level from classroom c order by c.title ASC";
-                var query = "select c.id as id,c.title as title,c.level as level, count(s.id) as students_count from (student s inner join classroom c on s.id_classroom=c.id ) group by c.id order by c.title Desc";
+                var query = "select c.id as id,c.title as title,c.level as level from classroom c order by c.title asc";
                 //vm.db.transaction(function(tx){},function(error){},function(){});
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [],
                         function (tx, res) {
 
                             for (var i = 0, len = res.rows.length; i < len; i++) {
-                                classrooms_view.push(res.rows.item(i));
+                                classrooms.push(res.rows.item(i));
                             }
 
                         }, function (err) {
@@ -366,11 +379,29 @@ angular.module('hdrApp')
                     console.log(error);
 
                 }, function () {
-                    q.resolve(classrooms_view);
+                    q.resolve(classrooms);
                 });
 
                 return q.promise;
             };
+
+            vm.classrooms_view = [];
+            vm.addStudentsToClassrooms = function (classrooms, index, callBack) {
+                if (index < classrooms.length) {
+                    vm.selectRows('student', "id_classroom=" + classrooms[index].id)
+                        .then(function (students) {
+                            classrooms[index].students = students;
+                            vm.classrooms_view.push(classrooms[index]);
+                            vm.addStudentsToClassrooms(classrooms, index + 1, callBack);
+                        }, function (err) {
+                            console.log('Error while selecting students' + JSON.stringify(err));
+                        })
+                }
+                else {
+                    callBack();
+                }
+            }
+
 
             vm.insertStudentRows = function (students, id_classroom) {
                 var q = $q.defer();
@@ -405,14 +436,204 @@ angular.module('hdrApp')
 
 
             vm.saveAbsentStudents = function (session, absentStudents) {
+                var q = $q.defer();
                 vm.insertRow('session', session)
                     .then(function (session) {
-                        var query_absentStudents = "insert into studentsessionlines";
+                        if (absentStudents.length > 0) {
+
+                            var query_absentStudents = "";
+
+                            absentStudents.forEach(function (absentStudent) {
+                                query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "',0);";
+                            }, this);
+
+                            cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
+                                successFn: function (count) {
+                                    q.resolve(count);
+                                },
+                                errorFn: function (err) {
+                                    q.reject(err);
+                                },
+                                progressFn: function () { }
+                            })
+                        }
 
                     }, function (err) {
-
+                        q.reject(err);
                     })
+
+                return q.promise;
+            };
+
+            vm.selectSessionsView = function () {
+                var q = $q.defer();
+                var sessions_view_obj = {
+                    session: {},
+                    classroom: {},
+                    students: []
+                }
+                var sessions_view_obj_arr = [];
+
+                var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number," +
+                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle," +
+                    "c.id as classroomId, c.title as classroomTitle " +
+                    "from " +
+                    "student st inner join absenceline a on a.massar_number=st.massar_number " +
+                    "inner join session s on s.id=a.id_session " +
+                    "inner join classroom c on c.id=s.id_classroom " +
+                    "order by s.unix_time desc";
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(sql, [],
+                        function (tx, res) {
+                            console.log(res);
+
+                            var i = 0, len = res.rows.length;
+                            while (i < len) {
+                                var curr_item = res.rows.item(i);
+                                var curr_unix_time = curr_item.unix_time;
+
+                                sessions_view_obj
+                                    .session = {
+                                        id: curr_item.sessionId,
+                                        unix_time: curr_item.unix_time,
+                                        title: curr_item.sessionTitle
+                                    };
+
+                                sessions_view_obj
+                                    .classroom = {
+                                        id: curr_item.classroomId,
+                                        title: curr_item.classroomTitle
+
+                                    };
+
+                                sessions_view_obj
+                                    .students = [];
+
+
+                                var sflag = true;
+                                while (i < len && sflag) {
+
+                                    if (curr_unix_time == res.rows.item(i).unix_time) {
+
+                                        var student = {};
+                                        student.id = res.rows.item(i).studentId;
+                                        student.full_name = res.rows.item(i).full_name;
+                                        student.queuing_number = res.rows.item(i).queuing_number;
+                                        sessions_view_obj.students.push(student);
+
+                                    }
+                                    else {
+
+                                        sflag = false;
+                                    }
+                                    i += 1;
+                                }
+
+
+                                sessions_view_obj_arr.push(sessions_view_obj);
+
+                            }
+
+
+
+
+                        }, function (err) {
+                            console.log(err);
+                            q.reject(err);
+                        });
+                }, function (error) {
+                    console.log(error);
+
+                }, function () {
+                    q.resolve(sessions_view_obj_arr);
+                });
+
+                return q.promise;
+            };
+
+            vm.selectSessionView = function (session) {
+                var q = $q.defer();
+                var session_view_obj = {
+                    session: {},
+                    classroom: {},
+                    students: []
+                }
+
+                var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number," +
+                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count, s.observation as observation," +
+                    "c.id as classroomId, c.title as classroomTitle " +
+                    "from " +
+                    /*                     "student st inner join absenceline a on a.massar_number=st.massar_number " +
+                                        "inner join session s on s.id=a.id_session " +
+                                        "inner join classroom c on c.id=s.id_classroom " +
+                                        "where s.id=?"; */
+                    "((session s inner join classroom c on s.id_classroom=c.id) " +
+                    "left join " +
+                    "(student st left join absenceline a on a.massar_number=st.massar_number) " +
+                    "on a.id_session = s.id) " +
+                    "where s.id=?";
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(sql, [session.id],
+                        function (tx, res) {
+                            console.log(res.rows);
+                            if (res.rows.length > 0) {
+
+                                console.log("session view :");
+                                console.log(res.rows);
+                                session_view_obj.session.id = res.rows.item(0).sessionId;
+                                session_view_obj.session.title = res.rows.item(0).sessionTitle;
+                                session_view_obj.session.unix_time = res.rows.item(0).unix_time;
+                                session_view_obj.session.students_count = res.rows.item(0).students_count;
+                                session_view_obj.session.observation = res.rows.item(0).observation;
+
+                                session_view_obj.classroom.id = res.rows.item(0).classroomId;
+                                session_view_obj.classroom.title = res.rows.item(0).classroomTitle;
+
+                                for (var i = 0; i < res.rows.length; i++) {
+                                    var student = {}
+                                    if (res.rows.item(0).massar_number == null) {
+                                        break;
+                                    }
+                                    else {
+                                        student.massar_number = res.rows.item(i).massar_number;
+                                        student.full_name = res.rows.item(i).full_name;
+                                        student.queuing_number = res.rows.item(i).queuing_number;
+                                        session_view_obj.students.push(student);
+                                    }
+                                }
+
+                            }
+
+                        }, function (err) {
+                            console.log(err);
+                            q.reject(err);
+                        });
+                }, function (error) {
+                    console.log(error);
+
+                }, function () {
+                    q.resolve(session_view_obj);
+                });
+
+                return q.promise;
+            };
+
+            vm.sessions_view_obj_arr = [];
+            // count is the number of session to dispaly, the max value of end_index is sessions_arr.length
+            vm.selectSessionsView2 = function (sessions_arr, start_index, count, callBack) {
+                vm.selectSessionView(sessions_arr[start_index])
+                    .then(function (session_view_obj) {
+                        vm.sessions_view_obj_arr.push(session_view_obj);
+                        if (start_index + 1 < count)
+                            vm.selectSessionsView2(sessions_arr, start_index + 1, count, callBack);
+                        else
+                            callBack();
+
+                    }, function (error) {
+                        console.log(error);
+                    });
             }
+
             /**
              * kissm represent one Excel file sheet
              * insert one kissm in db

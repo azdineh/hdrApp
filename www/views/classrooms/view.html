@@ -1,35 +1,41 @@
-<ion-view view-title="الأقسام" cache-view="false">
-    <ion-content dir="rtl">
+<ion-view view-title="لائحة الأقسام" cache-view="false">
 
+    <ion-content dir="rtl">
         <div ng-show="classrooms_view.length>0">
+
+
+           <!--  <ion-spinner ng-if="tapped" icon="lines" class="spinner-assertive" style="position: absolute;top: 35%;left: 35%;z-index: 500"></ion-spinner> -->
 
             <div class="item item-divider dark title hdr-sub-title" style="font-size: 13px;">
 
                 هناك {{students_count_global}} تلميذ وتلميذة موزعين على {{classrooms_view.length}} أقسام.
-                <br/> بمعدل {{students_count_global/classrooms_view.length}} تلميذ في القسم.
+                <br/> بمعدل {{(students_count_global/classrooms_view.length)|number:1}} تلميذ في القسم.
             </div>
 
             <ul class="list">
 
-                <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view">
+                <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
                     <div class="hdr-classroom-container">
                         <div id="hdr-item0" class="hdr-item">
-                            <button class="button button-outline" on-tap="showActionSheet(classroom)">
+                            <button class="button button-outline"  ng-click="showActionSheet(classroom)">
                                 <i class="ion-android-more-vertical"></i>
                             </button>
                         </div>
-                        <div id="hdr-item1" class="hdr-item">
-                            <button class="button button-outline" on-double-tap="startAttendanceCall(classroom,-1)">
+                        <div id="hdr-item1" class="hdr-item" style="position: relative">
+
+                            <button class="button button-outline" id="{{classroom.id}}" ng-click="startAttendanceCall(classroom,'-1')">
                                 <div class="hdr-main-text">
                                     <span class="positive">{{classroom.title}}</span>
                                 </div>
                                 <div class="hdr-sub-text dark">{{classroom.level}}</div>
+
                             </button>
+
                         </div>
                         <div id="hdr-item2" class="hdr-item">
-                            <button class="button button-outline button-dark" on-tap="goToStudentsView(classroom)">
-                                {{classroom.students_count}} تلميذ
+                            <button class="button button-outline button-dark" ng-click="goToStudentsView(classroom)">
+                                {{classroom.students.length}} تلميذ
                                 <i class="ion-chevron-left"></i>
                             </button>
                         </div>
@@ -37,10 +43,10 @@
                 </li>
                 <div class="dark padding">
                     <i class="ion-information-circled"></i>
-                    <span> </span> لبدء عملية النداء، قم بنقر القسم مرتين. </div>
+                    <span> </span> لبدء عملية النداء، قم بنقر القسم المراد. </div>
             </ul>
-        </div>
 
+        </div>
 
         <div ng-show="classrooms_view.length==0">
             <div style="text-align: center;display:table-cell;vertical-align: middle">

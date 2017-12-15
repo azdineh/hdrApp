@@ -1,4 +1,4 @@
-<ion-view view-title="القسم : {{classroom.title}}">
+<ion-view view-title="لائحة التلاميذ : {{classroom.title}}">
 
   <ion-content dir="rtl">
 
@@ -7,20 +7,20 @@
       <hdr-student ng-repeat="student in students_view"></hdr-student>
     </ul> -->
 
-    <div ng-show="students.length==0" style="text-align: center">
+    <div ng-show="classroom.students.length==0" style="text-align: center">
       <div style="padding-top: 20vh;" dir="rtl" class="h3 title dark"> في طور تجهيز لائحة التلاميذ.. </div>
-      <ion-spinner icon="lines" style="font-size: 4vh"></ion-spinner>
+      <ion-spinner icon="lines" class="spinner-assertive" style="font-size: 4vh"></ion-spinner>
     </div>
 
-    <div ng-show="students.length>0">
+    <div ng-show="classroom.students.length>0">
 
       <div class="item item-divider dark title hdr-sub-title" style="font-size: 13px;">
-        عدد التلاميذ : {{classroom.students_count}}
+        عدد التلاميذ : {{classroom.students.length}}
       </div>
 
       <ul class="list">
-        <li class="item hdr-list-item" ng-repeat="student in students" ng-class="student.id%2==0 ?'hdr-item-odd':'hdr-item-even'"
-          id="{{student.id}}" on-double-tap="goToStudentView(student)">
+        <li class="item hdr-list-item" ng-repeat="student in classroom.students" ng-class="student.id%2==0 ?'hdr-item-odd':'hdr-item-even'"
+          id="{{student.id}}" on-tap="goToStudentView(student)">
 
           <table class="classroom_item">
             <tr>
@@ -32,14 +32,16 @@
               <td width="94%" style="padding-right: 10px;">
                 <div>
                   <div class="hdr-main-text positive">{{student.full_name}}</div>
-                  <div class="hdr-sub-text"> <i class="ion-android-bookmark"></i> {{student.birth_date|hdrage}}</div>
+                  <div class="hdr-sub-text">
+                    <i class="ion-android-bookmark"></i> {{student.birth_date|hdrage}}</div>
                 </div>
               </td>
             </tr>
           </table>
 
         </li>
-        <div class="dark padding"> <i class="ion-information-circled"></i> للإطلاع على مزيد من التفاصيل، قم بنقر التلميذ مرتين. </div>
+        <div class="dark padding">
+          <i class="ion-information-circled"></i> للإطلاع على مزيد من التفاصيل، قم بنقر التلميذ المراد. </div>
       </ul>
     </div>
 

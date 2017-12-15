@@ -1,26 +1,42 @@
 angular.module('hdrApp')
-    .controller('HomeController', function ($scope, $rootScope, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
+    .controller('HomeController', function ($scope, $http, $rootScope, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
 
         $scope.page = "home";
         $rootScope.deviceWidth = $window.innerWidth;
         $rootScope.deviceHeight = $window.innerHeight;
 
-        $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY');
-        $rootScope.academy = {};
-        $rootScope.rd = {};
-        $rootScope.school = {};
-        $rootScope.teacher = {};
+        /* $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY'); */
+
+        $rootScope.today = Date.now();
+
+        $rootScope.academy = $window.localStorage['hdr.academy'] ? angular.fromJson($window.localStorage['hdr.academy']) : {};
+        $rootScope.rd = $window.localStorage['hdr.rd'] ? angular.fromJson($window.localStorage['hdr.rd']) : {};
+        $rootScope.school = $window.localStorage['hdr.school'] ? angular.fromJson($window.localStorage['hdr.school']) : {};
+        $rootScope.teacher = $window.localStorage['hdr.teacher'] ? angular.fromJson($window.localStorage['hdr.teacher']) : {};
+
         $rootScope.isDBThere = false;
+
+        var wind;
+
+        $scope.btnWind = function () {
+            console.log(wind);
+        }
 
         if (ionic.Platform.isWebView()) {
             $ionicPlatform.ready(function () {
-                
+                hdrdbx.openDB();
             });
         }
         else {// browser 
-            //console.log('home page..');
 
         }
+
+
+
+
+
+
+
 
 
     });
@@ -83,4 +99,4 @@ angular.module('hdrFilters', [])
             }
             return hdrnumber;
         }
-    });
+    })

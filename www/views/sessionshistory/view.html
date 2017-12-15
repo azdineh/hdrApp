@@ -1,10 +1,10 @@
 <ion-view view-title="تأريخ الغياب">
-    <ion-content scroll="true" style="background-color: lightgray">
-<hdrabsencehistoryitem ng-repeat="session in sessionshistories"></hdrabsencehistoryitem>
+    <ion-content scroll="true" style="background-color: lightgray" dir="rtl">
+<hdrabsencehistoryitem ng-repeat="session in sessionshistories track by $index"></hdrabsencehistoryitem>
 
 <div ng-show="sessionshistories.length===0" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
 <p class="title" style="font-size: 1.5em">
-{{msg}}
+لم يتم تسجيل أية حصة بعد.
 </p>
 </div>
 </ion-content>

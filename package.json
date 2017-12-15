@@ -3,10 +3,12 @@
     "version": "1.1.0",
     "description": "hdrApp: An Ionic project",
     "dependencies": {
+        "angular-animate": "^1.6.7",
         "cordova-android": "^6.2.3",
         "cordova-browser": "^4.1.0",
         "cordova-plugin-crosswalk-webview": "^2.3.0",
-        "cordova-plugin-sqlite": "~1.0.3",
+        "cordova-plugin-whitelist": "^1.3.3",
+        "cordova-sqlite-storage": "^2.1.2",
         "gulp": "^3.5.6",
         "gulp-concat": "^2.2.0",
         "gulp-minify-css": "^0.3.0",
@@ -21,9 +23,10 @@
         "shelljs": "^0.3.0"
     },
     "cordovaPlugins": [
-        "cordova-plugin-sqlite",
+        "cordova-plugin-crosswalk-webview",
+        "cordova-plugin-whitelist",
         "uk.co.workingedge.cordova.plugin.sqliteporter",
-        "cordova-plugin-crosswalk-webview"
+        "cordova-sqlite-storage"
     ],
     "cordovaPlatforms": [
         "android"
@@ -34,15 +37,16 @@
             "browser"
         ],
         "plugins": {
-            "cordova-plugin-sqlite": {},
-            "uk.co.workingedge.cordova.plugin.sqliteporter": {},
             "cordova-plugin-crosswalk-webview": {
                 "XWALK_VERSION": "23+",
                 "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
                 "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
                 "XWALK_MODE": "embedded",
                 "XWALK_MULTIPLEAPK": "true"
-            }
+            },
+            "cordova-plugin-whitelist": {},
+            "uk.co.workingedge.cordova.plugin.sqliteporter": {},
+            "cordova-sqlite-storage": {}
         }
     }
 }

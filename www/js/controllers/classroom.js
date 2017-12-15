@@ -1,9 +1,10 @@
 angular.module('hdrApp')
-	.controller('ClassroomController', function ($scope, $rootScope, $window, $state, $stateParams, $timeout, hdrdbx) {
-		$scope.classroom = $stateParams.classroom;
-		$scope.students=[];
-		$scope.fct = function (id) {
+	.controller('ClassroomController', function ($scope, $rootScope, $filter, $window, $state, $stateParams, $timeout, hdrdbx) {
 
+
+		$scope.classroom = $filter('filter')($rootScope.classrooms_view, $stateParams.classroom_title)[0];
+
+		$scope.fct = function (id) {
 			var initial_bg = document.getElementById(id).style.backgroundColor;
 
 			document.getElementById(id).style.backgroundColor = "lightgray";
@@ -11,6 +12,7 @@ angular.module('hdrApp')
 				document.getElementById(id).style.backgroundColor = initial_bg;
 			}, 150);
 		}
+
 		$scope.goToStudentView = function (student) {
 			$scope.fct(student.id);
 			$state.go('tab.student', { 'student': student, 'classroom': $scope.classroom });
@@ -19,14 +21,6 @@ angular.module('hdrApp')
 
 		if (ionic.Platform.isWebView()) {
 			ionic.Platform.ready(function () {
-
-				hdrdbx.selectRows('student', 'id_classroom=' + $scope.classroom.id)
-					.then(function (students) {
-						$scope.students = students;
-					}, function (err) {
-						console.log(err);
-					});
-
 
 			});
 		}

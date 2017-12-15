@@ -1,37 +1,43 @@
 <div class="card" dir="rtl">
     <div class="item item-divider">
         <table style="width: 100%">
-<tr>
-    <td style="width: 85%">
-<span><i class="fa fa-calendar-o" aria-hidden="true"></i></span>
-<span>{{session.session.unix_time|date:format:'medium'}}</span>
-</td>
-<td style="text-align: left">
-<span><i class="fa fa-clock-o" aria-hidden="true"></i></span>
-<span>{{session.session.title}}</span>
-</td>
-</tr>
-</table>
-</div>
+            <tr>
+                <td style="width: 85%">
+                    <span>
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                    </span>
+                    <span>{{session.session.unix_time|date:'fullDate'}}</span>
+                </td>
+                <td style="text-align: left">
+                    <span>
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    </span>
+                    <span>{{session.session.title}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-<div class="item item-text-wrap">
-    <div style="font-weight: bold">
-<span>القسم</span> :
-<span>TCLSH 2</span>
-</div>
+    <div class="item item-text-wrap">
+        <div style="font-weight: bold">
+            <span>القسم</span> :
+            <span>{{session.classroom.title}}</span>
+        </div>
 
-<div>
-    <span>المتغيبون</span> :
-</div>
-<ul  style="display: block;font-size: 0.9em;padding-right:18px;list-style-type:square">
-<li ng-repeat="student in session.students">
-    <span ng-show="student.massar_number === '0'">جرت الحصة بدون غياب</span>
-    <span ng-show="student.massar_number !== '0'">{{student.full_name}}</span>
-<!--    <span style="font-size: 0.85em">{{student.massar_number}}</span><br/>
+        <div>
+            <span>المتغيبون</span> :
+        </div>
+        <ul style="display: block;font-size: 0.9em;padding-right:18px;list-style-type:square" ng-show="session.session.students_count > session.students.length">
+            <li ng-repeat="student in session.students track by $index">
+                <!-- <span ng-show="student.massar_number === '0'">جرت الحصة بدون غياب</span> -->
+                
+                <span>({{student.queuing_number}})</span> <span>{{student.full_name}}</span>
+                <!--    <span style="font-size: 0.85em">{{student.massar_number}}</span><br/>
     <span>{{student.registration_number}}</span><br/>
     <span>{{student.date_birth}}</span>-->
-</li>
-</ul>
+            </li>
+        </ul>
+        <p dir="rtl" style="font-size: 0.8em" class="dark">{{session.session.observation}}</p>
 
-</div>
+    </div>
 </div>

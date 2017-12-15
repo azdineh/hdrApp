@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
 
-    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider,$httpProvider) {
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router
         // Set up the various states which the app can be in.
@@ -14,10 +14,13 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
 
         $ionicConfigProvider.tabs.position('bottom');
         $ionicConfigProvider.navBar.alignTitle('center');
-        $ionicConfigProvider.views.transition('android');    
-        $ionicConfigProvider.form.checkbox('square');        
+        $ionicConfigProvider.views.transition('none');
+        $ionicConfigProvider.form.checkbox('square');
         //$ionicConfigProvider.form.toggle('large');
-        
+
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
 
         $stateProvider
             // setup an abstract state for the tabs directive
@@ -46,7 +49,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             })
             .state('tab.classroom', {
                 url: '/classrooms/classroom',
-                params: { 'classroom': null },
+                params: { 'classroom_title': null },
                 views: {
                     'tab-classrooms': {
                         templateUrl: 'views/classrooms/classroom/view.html',
@@ -56,7 +59,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             })
             .state('tab.student', {
                 url: '/classrooms/classroom/student',
-                params: { 'student': null,'classroom':null },
+                params: { 'student': null, 'classroom': null },
                 views: {
                     'tab-classrooms': {
                         templateUrl: 'views/classrooms/classroom/student/view.html',
@@ -66,7 +69,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             })
             .state('tab.appeal', {
                 url: '/classrooms/appeal',
-                params:{classroom:null,index:null},
+                params: { classroom_title: null, index: null },
                 views: {
                     'tab-classrooms': {
                         templateUrl: 'views/classrooms/appeal/view.html',
@@ -94,7 +97,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
                     }
                 }
             })
-            
+
             .state('tab.user', {
                 url: '/user',
                 views: {
