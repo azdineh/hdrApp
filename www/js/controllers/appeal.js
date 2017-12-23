@@ -33,7 +33,7 @@ angular.module('hdrApp')
 			if (h % 2 !== 0) {
 				h = h - 1;
 			}
-			var h2 = Math.abs(h + 2);
+			var h2 = h - (-2);
 			session.push(h + "-" + h2);
 
 			return session;
@@ -93,9 +93,6 @@ angular.module('hdrApp')
 			}
 		};
 
-		$scope.saveAbsentStudents = function () {
-
-		}
 
 		if (ionic.Platform.isWebView()) {
 			ionic.Platform.ready(function () {
@@ -186,13 +183,14 @@ angular.module('hdrApp')
 						type: 'button-assertive',
 						onTap: function (e) {
 							//console.log($scope.data.choice);
-							if (index == 0) {
 
-							}
 							if (index == 1) {
 								$scope.absentStudents = $scope.classroom.students;
 							}
-							$scope.saveSession();
+
+							$scope.saveSession(function () {
+								$state.go('tab.classrooms');
+							});
 							//e.preventDefault();
 						}
 					}
@@ -261,7 +259,8 @@ angular.module('hdrApp')
 			$ionicSlideBoxDelegate.slide(last);
 		};
 
-		$scope.saveSession = function () {
+
+		$scope.saveSession = function (callback) {
 			var session = {
 				id: null,
 				id_classroom: $scope.classroom.id,
@@ -270,9 +269,15 @@ angular.module('hdrApp')
 				unix_time: Date.now(),
 				title: $scope.data.choice,
 				students_count: $scope.classroom.students.length,
+				parity: $scope.currentGroup,
+				isExamSession: 0,
 				observation: ""
 
 			}
+
+			session.isExamSession = $scope.data.isExamSession == true ? 1 : 0;
+
+			console.log("Current parity: " + session.parity);
 
 			if ($scope.absentStudents.length == 0) {
 				session.observation = "لم يتغيب أحد.";
@@ -281,9 +286,19 @@ angular.module('hdrApp')
 				session.observation = "غياب جماعي.";
 			}
 
+			if (session.isExamSession == 1) {
+				session.observation += "~" + "حصة اختبار.";
+			}
+
+
+
 			hdrdbx.saveAbsentStudents(session, $scope.absentStudents)
 				.then(function (count) {
 					console.log('save ' + count + ' absent students is done');
+					//$scope.absentStudents = [];
+					//$scope.data.isExamSession = false;
+					alert("تم تسجيل الحصة بنجاح.");
+					callback();
 				}, function (err) {
 					console.log(err);
 				});

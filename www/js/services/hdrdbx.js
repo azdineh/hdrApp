@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-    .factory('hdrdbx', function ($q, $window) {
+    .factory('hdrdbx', function ($q, $window, $filter) {
         //this service must called only when ionicPlatfom is ready
 
         var academy_table_query = "CREATE TABLE IF NOT EXISTS academy(id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -29,7 +29,7 @@ angular.module('hdrApp')
 
         var session_table_query = "CREATE TABLE IF NOT EXISTS session(id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "id_classroom INTEGER,classroom_title TEXT(255),id_teacher INTEGER,unix_time TEXT(255),title TEXT(255)," +
-            "students_count INTEGER,observation TEXT(1020)," +
+            "students_count INTEGER, parity TEXT(10),isExamSession INTEGER,observation TEXT(1020)," +
             "foreign key (id_classroom) references classroom(id)," +
             "foreign key (id_teacher) references teacher(id));";
 
@@ -85,6 +85,8 @@ angular.module('hdrApp')
                 unix_time: "",
                 title: "10-12",
                 students_count: 0,
+                parity: "all", // session parity is  all classroom attend or just by group: all,odd or even .
+                isExamSession : 0, // is a isExamSession session : 0 non, 1 yes.
                 observation: ""
             }
             vm.student = {
@@ -456,6 +458,8 @@ angular.module('hdrApp')
                                 },
                                 progressFn: function () { }
                             })
+                        }else{
+                            q.resolve(0);
                         }
 
                     }, function (err) {
@@ -475,7 +479,7 @@ angular.module('hdrApp')
                 var sessions_view_obj_arr = [];
 
                 var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number," +
-                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle," +
+                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.parity as parity," +
                     "c.id as classroomId, c.title as classroomTitle " +
                     "from " +
                     "student st inner join absenceline a on a.massar_number=st.massar_number " +
@@ -496,7 +500,8 @@ angular.module('hdrApp')
                                     .session = {
                                         id: curr_item.sessionId,
                                         unix_time: curr_item.unix_time,
-                                        title: curr_item.sessionTitle
+                                        title: curr_item.sessionTitle,
+                                        parity:curr_item.parity
                                     };
 
                                 sessions_view_obj
@@ -560,7 +565,7 @@ angular.module('hdrApp')
                 }
 
                 var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number," +
-                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count, s.observation as observation," +
+                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
                     "c.id as classroomId, c.title as classroomTitle " +
                     "from " +
                     /*                     "student st inner join absenceline a on a.massar_number=st.massar_number " +
@@ -584,6 +589,8 @@ angular.module('hdrApp')
                                 session_view_obj.session.title = res.rows.item(0).sessionTitle;
                                 session_view_obj.session.unix_time = res.rows.item(0).unix_time;
                                 session_view_obj.session.students_count = res.rows.item(0).students_count;
+                                session_view_obj.session.parity = res.rows.item(0).parity;
+                                session_view_obj.session.isExamSession = res.rows.item(0).isExamSession;
                                 session_view_obj.session.observation = res.rows.item(0).observation;
 
                                 session_view_obj.classroom.id = res.rows.item(0).classroomId;
@@ -618,12 +625,34 @@ angular.module('hdrApp')
                 return q.promise;
             };
 
-            vm.sessions_view_obj_arr = [];
+            vm.daies_arr = [];
             // count is the number of session to dispaly, the max value of end_index is sessions_arr.length
             vm.selectSessionsView2 = function (sessions_arr, start_index, count, callBack) {
+
                 vm.selectSessionView(sessions_arr[start_index])
                     .then(function (session_view_obj) {
-                        vm.sessions_view_obj_arr.push(session_view_obj);
+                        var dayObj = {
+                            date: '',
+                            sessions_view: []
+                        }
+
+                        if (vm.daies_arr.length == 0) {
+                            dayObj.date = session_view_obj.session.unix_time;
+                            dayObj.sessions_view.push(session_view_obj);
+                            vm.daies_arr.push(dayObj);
+                        }
+                        else {
+                            var day = $filter('date')(session_view_obj.session.unix_time, 'fullDate');
+                            var pday = $filter('date')(vm.daies_arr[vm.daies_arr.length - 1].date, 'fullDate');
+                            if (day == pday) {
+                                vm.daies_arr[vm.daies_arr.length - 1].sessions_view.push(session_view_obj);
+                            } else {
+                                dayObj.date = session_view_obj.session.unix_time;
+                                dayObj.sessions_view.push(session_view_obj);
+                                vm.daies_arr.push(dayObj);
+                            }
+                        }
+
                         if (start_index + 1 < count)
                             vm.selectSessionsView2(sessions_arr, start_index + 1, count, callBack);
                         else

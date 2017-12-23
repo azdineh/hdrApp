@@ -42,6 +42,10 @@ angular.module('hdrApp')
 
             };
 
+/*             HdrFileSystem.rename=function(fs){
+                $cordovaFile.moveDir(path, directory, newPath, newDirectory);
+            } */
+
             /**
              * [getWorkbook return a Workbook object from an Excel file]
              * @param  {[FileEntry]} file [Excel file]

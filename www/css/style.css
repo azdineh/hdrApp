@@ -5,9 +5,10 @@ html,body{
   background-color:  #f7f7f7;
 }
 ion-content{
-  background-color: #f7f7f7;
+ /*  background-image: url("../img/hdr-texture.jpg");*/
+  background-color: #f9f9f9; 
  }
- 
+
 .card-red div{
    color: #FFFFFF !important;
 }
@@ -15,7 +16,9 @@ ion-content{
   background: #FF3E3C !important;
 
 }
-
+body div{
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 .card-gray .item{
   background: #f7f7f7;
 }
@@ -144,6 +147,14 @@ width: 100%;
 border: 0;
 }
 
+@font-face{
+  font-family: hdrFont;
+  src: ''
+}
+
+body{
+  font-family: hdrFont;
+}
 .hdr-classroom-container #hdr-item1 button{
  text-align: right;
  line-height: 20px;

@@ -100,3 +100,15 @@ angular.module('hdrFilters', [])
             return hdrnumber;
         }
     })
+    .filter('hdrparity', function () {
+        return function (input) {
+            var hdrparity = '';
+            if (input == 'odd') {
+                hdrparity = 'فرديين';
+            } else if (input == 'even') {
+                hdrparity = 'زوجيين';
+            }
+            
+            return hdrparity;
+        }
+    });
