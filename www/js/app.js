@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
 
-    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider,$httpProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider, $httpProvider) {
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router
         // Set up the various states which the app can be in.
@@ -94,6 +94,15 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
                     'tab-teacher': {
                         templateUrl: 'views/teacher/view.html',
                         controller: 'TeacherController'
+                    }
+                }
+            })
+            .state('tab.search', {
+                url: '/search',
+                views: {
+                    'tab-search': {
+                        templateUrl: 'views/search/view.html',
+                        controller: 'SearchController'
                     }
                 }
             })

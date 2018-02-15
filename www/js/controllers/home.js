@@ -111,4 +111,23 @@ angular.module('hdrFilters', [])
             
             return hdrparity;
         }
+    })
+    .filter('hdrsession', function () {
+        return function (input) {
+            var sess="";
+            if(input==1)
+            sess="حصة واحدة";
+            if(input==2)
+            sess="حصتين";
+            if(input==3)
+            sess="ثلاث حصص";
+            if(input==4)
+            sess="أريع حصص";
+            if(input==5)
+            sess="خمس حصص";
+            if(input>5)
+            sess=input +" حصص";
+
+           return sess;
+        }
     });

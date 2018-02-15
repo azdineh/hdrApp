@@ -378,25 +378,35 @@ angular.module('hdrApp').controller('ClassroomsController',
         };
 
 
-        $scope.shooseZipFile = function () {
+        $scope.zipFilesAndImportClassrooms = function () {
             fileChooser.open(function (uripath) {
 
                 window.FilePath.resolveNativePath(uripath, successNative, failNative);
                 function successNative(finalpath) {
                     console.log("url of file is " + finalpath); successNative
-                    $cordovaFile.removeDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms");
-                    zip.unzip(finalpath, cordova.file.applicationStorageDirectory + "hodoor-classrooms/", function (arg) {
-                        console.log("dist : " + cordova.file.applicationStorageDirectory);
-                        if (arg == 0) {
-                            console.log("unzipping is done");
-                            /*                             var dirdistname = finalpath.slice(finalpath.lastIndexOf('/') + 1, finalpath.lastIndexOf('.'));
-                                                        console.log("file name :" + dirdistname);
-                                                        console.log("") */
-                            //$cordovaFile.moveDir(cordova.file.applicationStorageDirectory, dirdistname, cordova.file.applicationStorageDirectory, 'hodoor-classrooms');
-                        } else {
-                            console.log('errore while unzipping');
-                        }
-                    });
+                    //$cordovaFile.removeDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms");
+
+                    $cordovaFile.removeRecursively(cordova.file.applicationStorageDirectory, "hodoor-classrooms")
+                        .then(function (success) {
+                            // success
+                            console.log("remove all files from hodoor-classroom successfully..");
+                            $cordovaFile.createDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms", false);
+                            zip.unzip(finalpath, cordova.file.applicationStorageDirectory + "hodoor-classrooms/", function (arg) {
+                                console.log("dist : " + cordova.file.applicationStorageDirectory);
+                                if (arg == 0) {
+                                    console.log("unzipping is done");
+                                    $scope.importClassrooms();
+
+                                } else {
+                                    console.log('errore while unzipping');
+                                }
+                            });
+                        }, function (error) {
+                            // error
+                            console.log('Error while removing files from hodoor-classrooms');
+                        });
+
+
                 }
 
                 function failNative() {

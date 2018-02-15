@@ -4,7 +4,7 @@
         <div ng-show="classrooms_view.length>0">
 
 
-           <!--  <ion-spinner ng-if="tapped" icon="lines" class="spinner-assertive" style="position: absolute;top: 35%;left: 35%;z-index: 500"></ion-spinner> -->
+            <!--  <ion-spinner ng-if="tapped" icon="lines" class="spinner-assertive" style="position: absolute;top: 35%;left: 35%;z-index: 500"></ion-spinner> -->
 
             <div class="item item-divider dark title hdr-sub-title" style="font-size: 13px;">
 
@@ -18,7 +18,7 @@
 
                     <div class="hdr-classroom-container">
                         <div id="hdr-item0" class="hdr-item">
-                            <button class="button button-outline"  ng-click="showActionSheet(classroom)">
+                            <button class="button button-outline" ng-click="showActionSheet(classroom)">
                                 <i class="ion-android-more-vertical"></i>
                             </button>
                         </div>
@@ -47,31 +47,31 @@
             </ul>
 
         </div>
-        <button ng-click="shooseZipFile()">Choose file</button>
         <div ng-show="classrooms_view.length==0">
+            <div dir="rtl" style="padding: 18px" class="hrd-parag">
+                <span class="icon ion-alert-circled" style="font-size: 8vmax"></span>
+                <p class="hdr-title">لا يتوفر التطبيق على بيانات التلاميذ بعد.</p>
+                <p class="hdr-parag">
+                    عن طريق هاتفك، قم بتصدير لوائح الأقسام من موقع منظومة مسار،( قم باختيار التصدير حسب الأستاذ)
+                    <br>
+                    بعد ذلك، إضغط على الزر - إستخراج البيانات - ثم قم بتحديد ملف التصدير المُحمّل في المرحلة الأولى.
+                </p>
+            </div>
+
             <div style="text-align: center;display:table-cell;vertical-align: middle">
                 <br/>
-                <p dir="rtl" style="padding: 18px">
-                    لا يتوفر التطبيق بعد على البيانات الضرورية.
-                    <br/> لإنجاز ذلك، قم بوضع ملفات الإكسل الخاصة بالأقسام (المقدمة من طرف منظومة مسار) في الذاكرة الداخلية للهاتف
-                    مجموعةً في ملف واحد ومسمى ب
-                    <b>
-                        "hodoor-classrooms"
-                    </b> .
-                    <br/> ثم بعد ذلك قم بالضغط على الزر "إستخراج البيانات".
-                </p>
 
-                <button class="button icon-right ion-plus button-assertive" style="width:60%;" ng-click="importClassrooms()">
-                    إستخراج البيانات الخاصة
+                <button class="button icon-right ion-plus button-large button-assertive" style="width:60%;;border-radius: 100px" ng-click="zipFilesAndImportClassrooms()">
+                    إستخراج البيانات
                 </button>
 
                 <br/>
                 <br/>
-                <p dir="rtl" style="padding: 18px;color:#999999">يمكن كذلك استعمال بيانات محاكاتية مدمجة مع التطبيق، هذه البيانات تمكن من أخذ فكرة عملية حول التطبيق قبل استخدام
+                <p dir="rtl" style="padding: 18px;" class="hrd-parag hdr-second-txt">يمكن كذلك استعمال بيانات محاكاتية مدمجة مع التطبيق، هذه البيانات تمكن من أخذ فكرة عملية حول التطبيق قبل استخدام
                     معلومات الأقسام الخاصة بالأستاذ.
                 </p>
 
-                <button class="button icon-right ion-plus " style="width:60%" ng-click="importSimulatedClassrooms()">
+                <button class="button" style="width:60%" ng-click="importSimulatedClassrooms()">
                     استعمال بيانات محاكاتية
                 </button>
 

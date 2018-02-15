@@ -1,11 +1,24 @@
+@font-face{
+  font-family: hdrFont;
+src: url('../font/JannaLT-Regular.ttf');
+}
+
 html,body{
 	height: 100%;
 	width: 100%;
   /*background-color: #E9E9E9*/
   background-color:  #f7f7f7;
+  font-family: hdrFont;
+  color: rgb(22, 21, 33)
 }
+
+div,p,button,li, span{
+  font-family: hdrFont!important;
+}
+
 ion-content{
- /*  background-image: url("../img/hdr-texture.jpg");*/
+  /*  background-image: url("../img/hdr-texture.jpg");*/
+  font-family: hdrFont;
   background-color: #f9f9f9; 
  }
 
@@ -16,9 +29,7 @@ ion-content{
   background: #FF3E3C !important;
 
 }
-body div{
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
+
 .card-gray .item{
   background: #f7f7f7;
 }
@@ -235,4 +246,20 @@ flex-grow: 3
 
 #hdr-appeal-subheader>div:nth-child(3) i{
   min-height: 40px;
+  }
+
+
+  .hdr-title{
+    font-size: 3vmax!important;
+    text-align: justify!important;
+    line-height:2vmax!important;
+  }
+  .hrd-parag{
+    font-size: 2.3vmax!important;
+    text-align: justify!important;
+    line-height: 3.55vmax!important;
+  }
+
+  .hdr-second-txt{
+    color: rgb(144, 142, 149)!important;
   }
