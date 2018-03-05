@@ -1,6 +1,6 @@
 @font-face{
   font-family: hdrFont;
-src: url('../font/JannaLT-Regular.ttf');
+src: url('../font/JannaLT.ttf');
 }
 
 html,body{
@@ -12,8 +12,8 @@ html,body{
   color: rgb(22, 21, 33)
 }
 
-div,p,button,li, span{
-  font-family: hdrFont!important;
+div,p,button,li, span,input,i{
+  font-family: hdrFont;
 }
 
 ion-content{
@@ -48,7 +48,7 @@ ion-content{
 }
 
 .classroom_item {
-    /*background-color: aquamarine;*/
+    /* background-color: aquamarine; */
     width: 100%;
     
 }
@@ -56,6 +56,7 @@ ion-content{
 
 .classroom_item td {
     vertical-align: middle;
+/*    border: 1px solid green; */
 }
 .classroom_item td a{
   /* border:1px solid;*/
@@ -250,14 +251,15 @@ flex-grow: 3
 
 
   .hdr-title{
-    font-size: 3vmax!important;
-    text-align: justify!important;
-    line-height:2vmax!important;
+    font-size: 3vmax;
+    line-height:2vmax;
+    margin-bottom: 1.5vmax;
   }
-  .hrd-parag{
-    font-size: 2.3vmax!important;
-    text-align: justify!important;
-    line-height: 3.55vmax!important;
+
+  .hdr-parag{
+    font-size: 2.3vmax;
+    line-height: 3.55vmax;
+    text-align: justify;
   }
 
   .hdr-second-txt{

@@ -1,54 +1,57 @@
 <div dir="rtl" style="margin-bottom: 1vmax;background-color:none;">
-    <div class="item item-divider light-bg dark" style="border: 0px;text-align: right;margin-bottom: 1vmax;background-color:rgba(206, 206, 206, 0.318)">
-        <table style="width: 100%">
+    <div class="item item-divider light-bg dark" style="border: 0px;text-align: right;;margin-bottom: 4px;background-color: inherit">
+        <table style="width: 100%;" >
             <tr>
                 <td style="width: 85%">
                     <span>
                         <i class="ion ion-android-bookmark" aria-hidden="true"></i>
                     </span>
                     <span>{{day.date|date:'fullDate'}}</span>
-                    <span> - </span>
-                    <span>({{day.sessions_view.length|hdrsession}})</span>
+                    <!-- <span> - </span> -->
+                    <!-- <span>({{day.sessions_view.length|hdrsession}})</span> -->
                 </td>
             </tr>
         </table>
     </div>
 
-    <div class="item item-text-wrap" style="font-size: 0.95em;border: 0px;padding: 8px;padding-top: 10px;background-color: inherit"
+    <div class="item item-text-wrap" style="font-size: 0.95em;padding: 8px;border:0;padding-top: 0px;background-color: inherit"
         ng-repeat="session_view in day.sessions_view track by $index">
-        <div style="font-weight: bold;padding-right: 14px;">
-            <table style="background: inherit; padding: 0 4 0 4">
-                <tr>
-
-                    <td style="padding-right: 0px;" >
-                        <span>
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>
-                        </span>
-                        <span>{{session_view.session.title}} </span>
-                        <i class="icon ion-android-arrow-dropleft"></i>
 
 
-                    </td>
-                    <td style="width: fit-content;padding-right: 2px">
-                        <span style="padding: 4px;border-radius: 10px 10px 10px 10px;">
-                            {{session_view.classroom.title}}
+        <div style="background-color:rgba(156, 157, 199, 0.023) ;margin-right: 10px;padding-top: 6px;padding-bottom: 12px;padding-right: 10px;border-radius: 4px;border-right: 1px solid lightgray;border-bottom:1px solid lightgrey;position: relative;top:0px;z-index: -100">
+           
+            <div style="font-weight: bold;padding-right: 0px;" class="positive">
+                <table style="background: inherit;">
+                    <tr>
+    
+                        <td style="padding-right: 0px;" >
+                            <span>
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            </span>
+                            <span>{{session_view.session.title}} </span>
+                            <i class="icon ion-android-arrow-dropleft"></i>
+    
+    
+                        </td>
+                        <td style="width: fit-content;padding-right: 2px">
+                            <span style="padding: 4px;border-radius: 10px 10px 10px 10px;">
+                                {{session_view.classroom.title}}
+    
+                            </span>
+                            <i class="icon ion-android-arrow-dropleft" ng-show="session_view.session.parity!='all'"></i>
+                            <span style="padding-right: 2px;position: relative;top:-2px" ng-show="session_view.session.parity!='all'">
+                                {{session_view.session.parity|hdrparity}}
+                            </span>
+    
+    
+                        </td>
+                    </tr>
+                </table>
+    
+    
+            </div>
 
-                        </span>
-                        <i class="icon ion-android-arrow-dropleft" ng-show="session_view.session.parity!='all'"></i>
-                        <span style="padding-right: 2px;position: relative;top:-2px" ng-show="session_view.session.parity!='all'">
-                            {{session_view.session.parity|hdrparity}}
-                        </span>
-
-
-                    </td>
-                </tr>
-            </table>
-
-
-        </div>
-
-        <div style="background-color:rgba(156, 157, 199, 0.023) ;margin-right: 10px;padding-top: 16px;padding-bottom: 12px;padding-right: 20px;border-radius: 4px;border-right: 1px solid lightgray;border-bottom:1px solid lightgrey;position: relative;top:0px;z-index: -100">
-            <table style="width: 100%; border-collapse:separate">
+            <table style="width: 100%; border-collapse:separate;margin-right: 12px">
                 <tr>
                     <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length" style="width: 46%">
                         <div style="padding-right: 4px">

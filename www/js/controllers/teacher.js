@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-    .controller('TeacherController', function ($scope, $ionicViewService, $window, hdrdbx) {
+    .controller('TeacherController', function ($scope, $rootScope, $ionicViewService, $window, hdrdbx) {
 
         $scope.clearDb = function () {
             if (ionic.Platform.isWebView()) {
@@ -12,7 +12,7 @@ angular.module('hdrApp')
             }
 
         }
-        
+
         $scope.clearStorage = function () {
             //hdrdbx.hdrdbtest();
             $window.localStorage.removeItem("hdr.classrooms_view");
@@ -22,6 +22,7 @@ angular.module('hdrApp')
             $window.localStorage.removeItem("hdr.school");
             $window.localStorage.removeItem("hdr.teacher");
             $window.localStorage.removeItem("hdr.helpPopupShown");
+            $rootScope.classrooms_view = [];
             $ionicViewService.clearHistory();
 
         }

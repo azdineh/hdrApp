@@ -1,15 +1,44 @@
 <ion-view view-title="بحث">
-    <ion-content>
+
+    <div dir="rtl" style="margin-top:46px;">
+        <div class="bar bar-header item-input-inset">
+            <label class="item-input-wrapper">
+                <i class="icon ion-ios-search placeholder-icon"></i>
+                <input type="search" placeholder="أكتب اسم تلميذ(ة) هنا" autocomplete="off" ng-model="textToSearch" id="hdr-search-text" style="margin-right: 6px"  ng-disabled="!classrooms_view || classrooms_view.length==0">
+            </label>
+            <button class="button button-clear" ng-click="clearText()">
+                إلغاء
+            </button>
+        </div>
+    </div>
+
+    <ion-content style="margin-top:46px!important;">
         <div dir="rtl">
 
-            <div class="bar bar-header item-input-inset">
-                <label class="item-input-wrapper">
-                    <i class="icon ion-ios-search placeholder-icon" ></i>
-                    <input type="search" placeholder="اسم تلميذ أو رقم ترتيبه" style="margin-right: 6px">
-                </label>
-                <button class="button button-clear">
-                    إلغاء
-                </button>
+
+            <div  ng-if="textToSearch==''"  style="padding: 6vmax;text-align: center;text-align: justify;font-size: 5vmax;line-height: 6vmax;margin-top: 15%;color: gainsboro">
+                بحث سريع في جميع لوائح التلاميذ.
+                <br>
+                <div ng-if="!classrooms_view || classrooms_view.length==0" style="font-size: 2.8vmax;padding-top: 2vmax;text-align: justify;line-height: 4.2vmax;color: lightblue">
+                    لا يتوفر التطبيق على لوائح التلاميذ، لمزيد من المعلومات أنظر تبويبة الأقسام
+                    <span class="icon ion-filing "></span> .
+
+                </div>
+
+            </div>
+
+            <div ng-if="classrooms_view.length>0">
+
+
+                <!--     <ul class="list"> -->
+                <div ng-if="textToSearch!=''" style="position: absolute;top:0;z-index: -10;padding: 2vmax;text-align: center;font-size: 3vmax;line-height: 2vmax;margin-top: 3%;color: gainsboro">
+                    لا يوجد أي تلميذ أو تلميذة بهذا الإسم.
+                </div>
+                <span ng-repeat="classroom_view in classrooms_view" ng-if="textToSearch!=''">
+                    <hdr-student ng-repeat="student in classroom_view.students|filter:{full_name:textToSearch}" ng-init="classroom_title=classroom_view.title"></hdr-student>
+                </span>
+
+                <!--    </ul> -->
             </div>
         </div>
     </ion-content>

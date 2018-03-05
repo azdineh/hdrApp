@@ -232,12 +232,12 @@ angular.module('hdrApp').controller('ClassroomsController',
             } else {
                 // actions for computer platforms
                 console.log("classrooms page");
-                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", 'students': [] });
-                $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", 'students': [] });
-                $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", 'students': [] });
-                $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", 'students': [] });
-                $rootScope.classrooms_view.push({ id: "5", title: "TCPS1", level: "جذع مشترك خدماتي", 'students': [] });
-                $rootScope.classrooms_view.push({ id: "6", title: "TCSH7", level: "جذع مشترك خدماتي", 'students': [] });
+                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", 'students': [{ full_name: "عمر فيلالي", queuing_number: "10" }, { full_name: "كريم زرهوني", queuing_number: "12" }, { full_name: "سفياني بدر", queuing_number: "22" }] });
+                $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "5", title: "TCPS1", level: "جذع مشترك خدماتي", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "6", title: "TCSH7", level: "جذع مشترك خدماتي", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
 
                 $rootScope.classrooms_view.forEach(function (classroom) {
                     $rootScope.students_count_global += classroom.students.length;
@@ -379,40 +379,59 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
         $scope.zipFilesAndImportClassrooms = function () {
-            fileChooser.open(function (uripath) {
+            if (ionic.Platform.isWebView()) {
+                fileChooser.open(function (uripath) {
 
-                window.FilePath.resolveNativePath(uripath, successNative, failNative);
-                function successNative(finalpath) {
-                    console.log("url of file is " + finalpath); successNative
-                    //$cordovaFile.removeDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms");
+                    window.FilePath.resolveNativePath(uripath, successNative, failNative);
+                    function successNative(finalpath) {
+                        console.log("url of file is " + finalpath); successNative
+                        //$cordovaFile.removeDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms");
 
-                    $cordovaFile.removeRecursively(cordova.file.applicationStorageDirectory, "hodoor-classrooms")
-                        .then(function (success) {
-                            // success
-                            console.log("remove all files from hodoor-classroom successfully..");
-                            $cordovaFile.createDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms", false);
-                            zip.unzip(finalpath, cordova.file.applicationStorageDirectory + "hodoor-classrooms/", function (arg) {
-                                console.log("dist : " + cordova.file.applicationStorageDirectory);
-                                if (arg == 0) {
-                                    console.log("unzipping is done");
-                                    $scope.importClassrooms();
+                        $cordovaFile.removeRecursively(cordova.file.applicationStorageDirectory, "hodoor-classrooms")
+                            .then(function (success) {
+                                // success
+                                console.log("remove all files from hodoor-classroom successfully..");
+                                $cordovaFile.createDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms", false);
+                                zip.unzip(finalpath, cordova.file.applicationStorageDirectory + "hodoor-classrooms/", function (arg) {
+                                    console.log("dist : " + cordova.file.applicationStorageDirectory);
+                                    if (arg == 0) {
+                                        console.log("unzipping is done");
+                                        $scope.importClassrooms();
 
-                                } else {
-                                    console.log('errore while unzipping');
-                                }
+                                    } else {
+                                        console.log('errore while unzipping');
+                                        alert('يبدو أن الملف المحدد غير مناسب..');
+                                    }
+                                });
+                            }, function (error) {
+                                // error
+                                console.log('Error while removing files from hodoor-classrooms');
                             });
-                        }, function (error) {
-                            // error
-                            console.log('Error while removing files from hodoor-classrooms');
-                        });
 
 
-                }
+                    }
 
-                function failNative() {
-                    console.log("error while resolving native file path");
-                }
-            });
+                    function failNative() {
+                        console.log("error while resolving native file path");
+                    }
+                });
+            } else {
+                console.log("classrooms page");
+                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي",  students: [{ full_name: "عمر فيلالي", queuing_number: "10" }, { full_name: "كريم زرهوني", queuing_number: "12" }, { full_name: "سفياني بدر", queuing_number: "22" }] });
+                $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "5", title: "TCPS1", level: "جذع مشترك خدماتي", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "6", title: "TCSH7", level: "جذع مشترك خدماتي", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+
+                $rootScope.classrooms_view.forEach(function (classroom) {
+                    $rootScope.students_count_global += classroom.students.length;
+                }, this);
+
+                $window.localStorage['hdr.classrooms_view'] = angular.toJson($rootScope.classrooms_view);
+                $window.localStorage['hdr.students_count_global'] = angular.toJson($rootScope.students_count_global);
+            }
+
 
         }
     });
