@@ -1,3 +1,29 @@
+<style>
+  /*   #ggh td {
+    border: 1px solid red
+  }
+ */
+
+  #hdr-absent-symbol {
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap-reverse;
+    /*     border: 1px solid lightslategray;
+    background-color: chartreuse; */
+    justify-content: center;
+    align-content: flex-start;
+  }
+
+  .hdr-absent-symbol-item {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(228, 23, 23, 0.434);
+    margin: 1px;
+  }
+</style>
+
 <ion-view view-title="لائحة التلاميذ : {{classroom.title}}">
 
   <ion-content dir="rtl">
@@ -22,28 +48,38 @@
         <li class="item hdr-list-item" ng-repeat="student in classroom.students" ng-class="student.id%2==0 ?'hdr-item-odd':'hdr-item-even'"
           id="{{student.id}}" on-tap="goToStudentView(student)">
 
-          <table class="classroom_item">
+          <table class="classroom_item" id="ggh">
             <tr>
-              <td style="text-align: center;height: 6vh;font-size: 3vmax;">
+              <td style="width: 8%;text-align: center;height: 6vh;font-size: 3vmax;">
                 <div style="width: 6vh">
                   <div>{{student.queuing_number|hdrnumber}} </div>
                 </div>
               </td>
-              <td width="94%" style="padding-right: 10px;">
+              <td style="width: auto;padding-right: 10px;padding-left: 10px">
                 <div>
                   <div class="hdr-main-text positive">{{student.full_name}}</div>
                   <div class="hdr-sub-text">
                     <i class="ion-android-bookmark"></i> {{student.birth_date|hdrage}}</div>
                 </div>
               </td>
+              <td style="width: 80%;">
+                <div id="hdr-absent-symbol">
+                  <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div>
+<!--                    <div class="hdr-absent-symbol-item"></div>
+                   <div class="hdr-absent-symbol-item"></div>
+                   <div class="hdr-absent-symbol-item"></div>
+                   <div class="hdr-absent-symbol-item"></div> -->
+                  
+
+                </div>
+              </td>
             </tr>
           </table>
 
         </li>
-        <div class="dark padding">
-          <i class="ion-information-circled"></i> للإطلاع على مزيد من التفاصيل، قم بنقر التلميذ المراد. </div>
-      </ul>
-      
+        <i class="ion-information-circled"></i> للإطلاع على مزيد من التفاصيل، قم بنقر التلميذ المراد. </div>
+    </ul>
+
     </div>
 
   </ion-content>

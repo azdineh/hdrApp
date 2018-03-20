@@ -23,13 +23,17 @@ navigation history that also transitions its views in and out.
   </ion-tab>
   
   <!-- Sessions history Tab -->
-  <ion-tab title="خ.ز. للحصص" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline" href="#/tab/sessionshistory">
+  <ion-tab title="سجل التغيبات" icon-on="ion-calendar" icon-off="ion-calendar" href="#/tab/sessionshistory">
     <ion-nav-view name="tab-sessionshistory"></ion-nav-view>
   </ion-tab>
   
   <!-- classes Tab -->
-  <ion-tab title="الأقسام"  icon-on="ion-filing " icon-off="ion-filing " href="#/tab/classrooms">
+  <ion-tab title="الأقسام"  icon-on="ion-filing " icon-off="ion-filing " href="#/tab/classrooms" >
     <ion-nav-view name="tab-classrooms"></ion-nav-view>
+  </ion-tab>
+  <!-- classes Tab -->
+  <ion-tab title="تلميذ"  icon-on="ion-filing " icon-off="ion-filing " href="#/tab/student" class="ng-hide">
+    <ion-nav-view name="tab-student"></ion-nav-view>
   </ion-tab>
 
   <!-- Home Tab -->

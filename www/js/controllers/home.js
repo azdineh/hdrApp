@@ -7,7 +7,11 @@ angular.module('hdrApp')
 
         /* $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY'); */
 
-        $rootScope.today = Date.now();
+    
+
+        $scope.$on('$ionicView.enter', function () {
+            $rootScope.today = Date.now();
+        })
 
         $rootScope.academy = $window.localStorage['hdr.academy'] ? angular.fromJson($window.localStorage['hdr.academy']) : {};
         $rootScope.rd = $window.localStorage['hdr.rd'] ? angular.fromJson($window.localStorage['hdr.rd']) : {};
@@ -50,6 +54,7 @@ angular.module('hdrFilters', [])
         * @return {Date}  Date object.
         */
         var parseShortDate = function (FrShortDateString) {
+            console.log(FrShortDateString)
             var str = FrShortDateString.trim();
             var dd = parseInt(str.substr(0, 2));
             var mm = parseInt(str.substr(3, 2)) - 1; // JS counts months from 0 to 11;
@@ -108,26 +113,26 @@ angular.module('hdrFilters', [])
             } else if (input == 'even') {
                 hdrparity = 'زوجيين';
             }
-            
+
             return hdrparity;
         }
     })
     .filter('hdrsession', function () {
         return function (input) {
-            var sess="";
-            if(input==1)
-            sess="حصة واحدة";
-            if(input==2)
-            sess="حصتين";
-            if(input==3)
-            sess="ثلاث حصص";
-            if(input==4)
-            sess="أريع حصص";
-            if(input==5)
-            sess="خمس حصص";
-            if(input>5)
-            sess=input +" حصص";
+            var sess = "";
+            if (input == 1)
+                sess = "حصة واحدة";
+            if (input == 2)
+                sess = "حصتين";
+            if (input == 3)
+                sess = "ثلاث حصص";
+            if (input == 4)
+                sess = "أريع حصص";
+            if (input == 5)
+                sess = "خمس حصص";
+            if (input > 5)
+                sess = input + " حصص";
 
-           return sess;
+            return sess;
         }
     });

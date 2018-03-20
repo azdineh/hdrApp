@@ -5,6 +5,8 @@ angular.module('hdrApp')
 		//$rootScope.today already defined in home controller
 		//$scope.classroom_title = $stateParams.classroom_title;
 		$scope.classroom = $filter('filter')($rootScope.classrooms_view, $stateParams.classroom_title)[0];
+		
+
 		$scope.choiceIndexOfFastCase = $stateParams.index;
 
 		$scope.numOfSlides = 0;
@@ -96,6 +98,17 @@ angular.module('hdrApp')
 
 		if (ionic.Platform.isWebView()) {
 			ionic.Platform.ready(function () {
+				hdrdbx.getStudentsAbsencesCount($scope.classroom.title)
+				.then(function(arr){
+					console.log(arr);
+					for (var i = 0; i < arr.length; i++) {
+						$scope.classroom.students[arr[i].queuing_number-1].times=new Array(arr[i].absences_count);
+					}
+		
+					
+				},function(err){
+					console.log(err);
+				});
 				$scope.numOfSlides = Math.ceil($scope.classroom.students.length / 5);
 				$scope.distributeStudentsBy5($scope.classroom.students);
 			});
@@ -201,7 +214,7 @@ angular.module('hdrApp')
 		$scope.showHelpPopup = function () {
 			var helpPopup = $ionicPopup.show({
 				templateUrl: "views/classrooms/appeal/helpappealview.html",
-				title: '<h3 class="h3 title assertive">دليل الإستخدام</h3>',
+				title: '<h3 class="title assertive-bg padding light" >دليل الإستخدام</h3>',
 				subTitle: '',
 				scope: $scope,
 				buttons: [

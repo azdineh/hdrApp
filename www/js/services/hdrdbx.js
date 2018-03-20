@@ -20,7 +20,7 @@ angular.module('hdrApp')
 
         var student_table_query = "CREATE TABLE IF NOT EXISTS student(id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "full_name TEXT(255), registration_number TEXT(255), massar_number TEXT(255)," +
-            "birth_date TEXT(255), queuing_number INTEGER, id_classroom INTEGER," +
+            "birth_date TEXT(255), queuing_number INTEGER,observation TEXT(1020) , id_classroom INTEGER," +
             "foreign key (id_classroom) references classroom(id));";
 
         var teacher_table_query = "CREATE TABLE IF NOT EXISTS teacher(id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -86,7 +86,7 @@ angular.module('hdrApp')
                 title: "10-12",
                 students_count: 0,
                 parity: "all", // session parity is  all classroom attend or just by group: all,odd or even .
-                isExamSession : 0, // is a isExamSession session : 0 non, 1 yes.
+                isExamSession: 0, // is a isExamSession session : 0 non, 1 yes.
                 observation: ""
             }
             vm.student = {
@@ -96,6 +96,7 @@ angular.module('hdrApp')
                 massar_number: "",
                 birth_date: "",
                 queuing_number: "",
+                observation: "",
                 id_classroom: ""
             };
             vm.absenceline = {
@@ -411,7 +412,7 @@ angular.module('hdrApp')
                 var iterator = 1;
                 students.forEach(function (student) {
                     sql = sql + "insert into student values(null,'" + student.issmKamel + "','" + student.ra9mTasjiil + "','" + student.ra9mMasar + "','" +
-                        student.tari5Izdiad + "','" + iterator + "','" + id_classroom + "');";
+                        student.tari5Izdiad + "','" + iterator + "', '', '" + id_classroom + "');";
                     iterator++;
                 }, this);
                 //console.log(sql);
@@ -458,7 +459,7 @@ angular.module('hdrApp')
                                 },
                                 progressFn: function () { }
                             })
-                        }else{
+                        } else {
                             q.resolve(0);
                         }
 
@@ -501,7 +502,7 @@ angular.module('hdrApp')
                                         id: curr_item.sessionId,
                                         unix_time: curr_item.unix_time,
                                         title: curr_item.sessionTitle,
-                                        parity:curr_item.parity
+                                        parity: curr_item.parity
                                     };
 
                                 sessions_view_obj
@@ -663,6 +664,34 @@ angular.module('hdrApp')
                     });
             }
 
+            vm.selectDaies = function () {
+                var q = $q.defer();
+                var daies = [];
+                //var query = "select c.id, c.title, c.level from classroom c order by c.title ASC";
+                var query = "select date(substr(unix_time,1,length(unix_time)-3), 'unixepoch') as sdate,unix_time, count(id) as count from session group by sdate order by sdate desc;";
+                //vm.db.transaction(function(tx){},function(error){},function(){});
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [],
+                        function (tx, res) {
+
+                            for (var i = 0, len = res.rows.length; i < len; i++) {
+                                daies.push(res.rows.item(i));
+                            }
+
+                        }, function (err) {
+                            console.log(err);
+                            q.reject(err);
+                        });
+                }, function (error) {
+                    console.log(error);
+
+                }, function () {
+                    q.resolve(daies);
+                });
+
+                return q.promise;
+            }
+
             /**
              * kissm represent one Excel file sheet
              * insert one kissm in db
@@ -761,6 +790,74 @@ angular.module('hdrApp')
                         console.log(err);
                     });
             };
+
+
+
+            vm.selectStudentAbsences = function (massar_number) {
+                var q = $q.defer();
+                var query = "select al.id as id,s.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title from absenceline al inner join student s on al.massar_number=s.massar_number " +
+                    "inner join session ss on al.id_session=ss.id  where s.massar_number=?";
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [massar_number],
+                        function (tx, res) {
+                            var items_arr = [];
+                            for (var i = 0, len = res.rows.length; i < len; i++) {
+                                items_arr.push(res.rows.item(i));
+                            }
+                            q.resolve(items_arr);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+            }
+
+            vm.getStudentsAbsencesCount = function (classroom_title) {
+
+                var query = "";
+                var arrayy = [];
+                if (classroom_title != "") {
+                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, count(al.id) as absences_count, s.full_name as full_name from absenceline al inner join student s on al.massar_number=s.massar_number " +
+                        "inner join classroom c on s.id_classroom =c.id group by s.massar_number HAVING c.title=?";
+                    arrayy.push(classroom_title);
+                }
+                else {
+                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, count(al.id) as absences_count, s.full_name as full_name, s.massar_number as massar_number from student s left join absenceline al on al.massar_number=s.massar_number " +
+                        "inner join classroom c on s.id_classroom =c.id group by s.massar_number order by full_name";
+                }
+
+                var q = $q.defer();
+
+
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, arrayy,
+                        function (tx, res) {
+                            var items_arr = [];
+                            for (var i = 0, len = res.rows.length; i < len; i++) {
+                                items_arr.push(res.rows.item(i));
+                            }
+                            q.resolve(items_arr);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+
+            }
 
 
 

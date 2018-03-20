@@ -1,5 +1,5 @@
 angular.module('hdrApp').controller('ClassroomsController',
-    function ($scope, $rootScope, hdrFileSystem, $filter, $window, $state, $ionicLoading, hdrdbx, $ionicActionSheet, $interval, $cordovaFile) {
+    function ($scope, $rootScope, hdrFileSystem, $filter, $window, $state, $ionicLoading, hdrdbx, $ionicActionSheet, $interval, $cordovaFile,$ionicPopup) {
 
         $scope.page = "Classrooms";
         $rootScope.classrooms_view = $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : [];
@@ -27,6 +27,10 @@ angular.module('hdrApp').controller('ClassroomsController',
 
         }
 
+
+        $scope.$on('$ionicView.enter', function () {
+            $rootScope.today = Date.now();
+        })
 
         $scope.show = function () {
             //template: '<ion-spinner icon="lines"></ion-spinner><br/><span dir="rtl">' + crntmsg + '</span>'
@@ -434,6 +438,27 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
         }
+
+
+        $scope.showHelpPopup = function () {
+			var helpPopup = $ionicPopup.show({
+				templateUrl: "views/classrooms/helpclassroomsview.html",
+				title: '<h3 class="title assertive-bg padding light" >معلومة</h3>',
+				subTitle: '',
+				scope: $scope,
+				buttons: [
+					{
+						text: 'رجوع ',
+						type: 'button',
+						onTap: function (e) {
+							//e.preventDefault();
+						}
+					}
+				]
+			});
+        };
+        
+
     });
 
 

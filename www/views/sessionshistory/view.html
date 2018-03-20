@@ -1,11 +1,19 @@
-<ion-view view-title="الخط الزمني للحصص">
-    <ion-content scroll="true"  dir="rtl">
-<hdrabsencehistoryitem ng-repeat="day in daies track by $index"></hdrabsencehistoryitem>
+<ion-view view-title="سجل التغيبات">
 
-<div ng-show="daies.length==0" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
-<p class="title" style="font-size: 1.5em">
-لم يتم تسجيل أية حصة بعد.
-</p>
-</div>
-</ion-content>
+    <ion-content scroll="true" dir="rtl">
+        <hdrabsencehistoryitem ng-repeat="day in daies track by $index"></hdrabsencehistoryitem>
+        <div style="padding: 11px;zoom: 1.25;position: relative;top:-9px;color: darkgrey" ng-show="lastday">
+            <span class="icon ion-record"   ></span>
+        </div>
+        <div style="text-align: center" ng-hide="lastday">
+            <button class="button button-large button-clear ion-ios-arrow-down" style="font-size: 40px" ng-click="more()"></button>
+        </div>
+
+        <div ng-show="daies.length==0" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
+            <p class="title" style="font-size: 1.5em">
+                لم يتم تسجيل أية حصة بعد.
+            </p>
+        </div>
+    </ion-content>
+
 </ion-view>

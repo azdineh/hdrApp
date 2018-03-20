@@ -12,7 +12,7 @@ html,body{
   color: rgb(22, 21, 33)
 }
 
-div,p,button,li, span,input,i{
+div,p,button,li, span,input,i,h1,h2,h3{
   font-family: hdrFont;
 }
 
@@ -26,7 +26,8 @@ ion-content{
    color: #FFFFFF !important;
 }
 .card-red .item{
-  background: #FF3E3C !important;
+ /*  background: rgba(202, 18, 18, 0.681) !important; */
+ background-image: linear-gradient(to right, #eddada, #ebcccc, #e8bdbd, #e5afaf, #e1a1a1) !important;
 
 }
 
@@ -143,8 +144,8 @@ background-color: rgb(250,250,250);
 }
 
 .hdr-classroom-container .hdr-item{
-/*   background-color: lightseagreen;
-  border: 1px solid blue; */
+/*   background-color: lightseagreen;*/
+  /* border: 1px solid blue;  */
   height: inherit;
   align-items: center;
 }
@@ -265,3 +266,4 @@ flex-grow: 3
   .hdr-second-txt{
     color: rgb(144, 142, 149)!important;
   }
+  

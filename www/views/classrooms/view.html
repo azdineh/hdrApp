@@ -1,3 +1,5 @@
+
+
 <ion-view view-title="لائحة الأقسام" cache-view="false">
 
     <ion-content dir="rtl">
@@ -8,8 +10,17 @@
 
             <div class="item item-divider dark title hdr-sub-title" style="font-size: 13px;">
 
-                هناك {{students_count_global}} تلميذ وتلميذة موزعين على {{classrooms_view.length}} أقسام.
-                <br/> بمعدل {{(students_count_global/classrooms_view.length)|number:1}} تلميذ في القسم.
+
+                <table style="width: 105%">
+                    <tr>
+                         <td> هناك {{students_count_global}} تلميذ وتلميذة موزعين على {{classrooms_view.length}} أقسام.
+                            <br/> بمعدل {{(students_count_global/classrooms_view.length)|number:1}} تلميذ في القسم.
+                        </td>
+                        <td style="text-align: left;vertical-align: middle">
+                            <button class="button button-clear ion-ios-information-outline" style="font-size: 30px;" ng-click="showHelpPopup()"></button>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <ul class="list">
@@ -52,11 +63,10 @@
                 <span class="icon ion-alert-circled" style="font-size: 8vmax"></span>
                 <p class="hdr-title">لا يتوفر التطبيق على بيانات التلاميذ بعد.</p>
                 <br/>
-                
+
                 <div class="hdr-parag">
                     عن طريق هاتفك، قم بتصدير لوائح الأقسام من موقع منظومة مسار ( قم باختيار التصدير حسب الأستاذ)
-                    <br>
-                    بعد ذلك، إضغط على الزر -حدد ملف التصدير- ثم قم بتحديد ملف التصدير الذي تم تحميله  في الخطوة الأولى.
+                    <br> بعد ذلك، إضغط على الزر -حدد ملف التصدير- ثم قم بتحديد ملف التصدير الذي تم تحميله في الخطوة الأولى.
                 </div>
             </div>
 
@@ -64,7 +74,7 @@
                 <br/>
 
                 <button class="button icon-right ion-plus button-large button-assertive" style="width:60%;;border-radius: 100px" ng-click="zipFilesAndImportClassrooms()">
-                   حدد ملف التصدير
+                    حدد ملف التصدير
                 </button>
 
                 <br/>

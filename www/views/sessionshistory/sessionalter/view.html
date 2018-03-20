@@ -1,0 +1,124 @@
+<style>
+    #hdr-g009 td {
+        /* border: 1px solid rebeccapurple; */
+        vertical-align: middle;
+    }
+
+    #hdr-absent-symbol {
+        height: 40px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap-reverse;
+        margin-top: 4px;
+        margin-left: 8px;
+        /*     border: 1px solid lightslategray;
+    background-color: chartreuse; */
+        justify-content: center;
+        align-content: flex-start;
+    }
+
+    .hdr-absent-symbol-item {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: rgba(228, 23, 23, 0.434);
+        margin: 1px;
+    }
+</style>
+<ion-view view-title="تعديل حصة">
+
+    <ion-content scroll="true" dir="rtl">
+        <div class="hdr-cntr-003">
+            <div style="background-color: rgb(239, 239, 239) ;padding-top: 25px;padding-bottom: 25px">
+                <table style="background: inherit;width: 100%;font-size: 16px" id="hdr-g009">
+                    <tr>
+
+                        <td rowspan="2" style="text-align: center">
+                            <span>
+                                <i class="fa fa-clock-o" aria-hidden="true" style="font-size: 40px"></i>
+                            </span>
+                        </td>
+                        <td style="padding-right: 0px;vertical-align: middle;width:84%;font-weight: bolder">
+
+                           <span >
+                                <span>حصة :</span>
+                                <span>
+                                    {{session.title}}
+                                </span>
+                           </span>
+                            <i class="icon ion-android-arrow-dropleft"></i>
+                            <span style="padding: 4px;border-radius: 10px 10px 10px 10px;" >
+                                {{session.classroom_title}}
+                            </span>
+                            <i class="icon ion-android-arrow-dropleft" ng-show="session_view.session.parity!='all'"></i>
+                            <span style="padding-right: 2px;position: relative;top:-2px" ng-show="session_view.session.parity!='all'">
+                                {{session.parity|hdrparity}}
+                            </span>
+                        </td>
+                        <tr>
+                            <td style="font-size: 13px;" class="dark">
+                                {{session.date|date:'fullDate'}}
+                            </td>
+                        </tr>
+                    </tr>
+                </table>
+            </div>
+            <div class="hdr-student-sessionalter">
+                <div style="padding: 8px;font-size: 14px;padding-right: 14px;">
+                    التلاميذ المتغيبون
+                </div>
+                <ul class="list" >
+
+                    <li class="item hdr-list-item" style="padding:0;height: auto;background-color: inherit" ng-repeat="student in session.students" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+
+                        <div class="hdr-classroom-container" style="height: 50px">
+                            <div id="hdr-item0" class="hdr-item">
+                                <button class="button button-outline" ng-click="" style="width: 50px">
+                                    <i class="icon ion-arrow-return-left" style="color: rgb(23, 156, 16);filter: saturate(0.3)"></i>
+                                </button>
+                            </div>
+                            <div class="hdr-item">
+                                <button class="button button-outline" ng-click="" style="width: 50px">
+                                    <i class="icon ion-android-cancel" style="color: rgb(156, 16, 16);filter: saturate(0.3)"></i>
+                                </button>
+                            </div>
+                            <div id="hdr-item1" class="hdr-item" style="position: relative">
+
+                                <div style="padding-top: 4px">
+                                    <div class="hdr-main-text">
+                                        <span class="positive">{{student.full_name}}</span>
+                                    </div>
+                                    <div class="hdr-sub-text dark">{{student.birth_date|hdrage}}</div>
+
+
+
+                                </div>
+
+                            </div>
+                            <div class="hdr-item">
+                                <div id="hdr-absent-symbol">
+                                    <!-- <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div> -->
+                                                 <div class="hdr-absent-symbol-item"></div>
+                                                 <div class="hdr-absent-symbol-item"></div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <div class="dark padding">
+                        <i class="ion-information-circled"></i>
+                        <span> </span> لبدء عملية النداء، قم بنقر القسم المراد.
+                    </div>
+                </ul>
+
+            </div>
+
+
+
+
+        </div>
+    </ion-content>
+
+</ion-view>

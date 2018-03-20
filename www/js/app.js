@@ -58,10 +58,11 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
                 }
             })
             .state('tab.student', {
-                url: '/classrooms/classroom/student',
+                url: '/student',
                 params: { 'student': null, 'classroom': null },
+                cache: false,
                 views: {
-                    'tab-classrooms': {
+                    'tab-student': {
                         templateUrl: 'views/classrooms/classroom/student/view.html',
                         controller: 'StudentController'
                     }
@@ -84,6 +85,16 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
                     'tab-sessionshistory': {
                         templateUrl: 'views/sessionshistory/view.html',
                         controller: 'SessionshistoryController'
+                    }
+                }
+            })
+            .state('tab.sessionalter', {
+                url: '/sessionshistory/sessionalter',
+                cache: false,
+                views: {
+                    'tab-sessionshistory': {
+                        templateUrl: 'views/sessionshistory/sessionalter/view.html',
+                        controller: 'SessionalterController'
                     }
                 }
             })

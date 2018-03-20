@@ -1,6 +1,33 @@
-<div dir="rtl" class="card" on-double-tap="onDoubleTap(student)" ng-class="cardInRed" ng-class-even="cardInGray" style="height: 10vh;padding: 0;margin:0px">
-    <div class="item item-text-wrap" style="padding: 0;height: 10vh">
-        <table class="classroom_item" style="height: 100%;">
+<style>
+/*          #ggh td {
+          border: 1px solid red
+        }
+        */
+      
+        #hdr-absent-symbol {
+          height: 40px;
+          
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap-reverse;
+/*           border: 1px solid lightslategray;
+          background-color: chartreuse;  */
+          justify-content: center;
+          align-content: flex-start;
+        }
+      
+        .hdr-absent-symbol-item {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background-color: rgba(228, 23, 23, 0.434);
+          margin: 1px;
+        }
+      </style>
+<div dir="rtl" class="card" on-double-tap="onDoubleTap(student)" ng-class="cardInRed" ng-class-even="cardInGray" style="height: 10vh;padding: 0;margin:0px;">
+    <div class="item item-text-wrap" style="padding: 0;height: 10vh;padding-left: 8px">
+
+<!--         <table class="classroom_item" style="height: 100%;">
             <tr>
                 <td style="text-align: center;vertical-align: middle;width: 12%;font-size: 3vmax;">
                     <div >
@@ -14,6 +41,39 @@
                     </div>
                 </td>
             </tr>
-        </table>
+        </table> -->
+
+        <table class="classroom_item" style="height: 100%;" id="ggh">
+            <tr>
+              <td style="width: 8%;text-align: center;height: 6vh;font-size: 3vmax;">
+                <div style="width: 6vh">
+                  <div>{{student.queuing_number|hdrnumber}} </div>
+                </div>
+              </td>
+              <td style="padding-right: 10px;padding-left: 10px">
+                <div>
+                  <div class="hdr-main-text positive">{{student.full_name}}</div>
+                  <div class="hdr-sub-text">
+                    <i class="ion-android-bookmark"></i> {{student.birth_date|hdrage}}</div>
+                </div>
+              </td>
+              <td style="">
+                <div id="hdr-absent-symbol" > 
+                <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div>
+                <div class="hdr-absent-symbol-item" ng-show="tapped"></div>
+<!--                     
+                   <div class="hdr-absent-symbol-item"></div>
+                   <div class="hdr-absent-symbol-item"></div>
+                   <div class="hdr-absent-symbol-item"></div>
+                   <div class="hdr-absent-symbol-item"></div>
+                   <div class="hdr-absent-symbol-item"></div> -->
+                  
+
+                </div>
+              </td>
+            </tr>
+          </table>
+
+
     </div>
 </div>

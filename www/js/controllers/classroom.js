@@ -1,31 +1,41 @@
 angular.module('hdrApp')
 	.controller('ClassroomController', function ($scope, $rootScope, $filter, $window, $state, $stateParams, $timeout, hdrdbx) {
 
-
-		$scope.classroom = $filter('filter')($rootScope.classrooms_view, $stateParams.classroom_title)[0];
-
+		
+		
 		$scope.fct = function (id) {
 			var initial_bg = document.getElementById(id).style.backgroundColor;
-
+			
 			document.getElementById(id).style.backgroundColor = "lightgray";
 			$timeout(function () {
 				document.getElementById(id).style.backgroundColor = initial_bg;
 			}, 150);
 		}
-
+		
 		$scope.goToStudentView = function (student) {
 			$scope.fct(student.id);
 			$state.go('tab.student', { 'student': student, 'classroom': $scope.classroom });
 		}
-
-
+		
+		
 		if (ionic.Platform.isWebView()) {
-			ionic.Platform.ready(function () {
+			$scope.classroom = $filter('filter')($rootScope.classrooms_view, $stateParams.classroom_title)[0];
 
+			hdrdbx.getStudentsAbsencesCount($scope.classroom.title)
+			.then(function(arr){
+				console.log(arr);
+				for (var i = 0; i < arr.length; i++) {
+					$scope.classroom.students[arr[i].queuing_number-1].times=new Array(arr[i].absences_count);
+				}
+
+				
+			},function(err){
+				console.log(err);
 			});
 		}
 		else {
-			console.log(" controller  " + $scope.classroom.title);
+			//console.log(" controller  " + $scope.classroom.title);
+			$scope.students = [];
 			$scope.students.push({ id: "1", full_name: 'كريم فيلالي', registration_number: '159986', massar_number: "S12345687", birth_date: "12/01/2000", queuing_number: '1' });
 			$scope.students.push({ id: "2", full_name: 'مريم يعقوبي', registration_number: '159986', massar_number: "S12345687", birth_date: "12/02/2000", queuing_number: '2' });
 			$scope.students.push({ id: "3", full_name: 'Omar zerouali', registration_number: '159986', massar_number: "S12345687", birth_date: "04/08/1986", queuing_number: '3' });
@@ -38,6 +48,7 @@ angular.module('hdrApp')
 			$scope.students.push({ id: "10", full_name: 'Omar zerouali', registration_number: '159986', massar_number: "S12345687", birth_date: "15/10/1998", queuing_number: '10' });
 			$scope.students.push({ id: "11", full_name: 'Omar zerouali', registration_number: '159986', massar_number: "S12345687", birth_date: "12/11/2000", queuing_number: '11' });
 			$scope.students.push({ id: "12", full_name: 'Omar zerouali', registration_number: '159986', massar_number: "S12345687", birth_date: "12/12/2000", queuing_number: '12' });
-
+			$scope.classroom = {};
+			$scope.classroom.students = $scope.students;
 		}
 	})
