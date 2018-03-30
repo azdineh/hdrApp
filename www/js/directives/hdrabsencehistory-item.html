@@ -6,10 +6,9 @@
     #gg td div {
         float: right
     }
-
 </style>
 
-<div dir="rtl" style="margin-bottom: 1vmax;width: 94%;margin: auto;margin-top: 4px" >
+<div dir="rtl" style="margin-bottom: 1vmax;width: 94%;margin: auto;margin-top: 4px">
 
     <div class=" light-bg dark" style="border:0px;text-align: right;margin-bottom:2px;background-color: inherit;opacity: 0.9;font-size: 1em">
         <table style="width: 100%;" id="gg">
@@ -28,88 +27,80 @@
 
     <div class="item item-text-wrap" style="font-size: 0.95em;padding: 8px;border:0;padding-top: 0px;background-color:inherit;margin: auto;
                                             border-right: 2px solid rgba(0, 0, 0, 0.3);margin-right:9px;padding-top: 6px;"
-                                             ng-repeat="session_view in day.sessions_view track by $index">
- 
-
-        <div style="margin-right: 2px;padding-top: 6px;padding-right: 4px;;position: relative;top:0px;z-index: -100;
-        background-color: rgba(207, 208, 214, 0.1);
-         border: 1px solid rgba(128, 128, 128, 0.3);
-         border:1px solid darkred;
-         ">
-            <div style="background-color: rgb(170, 170, 109);height: 70px;"  on-="onSessiondbTap()">
-
-            </div>
-            <div style="padding: 4px;padding-bottom: 8px;">
-
-                <div style="font-weight: bold;">
-                    <table style="background: inherit;">
-                        <tr>
-
-                            <td style="padding-right: 0px;">
-                                <span>
-                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                </span>
-                                <span>حصة :</span>
-                                <span>{{session_view.session.title}} </span>
-                                <i class="icon ion-android-arrow-dropleft"></i>
+        ng-repeat="session_view in day.sessions_view track by $index">
 
 
-                            </td>
-                            <td style="width: fit-content;padding-right: 2px">
-                                <span style="padding: 4px;border-radius: 10px 10px 10px 10px;">
-                                    {{session_view.classroom.title}}
-
-                                </span>
-                                <i class="icon ion-android-arrow-dropleft" ng-show="session_view.session.parity!='all'"></i>
-                                <span style="padding-right: 2px;position: relative;top:-2px" ng-show="session_view.session.parity!='all'">
-                                    {{session_view.session.parity|hdrparity}}
-                                </span>
-
-
-                            </td>
-                        </tr>
-                    </table>
-
-
-                </div>
-
-                <table style="width: 100%; border-collapse:separate;padding-right: 4px">
+        <div class="card" style="color:rgba(0, 0, 0, 0.6) ;padding: 0px;padding-bottom: 8px;border: 1px solid rgba(0, 128, 0, 0.15);margin: 0px;"
+            id="hdr-session-card{{session_view.session.id}}" on-double-tap="selectElement(session_view)">
+            <div style="font-weight: bold;background: rgba(23, 23, 31, 0.126);padding: 4px;padding-right: 8px">
+                <table>
                     <tr>
-                        <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length" style="width: 46%">
-                            <div style="padding-right: 4px">
-                                <span>المتغيبون</span> :
-                            </div>
-                        </td>
-                        <td style="" ng-show="session_view.session.observation!=''">
-                            <div>
-                                <span>ملاحظات</span> :
-                            </div>
-                            <div>
 
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length">
-                            <ul style="display: block;font-size: 0.9em;padding-right:18px;list-style-type:square" ng-show="session_view.session.students_count > session_view.students.length">
-                                <li ng-repeat="student in session_view.students track by $index">
-                                    <!-- <span ng-show="student.massar_number === '0'">جرت الحصة بدون غياب</span> -->
+                        <td style="padding-right: 0px;">
+                            <span>
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            </span>
+                            <span>حصة :</span>
+                            <span>{{session_view.session.title}} </span>
+                            <i class="icon ion-android-arrow-dropleft"></i>
 
-                                    <span>({{student.queuing_number}})</span>
-                                    <span>{{student.full_name}}</span>
-                                    <!--    <span style="font-size: 0.85em">{{student.massar_number}}</span><br/>
-                        <span>{{student.registration_number}}</span><br/>
-                        <span>{{student.date_birth}}</span>-->
-                                </li>
-                            </ul>
+
                         </td>
-                        <td ng-show="session_view.session.observation!=''">
-                            <div dir="rtl" style="font-size: 0.8em" class="dark">{{session_view.session.observation}}</div>
+                        <td style="width: fit-content;padding-right: 2px">
+                            <span style="padding: 4px;border-radius: 10px 10px 10px 10px;">
+                                {{session_view.classroom.title}}
+
+                            </span>
+                            <i class="icon ion-android-arrow-dropleft" ng-show="session_view.session.parity!='all'"></i>
+                            <span style="padding-right: 2px;position: relative;top:-2px" ng-show="session_view.session.parity!='all'">
+                                {{session_view.session.parity|hdrparity}}
+                            </span>
+
+
                         </td>
                     </tr>
                 </table>
+
+
             </div>
 
+            <table style="width: 100%; border-collapse:separate;padding-right: 8px;padding-top: 4px">
+                <tr>
+                    <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length" style="width: 46%">
+                        <div>
+                            <span>المتغيبون</span> :
+                        </div>
+                    </td>
+                    <td ng-show="session_view.session.observation!=''">
+                        <div>
+                            <span>ملاحظات</span> :
+                        </div>
+                        <div>
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length">
+                        <ul style="display: block;padding-right:18px;list-style-position: initial;list-style-type:disc" ng-show="session_view.session.students_count > session_view.students.length">
+                            <li ng-repeat="student in session_view.students track by $index" style="font-size: 0.8em;">
+                                <!-- <span ng-show="student.massar_number === '0'">جرت الحصة بدون غياب</span> -->
+
+                                <span>({{student.queuing_number}})</span>
+                                <span>{{student.full_name}}</span>
+                                <!--    <span style="font-size: 0.85em">{{student.massar_number}}</span><br/>
+                        <span>{{student.registration_number}}</span><br/>
+                        <span>{{student.date_birth}}</span>-->
+                            </li>
+                        </ul>
+                    </td>
+                    <td ng-show="session_view.session.observation!=''">
+                        <div dir="rtl" style="font-size: 0.8em;line-height: 1.3em" ng-bind-html="session_view.session.observation">
+
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
 
     </div>

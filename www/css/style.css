@@ -177,14 +177,14 @@ body{
   
 
 
-#hdr-slider-container{
+.hdr-slider-container{
   display: flex;
   height: inherit;
   padding: 16px;
   flex-direction: column;
 }
 
-#hdr-slider-container .hdr-slider-item{
+.hdr-slider-container .hdr-slider-item{
 margin-bottom: 4vh
 }
 
@@ -267,3 +267,6 @@ flex-grow: 3
     color: rgb(144, 142, 149)!important;
   }
   
+  .hdr-card-session{
+    background-color:rgba(228, 223, 69, 0.38);
+  }

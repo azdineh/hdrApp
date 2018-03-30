@@ -32,7 +32,7 @@
 
 
                 <!--     <ul class="list"> -->
-                <div ng-if="textToSearch!=''" style="position: absolute;top:0;z-index: -10;padding: 2vmax;text-align: center;font-size: 3vmax;line-height: 2vmax;margin-top: 3%;color: gainsboro">
+                <div ng-if="textToSearch!='' && foundStudents.length==0" style="position: absolute;top:0;z-index: -10;padding: 8px;text-align: center;font-size: 2em;line-height: 2.1em;margin-top: 3%;color: gainsboro">
                     لا يوجد أي تلميذ أو تلميذة بهذا الإسم.
                 </div>
                 <span ng-if="textToSearch!=''">

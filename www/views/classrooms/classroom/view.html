@@ -44,7 +44,7 @@
         عدد التلاميذ : {{classroom.students.length}}
       </div>
 
-      <ul class="list">
+      <!--       <ul class="list">
         <li class="item hdr-list-item" ng-repeat="student in classroom.students" ng-class="student.id%2==0 ?'hdr-item-odd':'hdr-item-even'"
           id="{{student.id}}" on-tap="goToStudentView(student)">
 
@@ -65,12 +65,6 @@
               <td style="width: 80%;">
                 <div id="hdr-absent-symbol">
                   <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div>
-<!--                    <div class="hdr-absent-symbol-item"></div>
-                   <div class="hdr-absent-symbol-item"></div>
-                   <div class="hdr-absent-symbol-item"></div>
-                   <div class="hdr-absent-symbol-item"></div> -->
-                  
-
                 </div>
               </td>
             </tr>
@@ -78,7 +72,9 @@
 
         </li>
         <i class="ion-information-circled"></i> للإطلاع على مزيد من التفاصيل، قم بنقر التلميذ المراد. </div>
-    </ul>
+    </ul> -->
+
+    <hdr-student ng-repeat="student in classroom.students"></hdr-student>
 
     </div>
 

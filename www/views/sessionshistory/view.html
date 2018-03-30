@@ -1,17 +1,53 @@
+<style>
+    #hdr-table-006 td {
+        /* border: 1px solid red; */
+        text-align: center;
+        vertical-align: middle;
+        width: 20%;
+    }
+</style>
+
 <ion-view view-title="سجل التغيبات">
 
-    <ion-content scroll="true" dir="rtl">
+    <div class="bar bar-subheader" style="height: 45px;padding: 0px;border: 0px;background-color: rgba(211, 224, 228, 0.5) " >
+        <table id="hdr-table-006" style="width: 100%;height: 100%">
+            <tr>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+                    <button class="button button-clear" ng-click="goToSessionAlter()" style="width: 45px;height: 45px" ng-disabled="sessionsSelected.length==0 || sessionsSelected.length>1">
+                        <i class="icon ion-compose" style="color: rgba(25, 24, 29,0.8);filter: saturate(0.3)"></i>
+                    </button>
+                </td>
+                <td>
+                    <button class="button button-clear" ng-click="showConfirm()" style="width: 45px;height: 45px" ng-disabled="!sessionsSelected.length>0">
+                        <i class="icon ion-trash-b" style="color: rgba(25, 24, 29,0.8);filter: saturate(0.3)"></i>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <ion-content scroll="true" dir="rtl" style="margin-top: 45px;padding-top: 10px">
+
         <hdrabsencehistoryitem ng-repeat="day in daies track by $index"></hdrabsencehistoryitem>
-        <div style="padding: 11px;zoom: 1.25;position: relative;top:-9px;color: darkgrey" ng-show="lastday">
-            <span class="icon ion-record"   ></span>
+        <div style="padding: 11px;zoom: 1.25;position: relative;top:-9px;color: rgb(169, 169, 169)" ng-show="lastday">
+            <span class="icon ion-record"></span>
         </div>
-        <div style="text-align: center" ng-hide="lastday">
+        <div style="text-align: center" ng-hide="lastday || daies.length==0">
             <button class="button button-large button-clear ion-ios-arrow-down" style="font-size: 40px" ng-click="more()"></button>
         </div>
 
         <div ng-show="daies.length==0" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
             <p class="title" style="font-size: 1.5em">
-                لم يتم تسجيل أية حصة بعد.
+                لم يتم العثور على أية حصة في سجل تغيبات التلاميذ
             </p>
         </div>
     </ion-content>

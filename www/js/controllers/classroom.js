@@ -3,19 +3,19 @@ angular.module('hdrApp')
 
 		
 		
-		$scope.fct = function (id) {
+/* 		$scope.fct = function (id) {
 			var initial_bg = document.getElementById(id).style.backgroundColor;
 			
 			document.getElementById(id).style.backgroundColor = "lightgray";
 			$timeout(function () {
 				document.getElementById(id).style.backgroundColor = initial_bg;
 			}, 150);
-		}
+		} */
 		
-		$scope.goToStudentView = function (student) {
+/* 		$scope.goToStudentView = function (student) {
 			$scope.fct(student.id);
 			$state.go('tab.student', { 'student': student, 'classroom': $scope.classroom });
-		}
+		} */
 		
 		
 		if (ionic.Platform.isWebView()) {

@@ -3,8 +3,9 @@ angular.module('hdrApp')
 
 
         $scope.$on('$ionicView.enter', function () {
-            /*             $rootScope.classrooms_view = $rootScope.classrooms_view ? $rootScope.classrooms_view :
-                            $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : []; */
+
+            /*           $rootScope.classrooms_view = $rootScope.classrooms_view ? $rootScope.classrooms_view :
+                      $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : []; */
 
 
 
@@ -13,7 +14,6 @@ angular.module('hdrApp')
                     $scope.students_view = arr;
                     for (var i = 0; i < arr.length; i++) {
                         $scope.students_view = arr;
-                        $scope.students_view[i].times = new Array(arr[i].absences_count);
                     }
                 }, function (err) {
                     console.log(err)
@@ -25,10 +25,12 @@ angular.module('hdrApp')
         $scope.searchIt = function (textToSearch) {
             if (textToSearch.length > 2)
                 $scope.foundStudents = $filter('filter')($scope.students_view, { full_name: textToSearch });
+            else
+                $scope.foundStudents = [];
         }
 
         $scope.students_view = [];
-        /* $scope.students_view = [{ 'title': 'TCS88', 'full_name': 'Ahmed Ezzat', 'queuing_number': '17 ' }]; */
+        /*  $scope.students_view = [{ 'title': 'TCS88', 'full_name': 'Ahmed Ezzat', 'queuing_number': '17 ' }]; */
 
         $scope.textToSearch = "";
 

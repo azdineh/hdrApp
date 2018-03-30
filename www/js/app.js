@@ -70,7 +70,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             })
             .state('tab.appeal', {
                 url: '/classrooms/appeal',
-                params: { classroom_title: null, index: null },
+                params: { classroom: null, index: null },
                 views: {
                     'tab-classrooms': {
                         templateUrl: 'views/classrooms/appeal/view.html',
@@ -90,6 +90,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             })
             .state('tab.sessionalter', {
                 url: '/sessionshistory/sessionalter',
+                params: { session_view: null },
                 cache: false,
                 views: {
                     'tab-sessionshistory': {

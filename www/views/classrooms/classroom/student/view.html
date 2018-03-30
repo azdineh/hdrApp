@@ -76,12 +76,21 @@
         <div style="position: relative;top:11vmax;padding: 2vmax">
 
           <div ng-show="student_absences.length>0">
-            <div style="font-size: 18px;;padding:8px;border-bottom:  1px solid lightgrey">{{student_absences.length}} تغيبات</div>
+            <div style="font-size: 18px;;padding:8px;border-bottom:  1px solid lightgrey">
+              <span class="icon ion-record assertive"></span>
+              <span>تغيبات</span> /
+              <span class="icon ion-record positive"></span>
+              <span>تأخرات</span>
+
+            </div>
             <div id="hdr-student-absence-cntr">
               <table>
                 <tr ng-repeat="absenceline in student_absences">
-                  <td>
+                  <td ng-show="absenceline.is_student_fix_problem==0">
                     <span class="icon ion-record assertive" style="zoom: 1.56"></span>
+                  </td>
+                  <td ng-show="absenceline.is_student_fix_problem==1">
+                    <span class="icon ion-record positive" style="zoom: 1.56"></span>
                   </td>
                   <td>
                     <span>{{absenceline.unix_time|date:'fullDate'}}</span>
@@ -105,7 +114,7 @@
                 </td>
               </tr>
             </table> -->
-         <!--  <div style="font-size: 18px;;padding:8px;margin-top:10px;;border-bottom:  1px solid lightgrey">ملاحظات خاصة</div>
+          <!--  <div style="font-size: 18px;;padding:8px;margin-top:10px;;border-bottom:  1px solid lightgrey">ملاحظات خاصة</div>
           <div style="min-height: 80px;width: 100%;background-color:rgba(233, 237, 242, 0.612);padding: 8px;margin-bottom:4px ">
             <p> لم يتم إضافة أية ملاحظة حتى الآن.</p>
             <br/>

@@ -1,6 +1,6 @@
 <style>
-    #hdr-g009 td {
-        /* border: 1px solid rebeccapurple; */
+    .hdr-g009 td {
+        /*  border: 1px solid rebeccapurple; */
         vertical-align: middle;
     }
 
@@ -24,97 +24,131 @@
         background-color: rgba(228, 23, 23, 0.434);
         margin: 1px;
     }
+
+    .hdr-session-alter-observation td {
+        /*  border: 1px solid rgb(210, 210, 210); */
+    }
 </style>
 <ion-view view-title="تعديل حصة">
 
-    <ion-content scroll="true" dir="rtl">
-        <div class="hdr-cntr-003">
-            <div style="background-color: rgb(239, 239, 239) ;padding-top: 25px;padding-bottom: 25px">
-                <table style="background: inherit;width: 100%;font-size: 16px" id="hdr-g009">
+    <ion-content scroll="true" dir="rtl" style="background-color: rgba(228, 223, 69, 0.25)">
+        <div class="hdr-cntr-003" style="width: inherit">
+            <div style="padding-top: 25px;padding-bottom: 25px;background-color: rgba(228, 223, 69, 0.1)">
+                <table style="width: 99%;font-size: 16px;margin: auto" class="hdr-g009">
                     <tr>
 
-                        <td rowspan="2" style="text-align: center">
+                        <td rowspan="2" style="text-align: center;padding-left: 4px;padding-right: 10px;width: 60px">
                             <span>
                                 <i class="fa fa-clock-o" aria-hidden="true" style="font-size: 40px"></i>
                             </span>
                         </td>
-                        <td style="padding-right: 0px;vertical-align: middle;width:84%;font-weight: bolder">
+                        <td style="padding-right: 0px;vertical-align: bottom;width:64%;font-weight: bolder">
 
-                           <span >
+                            <span>
                                 <span>حصة :</span>
                                 <span>
-                                    {{session.title}}
+                                    {{session_view.session.title}}
                                 </span>
-                           </span>
+                            </span>
                             <i class="icon ion-android-arrow-dropleft"></i>
-                            <span style="padding: 4px;border-radius: 10px 10px 10px 10px;" >
-                                {{session.classroom_title}}
+                            <span style="padding: 4px;border-radius: 10px 10px 10px 10px;">
+                                {{session_view.classroom.title}}
                             </span>
                             <i class="icon ion-android-arrow-dropleft" ng-show="session_view.session.parity!='all'"></i>
                             <span style="padding-right: 2px;position: relative;top:-2px" ng-show="session_view.session.parity!='all'">
-                                {{session.parity|hdrparity}}
+                                {{session_view.session.parity|hdrparity}}
                             </span>
                         </td>
+                        <td rowspan="2" style="text-align: left">
+
+                            <button class="button button-outline" ng-click="showHelp()" style="width: 60px;height: 60px;border: 0px">
+                                <i class="icon ion-help" style="color: rgb(141, 127, 127);filter: saturate(0.6)"></i>
+                            </button>
+
+                        </td>
                         <tr>
-                            <td style="font-size: 13px;" class="dark">
-                                {{session.date|date:'fullDate'}}
+                            <td style="font-size: 13px;vertical-align: top" class="dark">
+                                {{session_view.session.unix_time|date:'fullDate'}}
                             </td>
                         </tr>
                     </tr>
                 </table>
             </div>
-            <div class="hdr-student-sessionalter">
-                <div style="padding: 8px;font-size: 14px;padding-right: 14px;">
+            <div class="hdr-student-sessionalter" style="width: 100%">
+                <div style="padding: 8px;font-size: 14px;padding-right: 14px;background-color: rgba(45, 51, 9, 0.062);border-bottom: 1px solid rgb(37, 37, 6)"
+                    ng-hide="session_view.students.length==0">
                     التلاميذ المتغيبون
                 </div>
-                <ul class="list" >
+                <div ng-show="session_view.students.length==0" style="height: 20vmax;padding-top: 4vh;text-align: center;background-color: inherit">
+                    <div style="font-size: 22px;line-height: 28px;color: rgba(28, 23, 7, 0.592);width: 75%;margin: auto">
+                        لم يتم تسجيل أية حالة تغيب خلال هذه الحصة.
+                    </div>
+                </div>
+                <ul class="list" style="padding: 0px;width: 100%">
 
-                    <li class="item hdr-list-item" style="padding:0;height: auto;background-color: inherit" ng-repeat="student in session.students" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+                    <li class="item hdr-list-item" style="position: relative;padding:0;height: auto;background-color: inherit;border: 1px solid rgba(46, 46, 9, 0.062)!important"
+                        ng-repeat="student in session_view.students" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
-                        <div class="hdr-classroom-container" style="height: 50px">
+                        <div class="hdr-classroom-container" style="height: 50px;" id="hdr-session-alter-student{{student.massar_number}}">
                             <div id="hdr-item0" class="hdr-item">
-                                <button class="button button-outline" ng-click="" style="width: 50px">
+                                <!-- <button class="button button-outline" ng-click="" style="width: 50px">
                                     <i class="icon ion-arrow-return-left" style="color: rgb(23, 156, 16);filter: saturate(0.3)"></i>
-                                </button>
+                                </button> -->
+                                <ion-checkbox ng-model="student.is_student_fix_problem" ng-change="changeStudentFixProblem(student,session_view.session.id)" style="margin-top: 4px;border: 0px;padding-left: 24px;background-color: transparent;zoom: 1.2"></ion-checkbox>
                             </div>
                             <div class="hdr-item">
-                                <button class="button button-outline" ng-click="" style="width: 50px">
+                                <button class="button button-outline" ng-click="showConfirmForRemoveStudent(student.massar_number)" style="width: 50px">
                                     <i class="icon ion-android-cancel" style="color: rgb(156, 16, 16);filter: saturate(0.3)"></i>
                                 </button>
                             </div>
-                            <div id="hdr-item1" class="hdr-item" style="position: relative">
-
-                                <div style="padding-top: 4px">
-                                    <div class="hdr-main-text">
-                                        <span class="positive">{{student.full_name}}</span>
-                                    </div>
-                                    <div class="hdr-sub-text dark">{{student.birth_date|hdrage}}</div>
-
-
-
-                                </div>
-
+                            <div id="hdr-item1" class="hdr-item" style="position: relative;">
+                                    <hdr-student ng-></hdr-student>
                             </div>
-                            <div class="hdr-item">
-                                <div id="hdr-absent-symbol">
-                                    <!-- <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div> -->
-                                                 <div class="hdr-absent-symbol-item"></div>
-                                                 <div class="hdr-absent-symbol-item"></div>
-
-
-
-                                </div>
+                        </div>
+                        <div class="hdr-classroom-container ng-hide" style="z-index: 100;position: absolute;top: 0px;height: 50px;" id="hdr-session-alter-confirm{{student.massar_number}}">
+                            <div style="height: 100%;width: 100%;background: linear-gradient(to left,rgba(0, 0, 0, 0.85),rgba(0, 0, 0, 0.7))">
+                                <table style="width: 100%;height: 100%;font-size: 0.8em" class="hdr-g009">
+                                    <tr>
+                                        <td style="width: 30%;padding-right: 3px;">
+                                            <button class="button" ng-click="removeStudent(student.massar_number,session_view.session.id)">
+                                                <i></i> متأكد</button>
+                                            <button class="button" ng-click="hideConfirmForRemoveStudent(student.massar_number)">
+                                                <i>رجــوع</i>
+                                            </button>
+                                        </td>
+                                        <td style="width: 70%">
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </li>
-                    <div class="dark padding">
-                        <i class="ion-information-circled"></i>
-                        <span> </span> لبدء عملية النداء، قم بنقر القسم المراد.
-                    </div>
                 </ul>
 
-            </div>
+                <div class="hdr-session-alter-observation" style="position: relative;">
+                    <div style="padding: 8px;font-size: 14px;padding-right: 14px;background-color: rgba(45, 51, 9, 0.062);border-bottom: 1px solid rgb(37, 37, 6)">
+                        ملاحظات تخص هذه الحصة:</div>
+                    <div style="position: absolute;top:0px;left: 8px">
 
+                    </div>
+                    <table style="margin-top: 4px;width: 100%;background: linear-gradient(to bottom,rgba(235, 235, 235, 0.325),rgba(255, 255, 255, 0));">
+                        <tr>
+                            <td style="width: 80%">
+                                <textarea placeholder="هنا، يمكنك كتابة ملاحظة تهم هذه الحصة." ng-model="session_view.session.observation" id="" style="width: 100%;background-color: inherit;padding: 12px;font-size: 14px;font-family: hdrFont"
+                                    rows="6"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;padding-left: 4px;height: 50px">
+                                <button class="button button-outline" ng-disabled="hidden" ng-click="saveObservation(session_view.session,session_view.session.observation)"
+                                    style="width: 70px;border:0px;color: rgb(8, 14, 54)">حفظ</button>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+            </div>
 
 
 

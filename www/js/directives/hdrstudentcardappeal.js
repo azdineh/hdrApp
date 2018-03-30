@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-	.directive('hdrStudentCardAppeal', [function ($scope, $rootscope) {
+	.directive('hdrStudentCardAppeal', function (hdrdbx, $timeout) {
 		return {
 			restrict: 'E',
 			templateUrl: "js/directives/hdrstudentcardappeal.html",
@@ -8,6 +8,29 @@ angular.module('hdrApp')
 				$scope.tapped = false;
 				$scope.cardInGray = "card-gray";
 
+
+				$timeout(function () {
+
+					if (ionic.Platform.isWebView()) {
+						hdrdbx.selectStudentAbsences($scope.student.massar_number)
+							.then(function (arr) {
+								$scope.student_absences = arr;
+
+							}, function (err) {
+								console.log('Error while getting student absences');
+								console.log(err);
+							});
+
+					} else {
+
+						$scope.student_absences = [
+							{ is_student_fix_problem: 0 },
+							{ is_student_fix_problem: 1 },
+							{ is_student_fix_problem: 0 }
+						];
+
+					}
+				}, 475)
 
 				$scope.onDoubleTap = function (student) {
 					if ($scope.tapped) {
@@ -30,4 +53,4 @@ angular.module('hdrApp')
 
 			}
 		};
-	}]);
+	})

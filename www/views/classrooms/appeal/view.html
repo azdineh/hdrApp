@@ -46,9 +46,9 @@
         <div id="hdr-slide-box" style="height:90%">
           <ion-slide-box on-slide-changed="slideHasChanged($index)" style="height: 100%">
 
-            <ion-slide ng-repeat="subArray in studentsDistribuedBy5InArray" style="height: inherit">
-              <div id="hdr-slider-container">
-                <div ng-repeat="student in subArray " class="hdr-slider-item">
+             <ion-slide ng-repeat="subArray in studentsDistribuedBy5InArray" style="height: inherit">
+              <div class="hdr-slider-container">
+                <div ng-repeat="student in subArray " class="hdr-slider-item" >
                   <hdr-student-card-appeal></hdr-student-card-appeal>
 
                 </div>
@@ -57,6 +57,20 @@
                   <i class="ion-record"></i> نهاية اللائحة
                 </div>
               </div>
+
+
+            </ion-slide>
+<!--             <ion-slide ng-repeat="t in slideTimes" style="height: inherit">
+              <div class="hdr-slider-container">
+                <div ng-repeat="student in subArray " class="hdr-slider-item" >
+                  <hdr-student-card-appeal></hdr-student-card-appeal>
+
+                </div>
+                <div dir="rtl" ng-if="$first" class="hdr-slider-item" style="font-size: 12px;padding-right: 3vmax;position: relative;top:-2vh"
+                  class="dark">
+                  <i class="ion-record"></i> نهاية اللائحة
+                </div>
+              </div> -->
 
 
             </ion-slide>

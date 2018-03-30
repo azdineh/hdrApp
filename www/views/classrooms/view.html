@@ -1,5 +1,3 @@
-
-
 <ion-view view-title="لائحة الأقسام" cache-view="false">
 
     <ion-content dir="rtl">
@@ -13,7 +11,7 @@
 
                 <table style="width: 105%">
                     <tr>
-                         <td> هناك {{students_count_global}} تلميذ وتلميذة موزعين على {{classrooms_view.length}} أقسام.
+                        <td> هناك {{students_count_global}} تلميذ وتلميذة موزعين على {{classrooms_view.length}} أقسام.
                             <br/> بمعدل {{(students_count_global/classrooms_view.length)|number:1}} تلميذ في القسم.
                         </td>
                         <td style="text-align: left;vertical-align: middle">
@@ -30,18 +28,26 @@
                     <div class="hdr-classroom-container">
                         <div id="hdr-item0" class="hdr-item">
                             <button class="button button-outline" ng-click="showActionSheet(classroom)">
-                                <i class="ion-android-more-vertical"></i>
+                                <i class="ion-android-more-vertical" ng-hide="clicked" style="zoom: 1.5"></i>
+                               
                             </button>
                         </div>
                         <div id="hdr-item1" class="hdr-item" style="position: relative">
 
                             <button class="button button-outline" id="{{classroom.id}}" ng-click="startAttendanceCall(classroom,'-1')">
+
                                 <div class="hdr-main-text">
-                                    <span class="positive">{{classroom.title}}</span>
+                                    <span class="positive">
+                                        <span> {{classroom.title}}</span>
+                                    </span>
                                 </div>
                                 <div class="hdr-sub-text dark">{{classroom.level}}</div>
 
+
+
+
                             </button>
+
 
                         </div>
                         <div id="hdr-item2" class="hdr-item">

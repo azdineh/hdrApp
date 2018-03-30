@@ -565,9 +565,9 @@ angular.module('hdrApp')
                     students: []
                 }
 
-                var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number," +
+                var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number, st.birth_date as birth_date," +
                     "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
-                    "c.id as classroomId, c.title as classroomTitle " +
+                    "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
                     "from " +
                     /*                     "student st inner join absenceline a on a.massar_number=st.massar_number " +
                                         "inner join session s on s.id=a.id_session " +
@@ -592,7 +592,7 @@ angular.module('hdrApp')
                                 session_view_obj.session.students_count = res.rows.item(0).students_count;
                                 session_view_obj.session.parity = res.rows.item(0).parity;
                                 session_view_obj.session.isExamSession = res.rows.item(0).isExamSession;
-                                session_view_obj.session.observation = res.rows.item(0).observation;
+                                session_view_obj.session.observation = res.rows.item(0).observation.replace(/\n/g, "<br>");
 
                                 session_view_obj.classroom.id = res.rows.item(0).classroomId;
                                 session_view_obj.classroom.title = res.rows.item(0).classroomTitle;
@@ -606,6 +606,12 @@ angular.module('hdrApp')
                                         student.massar_number = res.rows.item(i).massar_number;
                                         student.full_name = res.rows.item(i).full_name;
                                         student.queuing_number = res.rows.item(i).queuing_number;
+                                        student.birth_date = res.rows.item(i).birth_date;
+                                        if (res.rows.item(i).is_student_fix_problem == 0)
+                                            student.is_student_fix_problem = false;
+                                        else
+                                            student.is_student_fix_problem = true;
+
                                         session_view_obj.students.push(student);
                                     }
                                 }
@@ -795,8 +801,9 @@ angular.module('hdrApp')
 
             vm.selectStudentAbsences = function (massar_number) {
                 var q = $q.defer();
-                var query = "select al.id as id,s.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title from absenceline al inner join student s on al.massar_number=s.massar_number " +
-                    "inner join session ss on al.id_session=ss.id  where s.massar_number=?";
+                var query = "select al.id as id,s.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title,al.is_student_fix_problem as is_student_fix_problem from absenceline al inner join student s on al.massar_number=s.massar_number " +
+                    "inner join session ss on al.id_session=ss.id  where s.massar_number=?"; 
+
 
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [massar_number],
@@ -805,6 +812,43 @@ angular.module('hdrApp')
                             for (var i = 0, len = res.rows.length; i < len; i++) {
                                 items_arr.push(res.rows.item(i));
                             }
+                            q.resolve(items_arr);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+            }
+
+            vm.selectStudentAbsencesIn = function (arrayOfStudentds) {
+                var inString = "";
+                arrayOfStudentds.forEach(function (student) {
+                    inString += "'" + student.massar_number + "',";
+                }, this);
+
+                inString = inString.substring(0, inString.length - 1);
+                inString = "(" + inString + ")";
+
+                var q = $q.defer();
+
+                var query = "select al.id as id,s.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title, count(al.id) as absences_count from absenceline al inner join student s on al.massar_number=s.massar_number " +
+                    "inner join session ss on al.id_session=ss.id  group by s.massar_number HAVING s.massar_number in " + inString;
+                console.log(query);
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [],
+                        function (tx, res) {
+                            var items_arr = [];
+                            for (var i = 0, len = res.rows.length; i < len; i++) {
+                                items_arr.push(res.rows.item(i));
+                            }
+                            console.log(items_arr);
                             q.resolve(items_arr);
                         }, function (err) {
                             q.reject(err);
@@ -829,7 +873,7 @@ angular.module('hdrApp')
                     arrayy.push(classroom_title);
                 }
                 else {
-                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, count(al.id) as absences_count, s.full_name as full_name, s.massar_number as massar_number from student s left join absenceline al on al.massar_number=s.massar_number " +
+                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, count(al.id) as absences_count, s.full_name as full_name, s.massar_number as massar_number, al.is_student_fix_problem as is_student_fix_problem from student s left join absenceline al on al.massar_number=s.massar_number " +
                         "inner join classroom c on s.id_classroom =c.id group by s.massar_number order by full_name";
                 }
 
@@ -859,6 +903,126 @@ angular.module('hdrApp')
 
             }
 
+
+            vm.removeSession = function (session_id) {
+
+                var q = $q.defer();
+
+                var query1 = "delete from absenceline where id_session='" + session_id + "'";
+                var query2 = "delete from session where id='" + session_id + "'";
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query1 + ";" + query2, {
+                    successFn: function (count) {
+                        console.log("Successfully delete lines frome " + count + " tables");
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while deleting lines from absenceline and session tables ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
+
+                return q.promise;
+
+            }
+            vm.removeSeveralSessions = function (array_of_session_view) {
+
+                var q = $q.defer();
+
+                var inString = "";
+                array_of_session_view.forEach(function (session_view) {
+                    inString += "'" + session_view.session.id + "',";
+                }, this);
+
+                inString = inString.substring(0, inString.length - 1);
+                inString = "(" + inString + ")";
+
+                var query1 = "delete from absenceline where id_session in " + inString;
+                var query2 = "delete from session where id in " + inString;
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query1 + ";" + query2, {
+                    successFn: function (count) {
+                        console.log("Successfully delete lines frome " + count + " tables");
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while deleting lines from absenceline and session tables ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
+
+                return q.promise;
+
+            }
+
+            vm.saveObservations = function (session_id, observation) {
+                var q = $q.defer();
+
+                var query = "update session set observation='" + observation + "' where id='" + session_id + "'";
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                    successFn: function (count) {
+                        console.log("Successfully uptade lines from " + count + " tables");
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while updating lines from session table ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
+
+                return q.promise;
+            }
+            vm.removeStudentFromAbsenceLine = function (massar_number, session_id) {
+                var q = $q.defer();
+
+                var query = "delete from absenceline where id_session='" + session_id + "' and massar_number='" + massar_number + "'";
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                    successFn: function (count) {
+                        console.log("Successfully delete line from absenceline ");
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while deleting line from absenceline table ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
+
+                return q.promise;
+            }
+
+
+            vm.changeStudentFixProblem = function (student, session_id) {
+
+                var q = $q.defer();
+                var val = 0;
+                if (student.is_student_fix_problem == false)
+                    val = 0;
+                else
+                    val = 1;
+
+                var query = "update absenceline set is_student_fix_problem='" + val + "' where id_session='" + session_id + "' and massar_number='" + student.massar_number + "'";
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                    successFn: function (count) {
+                        console.log("Successfully update line from absenceline ");
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while updating line from absenceline table ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
+
+                return q.promise;
+
+            }
 
 
             return vm;

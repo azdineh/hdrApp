@@ -9,6 +9,7 @@
         "cordova-filepath-resolver": "^1.0.4",
         "cordova-plugin-crosswalk-webview": "^2.3.0",
         "cordova-plugin-filechooser": "^1.0.1",
+        "cordova-plugin-ionic-keyboard": "^2.0.5",
         "cordova-plugin-whitelist": "^1.3.3",
         "cordova-plugin-zip": "^3.1.0",
         "cordova-sqlite-storage": "^2.1.2",
@@ -32,7 +33,8 @@
         "cordova-sqlite-storage",
         "cordova-plugin-filechooser",
         "cordova-plugin-zip",
-        "cordova-filepath-resolver"
+        "cordova-filepath-resolver",
+        "cordova-plugin-ionic-keyboard"
     ],
     "cordovaPlatforms": [
         "android"
@@ -55,7 +57,8 @@
             "cordova-sqlite-storage": {},
             "cordova-plugin-filechooser": {},
             "cordova-plugin-zip": {},
-            "cordova-filepath-resolver": {}
+            "cordova-filepath-resolver": {},
+            "cordova-plugin-ionic-keyboard": {}
         }
     }
 }

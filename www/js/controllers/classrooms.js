@@ -1,5 +1,5 @@
 angular.module('hdrApp').controller('ClassroomsController',
-    function ($scope, $rootScope, hdrFileSystem, $filter, $window, $state, $ionicLoading, hdrdbx, $ionicActionSheet, $interval, $cordovaFile,$ionicPopup) {
+    function ($scope, $rootScope, hdrFileSystem, $filter, $window, $state, $ionicLoading, hdrdbx, $ionicActionSheet, $interval, $cordovaFile, $ionicPopup) {
 
         $scope.page = "Classrooms";
         $rootScope.classrooms_view = $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : [];
@@ -11,26 +11,22 @@ angular.module('hdrApp').controller('ClassroomsController',
          * go to the appel page with the classroom and choice index of rappid call
          */
         $scope.startAttendanceCall = function (classroom, index) {
-
+            
             if (index == '-1') {
                 var elm = document.getElementById(classroom.id);
                 elm.className += ' hdr-btn';
             }
 
-            //$scope.tapped = true;
-            if (ionic.Platform.isWebView()) {
+            $state.go("tab.appeal", { 'classroom': classroom, 'index': index });
+            
+/*             if (ionic.Platform.isWebView()) {
                 $state.go("tab.appeal", { 'classroom_title': classroom.title, 'index': index });
             }
             else {
-                $state.go("tab.appeal", { 'classroom_title': classroom.title, 'index': index });
-            }
+            } */
 
         }
 
-
-        $scope.$on('$ionicView.enter', function () {
-            $rootScope.today = Date.now();
-        })
 
         $scope.show = function () {
             //template: '<ion-spinner icon="lines"></ion-spinner><br/><span dir="rtl">' + crntmsg + '</span>'
@@ -421,7 +417,7 @@ angular.module('hdrApp').controller('ClassroomsController',
                 });
             } else {
                 console.log("classrooms page");
-                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي",  students: [{ full_name: "عمر فيلالي", queuing_number: "10" }, { full_name: "كريم زرهوني", queuing_number: "12" }, { full_name: "سفياني بدر", queuing_number: "22" }] });
+                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", students: [{ full_name: "عمر فيلالي", queuing_number: "10" }, { full_name: "كريم زرهوني", queuing_number: "12" }, { full_name: "سفياني بدر", queuing_number: "22" }] });
                 $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
                 $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
                 $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
@@ -441,23 +437,23 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
         $scope.showHelpPopup = function () {
-			var helpPopup = $ionicPopup.show({
-				templateUrl: "views/classrooms/helpclassroomsview.html",
-				title: '<h3 class="title assertive-bg padding light" >معلومة</h3>',
-				subTitle: '',
-				scope: $scope,
-				buttons: [
-					{
-						text: 'رجوع ',
-						type: 'button',
-						onTap: function (e) {
-							//e.preventDefault();
-						}
-					}
-				]
-			});
+            var helpPopup = $ionicPopup.show({
+                templateUrl: "views/classrooms/helpclassroomsview.html",
+                title: '<h3 class="title assertive-bg padding light" >معلومة</h3>',
+                subTitle: '',
+                scope: $scope,
+                buttons: [
+                    {
+                        text: 'رجوع ',
+                        type: 'button',
+                        onTap: function (e) {
+                            //e.preventDefault();
+                        }
+                    }
+                ]
+            });
         };
-        
+
 
     });
 

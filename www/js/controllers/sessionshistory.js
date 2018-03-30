@@ -1,6 +1,6 @@
 
 angular.module('hdrApp')
-    .controller('SessionshistoryController', function ($scope, hdrdbx, $ionicScrollDelegate) {
+    .controller('SessionshistoryController', function ($scope, hdrdbx, $timeout, $ionicScrollDelegate, $state,$ionicPopup) {
 
         //$state.go($state.current, $stateParams, {reload: true, inherit: false});
         //$watch
@@ -21,7 +21,7 @@ angular.module('hdrApp')
                         sessions_view: [
                             {
                                 session: {
-                                    id: '',
+                                    id: '1',
                                     unix_time: '9876543210',
                                     title: '10-11',
                                     students_count: 50,
@@ -49,7 +49,7 @@ angular.module('hdrApp')
                             },
                             {
                                 session: {
-                                    id: '',
+                                    id: '2',
                                     unix_time: '9876543210',
                                     title: '10-11',
                                     students_count: 50,
@@ -83,7 +83,7 @@ angular.module('hdrApp')
                         sessions_view: [
                             {
                                 session: {
-                                    id: '',
+                                    id: '3',
                                     unix_time: '9876543210',
                                     title: '10-11',
                                     students_count: 50,
@@ -160,12 +160,78 @@ angular.module('hdrApp')
 
             $scope.offsetStep += 3;
             $scope.selectSessionsHistory($scope.offsetStep);
+            $ionicScrollDelegate.resize();
 
         }
 
         $scope.offsetStep = 0;
 
-        $scope.onSessiondbTap = function () {
-            alert('dfdsfsd');
+        $scope.goToSessionAlter = function () {
+            $state.go("tab.sessionalter", { 'session_view': $scope.sessionsSelected[0] });
         }
+
+        
+        $scope.sessionsSelected = [];
+        $scope.selectElement = function (session_view) {
+
+            var elem = document.getElementById('hdr-session-card' + session_view.session.id);
+
+            if (elem.classList.contains('hdr-card-session')) {
+                elem.classList.remove("hdr-card-session");
+                $scope.sessionsSelected.splice($scope.sessionsSelected.indexOf(session_view), 1);
+            }
+            else {
+                elem.classList.add("hdr-card-session");
+                $scope.ItemSelected = true;
+                $scope.sessionsSelected.push(session_view);
+            }
+        }
+
+        /*         $scope.removeSession = function (session) {
+        
+                    hdrdbx.removeSession(session.id)
+                        .then(function (res) {
+                            $state.go('tab.sessionshistory');
+                        }, function (err) {
+        
+                        })
+                } */
+
+
+
+        $scope.removeSeveralSessions = function (arr_of_session_view) {
+
+            hdrdbx.removeSeveralSessions(arr_of_session_view)
+                .then(function (res) {
+                    $state.go($state.current, {}, { reload: true });
+                }, function (err) {
+
+                })
+        }
+
+        $scope.showConfirm = function () {
+            var template = "";
+            if ($scope.sessionsSelected.length > 1) {
+                template = '<p dir="rtl">هل أنت متأكد من حذف الحصص المحددة من سجل التغيبات ؟</p>';
+            }
+            else {
+                template = '<p dir="rtl">هل أنت متأكد من حذف هذه الحصة من سجل التغيبات ؟</p>';
+            }
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'تأكيد',
+                template: template,
+                cancelText: 'إلغاء الأمر',
+                okText: 'نعم'
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    console.log('You are sure');
+                    $scope.removeSeveralSessions($scope.sessionsSelected);
+                } else {
+                    console.log('You are not sure');
+                }
+            });
+        };
+
     });
