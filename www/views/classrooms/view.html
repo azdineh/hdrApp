@@ -23,13 +23,14 @@
 
             <ul class="list">
 
-                <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+                <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view"
+                    ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
                     <div class="hdr-classroom-container">
                         <div id="hdr-item0" class="hdr-item">
                             <button class="button button-outline" ng-click="showActionSheet(classroom)">
                                 <i class="ion-android-more-vertical" ng-hide="clicked" style="zoom: 1.5"></i>
-                               
+
                             </button>
                         </div>
                         <div id="hdr-item1" class="hdr-item" style="position: relative">
@@ -72,14 +73,14 @@
 
                 <div class="hdr-parag">
                     عن طريق هاتفك، قم بتصدير لوائح الأقسام من موقع منظومة مسار ( قم باختيار التصدير حسب الأستاذ)
-                    <br> بعد ذلك، إضغط على الزر -حدد ملف التصدير- ثم قم بتحديد ملف التصدير الذي تم تحميله في الخطوة الأولى.
+                    <br> بعد ذلك، إضغط على الزر الأزرق ثم قم بتحديد ملف التصدير الذي تم تحميله في الخطوة الأولى.
                 </div>
             </div>
 
             <div style="text-align: center;display:table-cell;vertical-align: middle">
                 <br/>
 
-                <button class="button icon-right ion-plus button-large button-assertive" style="width:60%;;border-radius: 100px" ng-click="zipFilesAndImportClassrooms()">
+                <button class="button icon-right ion-plus button-large button-positive" style="width:60%;;border-radius: 100px" ng-click="zipFilesAndImportClassrooms()">
                     حدد ملف التصدير
                 </button>
 

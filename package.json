@@ -11,8 +11,10 @@
         "cordova-plugin-filechooser": "^1.0.1",
         "cordova-plugin-ionic-keyboard": "^2.0.5",
         "cordova-plugin-whitelist": "^1.3.3",
+        "cordova-plugin-x-socialsharing": "^5.3.2",
         "cordova-plugin-zip": "^3.1.0",
         "cordova-sqlite-storage": "^2.1.2",
+        "es6-promise-plugin": "^4.2.2",
         "gulp": "^3.5.6",
         "gulp-concat": "^2.2.0",
         "gulp-minify-css": "^0.3.0",
@@ -34,7 +36,8 @@
         "cordova-plugin-filechooser",
         "cordova-plugin-zip",
         "cordova-filepath-resolver",
-        "cordova-plugin-ionic-keyboard"
+        "cordova-plugin-ionic-keyboard",
+        "cordova-plugin-x-socialsharing"
     ],
     "cordovaPlatforms": [
         "android"
@@ -58,7 +61,8 @@
             "cordova-plugin-filechooser": {},
             "cordova-plugin-zip": {},
             "cordova-filepath-resolver": {},
-            "cordova-plugin-ionic-keyboard": {}
+            "cordova-plugin-ionic-keyboard": {},
+            "cordova-plugin-x-socialsharing": {}
         }
     }
 }

@@ -1,14 +1,15 @@
 
 angular.module('hdrApp')
-    .controller('SessionshistoryController', function ($scope, hdrdbx, $timeout, $ionicScrollDelegate, $state,$ionicPopup) {
+    .controller('SessionshistoryController', function ($scope, hdrdbx, $timeout, $ionicScrollDelegate, $state, $ionicPopup) {
 
         //$state.go($state.current, $stateParams, {reload: true, inherit: false});
         //$watch
 
-        $scope.daies = [];
-        $scope.lastday = false;
 
-        $scope.$on('$ionicView.enter', function () {
+        $scope.$on('$ionicView.beforeEnter', function () {
+            $scope.daies = [];
+            $scope.lastday = false;
+            
             if (ionic.Platform.isWebView()) {
 
                 $scope.selectSessionsHistory(0);
@@ -26,7 +27,7 @@ angular.module('hdrApp')
                                     title: '10-11',
                                     students_count: 50,
                                     parity: 'odd',
-                                    observation: "حصة امتحان"
+                                    observation: "حصة امتحان<br/>kjkljkljl <br/>:;j;,kljkl"
 
                                 },
                                 classroom: {
@@ -35,15 +36,53 @@ angular.module('hdrApp')
                                 students: [
                                     {
                                         full_name: 'الرياحي منير',
-                                        queuing_number: '15'
+                                        queuing_number: '15',
+                                        is_student_fix_problem: 0
                                     },
                                     {
-                                        full_name: 'كوثر الغيابة',
-                                        queuing_number: '19'
+                                        full_name: 'كوثر قيلالي',
+                                        queuing_number: '19',
+                                        is_student_fix_problem: 1
                                     },
                                     {
-                                        full_name: 'كمال الأجسام',
-                                        queuing_number: '33'
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 0
+                                    },
+                                    {
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 0
+                                    },
+                                    {
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 0
+                                    },
+                                    {
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 0
+                                    },
+                                    {
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 1
+                                    },
+                                    {
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 0
+                                    },
+                                    {
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 0
+                                    },
+                                    {
+                                        full_name: 'كمال مضعيف',
+                                        queuing_number: '33',
+                                        is_student_fix_problem: 1
                                     }
                                 ]
                             },
@@ -135,6 +174,7 @@ angular.module('hdrApp')
                                 $scope.daies = hdrdbx.daies_arr;
                             else {
                                 $scope.daies = $scope.daies.concat(hdrdbx.daies_arr);
+                                $ionicScrollDelegate.resize();
                             }
 
                             hdrdbx.selectDaies()
@@ -160,7 +200,8 @@ angular.module('hdrApp')
 
             $scope.offsetStep += 3;
             $scope.selectSessionsHistory($scope.offsetStep);
-            $ionicScrollDelegate.resize();
+
+
 
         }
 
@@ -170,7 +211,7 @@ angular.module('hdrApp')
             $state.go("tab.sessionalter", { 'session_view': $scope.sessionsSelected[0] });
         }
 
-        
+
         $scope.sessionsSelected = [];
         $scope.selectElement = function (session_view) {
 
@@ -231,6 +272,31 @@ angular.module('hdrApp')
                 } else {
                     console.log('You are not sure');
                 }
+            });
+        };
+
+        $scope.showHelpPopup = function (number) {
+            var template = "";
+            if (number == 0)
+                template = '<p dir="rtl">السجل فارغ.. </p>';
+            else
+                template = '<p dir="rtl">لتحرير أو حذف حصة ما من السجل، قم بالنقر عليها مرتين ثم اختر الأمر المناسب قي القائمة أعلاه.</p>';
+
+            var helpPopup = $ionicPopup.show({
+                /* templateUrl: "views/sessionshistory/helpsessionshistoryview.html", */
+                template: template,
+                title: '<h3 class="title assertive-bg padding light" >دليل الإستخدام</h3>',
+                subTitle: '',
+                scope: $scope,
+                buttons: [
+                    {
+                        text: 'رجوع',
+                        type: 'button',
+                        onTap: function (e) {
+                            //e.preventDefault();
+                        }
+                    }
+                ]
             });
         };
 

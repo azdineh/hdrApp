@@ -3,8 +3,8 @@ Create tabs with an icon and label, using the tabs-positive style.
 Each tab's child <ion-nav-view> directive will have its own
 navigation history that also transitions its views in and out.
 -->
-<ion-tabs class=" tabs-color-active-positive tabs-icon-only">
-
+<ion-tabs class="tabs-color-active-positive" id="hdr-tabs-bar" >
+  <!-- tabs-icon-only -->
 
 
   <!-- user Tab -->
@@ -13,9 +13,9 @@ navigation history that also transitions its views in and out.
   </ion-tab> -->
 
   <!-- Teacher Tab -->
-<!--   <ion-tab title="الأستاذ" icon-on="ion-person" icon-off="ion-person" href="#/tab/teacher">
+ <ion-tab title="الأستاذ" icon-on="ion-person" icon-off="ion-person" href="#/tab/teacher">
     <ion-nav-view name="tab-teacher"></ion-nav-view>
-  </ion-tab> -->
+  </ion-tab> 
 
   <!-- Search Tab -->
   <ion-tab title="بحث" icon-on="ion-android-search" icon-off="ion-android-search" href="#/tab/search">
@@ -28,7 +28,7 @@ navigation history that also transitions its views in and out.
   </ion-tab>
 
   <!-- classes Tab -->
-  <ion-tab title="الأقسام" icon-on="ion-android-menu" icon-off="ion-android-menu" href="#/tab/classrooms">
+  <ion-tab title="الأقسام" icon-on="ion-android-contacts" icon-off="ion-android-contacts" href="#/tab/classrooms">
     <ion-nav-view name="tab-classrooms"></ion-nav-view>
   </ion-tab>
   <!-- classes Tab -->

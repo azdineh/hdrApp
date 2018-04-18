@@ -3,45 +3,25 @@ angular.module('hdrApp')
 
 		$scope.initialobservation = "";
 
+
+
 		if (ionic.Platform.isWebView()) {
 
 			$scope.session_view = $stateParams.session_view;
 
-
-			/* 			hdrdbx.selectStudentAbsencesIn($scope.session_view.students)
-							.then(function (arr) {
-								arr.forEach(function (element, index) {
-									$scope.session_view.students[index].times = new Array(element.absences_count);
-								}, this);
-								$scope.session_view.session.observation = $scope.session_view.session.observation.replace(/<br>/g, "\r");
-								$scope.initialobservation = $scope.session_view.session.observation;
-							}, function (err) {
-								console.log(err)
-							}); */
-
-			/* 		hdrdbx.selectStudentAbsences($scope.student.massar_number)
-						.then(function (arr) {
-							$timeout(function () {
-								$scope.student_absences = arr;
-							}, 100)
-						}, function (err) {
-							console.log('Error while getting student absences');
-							console.log(err);
-						}); */
-
-
-
+			$scope.session_view.session.observation = $scope.session_view.session.observation.replace(/<br>/g, "\r");
+/* 			$scope.initialobservation = $scope.session_view.session.observation;
 
 
 			$scope.hidden = true;
 			$scope.$watch('session_view.session.observation', function (newVal, oldval) {
-				if (newVal == $scope.initialobservation || newVal == "") {
+				if (newVal == $scope.initialobservation) {
 					$scope.hidden = true;
 				}
 				else {
 					$scope.hidden = false;
 				}
-			});
+			}); */
 
 			$scope.saveObservation = function (session, observation) {
 				var obsToDB = observation.replace(/\r/g, "\n");
@@ -83,7 +63,7 @@ angular.module('hdrApp')
 		else {
 
 			var students = [];
-			students.push({ id: "1", full_name: 'كريم فيلالي', registration_number: '159986', massar_number: "S1234200", birth_date: "12/01/2000", queuing_number: '1' });
+			students.push({ id: "1", full_name: 'جباري هبة الحكيم', registration_number: '159986', massar_number: "S1234200", birth_date: "12/01/2000", queuing_number: '1' });
 			students.push({ id: "2", full_name: 'مريم يعقوبي', registration_number: '159986', massar_number: "S12345977", birth_date: "12/02/2000", queuing_number: '2' });
 			students.push({ id: "5", full_name: 'Omar zerouali', registration_number: '159986', massar_number: "S123ZI687", birth_date: "12/05/2000", queuing_number: '5' });
 
@@ -100,7 +80,7 @@ angular.module('hdrApp')
 		}
 
 
-		$scope.showHelpPopup = function () {
+		$scope.showHelp = function () {
 			var helpPopup = $ionicPopup.show({
 				templateUrl: "views/sessionshistory/sessionalter/helpsessionalterview.html",
 				title: '<h3 class="title assertive-bg padding light" >مساعدة</h3>',

@@ -1,9 +1,26 @@
 angular.module('hdrApp')
-    .controller('HomeController', function ($scope, $http, $rootScope, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
+    .controller('HomeController', function ($scope, $http, $rootScope, $ionicScrollDelegate,$window, hdrFileSystem, $ionicPlatform, hdrdbx) {
 
         $scope.page = "home";
         $rootScope.deviceWidth = $window.innerWidth;
         $rootScope.deviceHeight = $window.innerHeight;
+
+        $rootScope.hideTab=false;
+
+        window.addEventListener('keyboardWillShow', function (event) {
+			// Describe your logic which will be run each time when keyboard is about to be shown.
+			console.log(event.keyboardHeight);
+			console.log("keuborad whill show, process to hide tab..");
+			document.getElementById('hdr-tabs-bar').classList.add("keyboard-open");
+			$ionicScrollDelegate.scrollBottom();
+		});
+
+		window.addEventListener('keyboardWillHide', function() {
+			// Describe your logic which will be run each time when keyboard is about to be closed.
+			//document.getElementById('hdr-Tab').style.display=
+            document.getElementById('hdr-tabs-bar').classList.remove("keyboard-open");
+            $ionicScrollDelegate.scrollTop();
+		});
 
         /* $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY'); */
 

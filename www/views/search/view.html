@@ -36,9 +36,9 @@
                     لا يوجد أي تلميذ أو تلميذة بهذا الإسم.
                 </div>
                 <span ng-if="textToSearch!=''">
-                    <hdr-student ng-repeat="student in foundStudents"></hdr-student>
+                    <hdr-student ng-repeat="student in foundStudents" ng-init="showborder=true;page='search'"></hdr-student>
                 </span>
-
+ 
                 <!--    </ul> -->
             </div>
         </div>

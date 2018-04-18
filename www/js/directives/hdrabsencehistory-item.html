@@ -1,6 +1,8 @@
 <style>
     #gg td {
-        /* border: 1px solid red;  */
+        /*   border: 1px solid red; */
+        text-align: right;
+        vertical-align: top
     }
 
     #gg td div {
@@ -30,13 +32,13 @@
         ng-repeat="session_view in day.sessions_view track by $index">
 
 
-        <div class="card" style="color:rgba(0, 0, 0, 0.6) ;padding: 0px;padding-bottom: 8px;border: 1px solid rgba(0, 128, 0, 0.15);margin: 0px;"
+        <div class="card" style="color:rgba(0, 0, 0, 0.6) ;padding: 0px;padding-bottom: 8px;border: 1px solid rgba(66, 95, 199, 0.45);margin: 0px;"
             id="hdr-session-card{{session_view.session.id}}" on-double-tap="selectElement(session_view)">
-            <div style="font-weight: bold;background: rgba(23, 23, 31, 0.126);padding: 4px;padding-right: 8px">
-                <table>
+            <div style="font-weight: bold;background: rgba(23, 23, 31, 0.21);">
+                <table id="gg">
                     <tr>
 
-                        <td style="padding-right: 0px;">
+                        <td style="padding: 4px;padding-right: 6px;">
                             <span>
                                 <i class="fa fa-clock-o" aria-hidden="true"></i>
                             </span>
@@ -46,7 +48,7 @@
 
 
                         </td>
-                        <td style="width: fit-content;padding-right: 2px">
+                        <td style="padding: 4px;width: fit-content;padding-right: 2px">
                             <span style="padding: 4px;border-radius: 10px 10px 10px 10px;">
                                 {{session_view.classroom.title}}
 
@@ -64,9 +66,9 @@
 
             </div>
 
-            <table style="width: 100%; border-collapse:separate;padding-right: 8px;padding-top: 4px">
+            <table id="gg" style="width: 100%; border-collapse:separate;padding-right: 8px;padding-top: 4px">
                 <tr>
-                    <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length" style="width: 46%">
+                    <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length" style="width: 40%">
                         <div>
                             <span>المتغيبون</span> :
                         </div>
@@ -82,17 +84,19 @@
                 </tr>
                 <tr>
                     <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length">
-                        <ul style="display: block;padding-right:18px;list-style-position: initial;list-style-type:disc" ng-show="session_view.session.students_count > session_view.students.length">
-                            <li ng-repeat="student in session_view.students track by $index" style="font-size: 0.8em;">
-                                <!-- <span ng-show="student.massar_number === '0'">جرت الحصة بدون غياب</span> -->
+                        <div style="display: block;padding-right:0px ;list-style-type:none" ng-show="session_view.session.students_count > session_view.students.length">
+                            <div ng-repeat="student in session_view.students|limitTo:limitstudent:0 track by $index" style="font-size: 0.8em;width: 100%">
 
-                                <span>({{student.queuing_number}})</span>
-                                <span>{{student.full_name}}</span>
-                                <!--    <span style="font-size: 0.85em">{{student.massar_number}}</span><br/>
-                        <span>{{student.registration_number}}</span><br/>
-                        <span>{{student.date_birth}}</span>-->
-                            </li>
-                        </ul>
+                                <div style="font-size: 1em;" >
+                                    <span ng-style="student.is_student_fix_problem==0?{}:{'text-decoration': 'line-through','opacity': '0.6'}">{{student.full_name}}</span>
+                                    <span style="font-size: 1em">
+                                        <sub> ({{student.queuing_number}})</sub>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <button class="button button-clear button-positive" style="font-size: 0.9em;padding: 0px;" ng-click="moreStudent()" ng-hide="limitstudent>=session_view.students.length">إظهار المزيد..</button>
+                        </div>
                     </td>
                     <td ng-show="session_view.session.observation!=''">
                         <div dir="rtl" style="font-size: 0.8em;line-height: 1.3em" ng-bind-html="session_view.session.observation">

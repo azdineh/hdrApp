@@ -1,9 +1,11 @@
 angular.module('hdrApp')
-	.directive('hdrStudent', function (hdrdbx, $timeout) {
+	.directive('hdrStudent', function (hdrdbx, $timeout, $state) {
 		return {
 			restrict: 'E',
 			templateUrl: "js/directives/hdrstudent.html",
-			controller: function ($scope, $element) {
+			controller: function ($scope, $element, $attrs) {
+
+				$scope.showtitle=true;
 
 				if (ionic.Platform.isWebView()) {
 					hdrdbx.selectStudentAbsences($scope.student.massar_number)
@@ -25,8 +27,13 @@ angular.module('hdrApp')
 					];
 
 				}
+				$scope.goToStudentView = function (student, classroom) {
+					$state.go('tab.student', { 'student': student, 'classroom': classroom });
+				}
 			},
 			link: function (scope, element, attrs) {
+
+
 				scope.$watch("sessionalterchange", function (newValue, oldValue) {
 					//This gets called when data changes.
 					if (ionic.Platform.isWebView()) {

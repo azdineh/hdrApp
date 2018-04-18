@@ -44,37 +44,8 @@
         عدد التلاميذ : {{classroom.students.length}}
       </div>
 
-      <!--       <ul class="list">
-        <li class="item hdr-list-item" ng-repeat="student in classroom.students" ng-class="student.id%2==0 ?'hdr-item-odd':'hdr-item-even'"
-          id="{{student.id}}" on-tap="goToStudentView(student)">
+      <hdr-student ng-repeat="student in classroom.students" ng-init="showborder=true;showtitle=false" ></hdr-student>
 
-          <table class="classroom_item" id="ggh">
-            <tr>
-              <td style="width: 8%;text-align: center;height: 6vh;font-size: 3vmax;">
-                <div style="width: 6vh">
-                  <div>{{student.queuing_number|hdrnumber}} </div>
-                </div>
-              </td>
-              <td style="width: auto;padding-right: 10px;padding-left: 10px">
-                <div>
-                  <div class="hdr-main-text positive">{{student.full_name}}</div>
-                  <div class="hdr-sub-text">
-                    <i class="ion-android-bookmark"></i> {{student.birth_date|hdrage}}</div>
-                </div>
-              </td>
-              <td style="width: 80%;">
-                <div id="hdr-absent-symbol">
-                  <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div>
-                </div>
-              </td>
-            </tr>
-          </table>
-
-        </li>
-        <i class="ion-information-circled"></i> للإطلاع على مزيد من التفاصيل، قم بنقر التلميذ المراد. </div>
-    </ul> -->
-
-    <hdr-student ng-repeat="student in classroom.students"></hdr-student>
 
     </div>
 

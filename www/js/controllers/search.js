@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-    .controller('SearchController', function ($scope, $rootScope, hdrdbx, $ionicScrollDelegate, $window, $filter, $state) {
+    .controller('SearchController', function ($scope, $rootScope, hdrdbx, $ionicScrollDelegate, $window, $filter) {
 
 
         $scope.$on('$ionicView.enter', function () {
@@ -42,10 +42,6 @@ angular.module('hdrApp')
         $scope.$watch('textToSearch', function (newvalue, oldvalue) {
             $ionicScrollDelegate.scrollTop();
         });
-
-        $scope.goToStudentView = function (student, classroom) {
-            $state.go('tab.student', { 'student': student, 'classroom': classroom });
-        }
 
 
     });

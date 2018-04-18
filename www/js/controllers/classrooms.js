@@ -11,19 +11,19 @@ angular.module('hdrApp').controller('ClassroomsController',
          * go to the appel page with the classroom and choice index of rappid call
          */
         $scope.startAttendanceCall = function (classroom, index) {
-            
+
             if (index == '-1') {
                 var elm = document.getElementById(classroom.id);
                 elm.className += ' hdr-btn';
             }
 
             $state.go("tab.appeal", { 'classroom': classroom, 'index': index });
-            
-/*             if (ionic.Platform.isWebView()) {
-                $state.go("tab.appeal", { 'classroom_title': classroom.title, 'index': index });
-            }
-            else {
-            } */
+
+            /*             if (ionic.Platform.isWebView()) {
+                            $state.go("tab.appeal", { 'classroom_title': classroom.title, 'index': index });
+                        }
+                        else {
+                        } */
 
         }
 
@@ -66,8 +66,10 @@ angular.module('hdrApp').controller('ClassroomsController',
                                             //$rootScope.classrooms_view = hdrdbx.classrooms_view;
                                             $interval(function () {
                                                 var shifted = hdrdbx.classrooms_view.shift();
-                                                $rootScope.classrooms_view.push(shifted);
-                                                $rootScope.students_count_global += shifted.students.length;
+                                                if (shifted.students.length > 0) {
+                                                    $rootScope.classrooms_view.push(shifted);
+                                                    $rootScope.students_count_global += shifted.students.length;
+                                                }
 
                                                 if (hdrdbx.classrooms_view.length == 0) {
 
@@ -83,7 +85,7 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
 
-                                        hdrdbx.selectRows('academy')
+/*                                         hdrdbx.selectRows('academy')
                                             .then(function (res) {
 
                                                 $rootScope.academy = res.rows.item(0);
@@ -111,7 +113,7 @@ angular.module('hdrApp').controller('ClassroomsController',
                                                 $window.localStorage['hdr.teacher'] = angular.toJson($rootScope.teacher);
                                             }, function (err) {
                                                 console.log(err);
-                                            });
+                                            }); */
 
                                         $scope.hide();
                                         hdrFileSystem.classrooms = [];
@@ -287,8 +289,10 @@ angular.module('hdrApp').controller('ClassroomsController',
                                             //$rootScope.classrooms_view = hdrdbx.classrooms_view;
                                             $interval(function () {
                                                 var shifted = hdrdbx.classrooms_view.shift();
+                                                if(shifted.students.length>0){
                                                 $rootScope.classrooms_view.push(shifted);
                                                 $rootScope.students_count_global += shifted.students.length;
+                                            }
 
                                                 if (hdrdbx.classrooms_view.length == 0) {
 
@@ -304,7 +308,7 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
 
-                                        hdrdbx.selectRows('academy')
+/*                                         hdrdbx.selectRows('academy')
                                             .then(function (res) {
 
                                                 $rootScope.academy = res.rows.item(0);
@@ -332,7 +336,7 @@ angular.module('hdrApp').controller('ClassroomsController',
                                                 $window.localStorage['hdr.teacher'] = angular.toJson($rootScope.teacher);
                                             }, function (err) {
                                                 console.log(err);
-                                            });
+                                            }); */
 
                                         $scope.hide();
                                         hdrFileSystem.classrooms = [];

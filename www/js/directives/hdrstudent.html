@@ -1,15 +1,14 @@
 <style>
-  /*   #ggh td {
+/*       #ggh td {
     border: 1px solid red
   } */
 
   #hdr-absent-symbol {
     position: relative;
-    top: -3px;
     height: fit-content;
     display: flex;
     flex-direction: row;
-    /*   border: 1px solid green; */
+    /*   border: 1px solid green;  */
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: center;
@@ -41,9 +40,9 @@
         <td style="text-align: center;height: 6vh;font-size: 18px;width: 10%">
           <div>{{student.queuing_number|hdrnumber}} </div>
         </td>
-        <td style="padding-right: 10px;">
+        <td style="padding-right: 14px;width: 50%">
           <div>
-            <div class="hdr-main-text positive">{{student.full_name}}</div>
+            <div class="hdr-main-text positive" ng-style="student.is_student_fix_problem==true && page!='search'?{'text-decoration': 'line-through','opacity':'0.6'}:{'text-decoration': 'none'}">{{student.full_name}}</div>
             <div class="hdr-sub-text">
               <i class="ion-android-bookmark"></i>
               <span ng-if="student.birth_date">{{student.birth_date|hdrage}}</span>
@@ -53,11 +52,12 @@
           </div>
         </td>
 
-        <td style="width: 30%">
+        <td style="">
           <div id="hdr-absent-symbol">
             <!-- <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div> -->
 
             <div ng-repeat="absenceline in student_absences" class="hdr_sessionalter_fix{{absenceline.is_student_fix_problem}}"></div>
+            
             <!-- <div class="hdr-absent-symbol-item-blu" ng-repeat="absenceline in student_absences" ng-show="absenceline.is_student_fix_problem==1"></div> -->
 
             <div class="hdr-absent-symbol-item" ng-show="tapped"></div>
@@ -66,19 +66,16 @@
           <!--             <div class="hdr-absent-symbol-item"></div>
             <div class="hdr-absent-symbol-item"></div>
             <div class="hdr-absent-symbol-item"></div> -->
-          <!--             <div class="hdr-absent-symbol-item"></div>
-            <div class="hdr-absent-symbol-item"></div>
-            <div class="hdr-absent-symbol-item"></div>
-            <div class="hdr-absent-symbol-item"></div> -->
-
 
         </td>
 
-        <td style="text-align: left;font-size: 14px;">
-          <div style="padding-left: 10px;margin: 2px"> {{student.title}}</div>
+        <td style="text-align: left;font-size: 14px;width: 24%" ng-show="showtitle">
+          <div style="padding-left: 10px;margin: 2px"> {{student.title}}
+          </div>
         </td>
       </tr>
     </table>
 
   </button>
 </div>
+<div style="border-bottom: 1px solid rgba(128, 128, 128, 0.25)" ng-show="showborder" ></div>

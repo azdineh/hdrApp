@@ -26,13 +26,11 @@
 </style> -->
 
 <style>
-  /*    #ggh td {
+/*     #ggh td {
       border: 1px solid red
     }  */
-
   #hdr-absent-symbol {
     position: relative;
-    top: -3px;
     height: fit-content;
     display: flex;
     flex-direction: row;
@@ -70,7 +68,7 @@
         <td style="text-align: center;height: 6vh;font-size: 18px;width: 12%">
           <div>{{student.queuing_number|hdrnumber}} </div>
         </td>
-        <td style="padding-right: 10px;">
+        <td style="padding-right: 10px;width: 50%">
           <div>
             <div class="hdr-main-text positive">{{student.full_name}}</div>
             <div class="hdr-sub-text">
@@ -88,7 +86,7 @@
 
             <div ng-repeat="absenceline in student_absences" class="hdr_sessionalter_fix{{absenceline.is_student_fix_problem}}"></div>
 
-            <div class="hdr-absent-symbol-item" ng-show="tapped"></div>
+            <div class="hdr_sessionalter_fix0" ng-show="tapped"></div>
 
           </div>
           <!--             <div class="hdr-absent-symbol-item"></div>
@@ -102,9 +100,9 @@
 
         </td>
 
-        <td style="text-align: left;font-size: 14px;">
+<!--         <td style="text-align: left;font-size: 14px;">
           <div style="padding-left: 10px;margin: 2px"> {{student.title}}</div>
-        </td>
+        </td> -->
       </tr>
     </table>
 

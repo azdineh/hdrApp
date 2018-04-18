@@ -34,7 +34,7 @@ angular.module('hdrApp')
             "foreign key (id_teacher) references teacher(id));";
 
         var absenceline_table_query = "CREATE TABLE IF NOT EXISTS absenceline(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "id_student INTEGER,id_session INTEGER,massar_number TEXT(255),is_student_fix_problem INTEGER," +
+            "id_student INTEGER,id_session INTEGER,massar_number TEXT(255),full_name TEXT(255),queuing_number INTEGER,birth_date TEXT(255),is_student_fix_problem INTEGER," +
             "foreign key (id_session) references session(id)," +
             "foreign key (id_student) references student(id));";
 
@@ -80,7 +80,7 @@ angular.module('hdrApp')
             vm.session = {
                 id: null,
                 id_classroom: "",
-                classroom_title: "", // for establish the link between session and classroom tables after DB wippinge, wd can't satisfed with only id, because not necessery we will have the same id after new db populting.
+                classroom_title: "", //not use :: for establish the link between session and classroom tables after DB wippinge, wd can't satisfed with only id, because not necessery we will have the same id after new db populting.
                 id_teacher: "", // we can satisfed only with id teacher, because we hava on teacher by application.
                 unix_time: "",
                 title: "10-12",
@@ -104,6 +104,9 @@ angular.module('hdrApp')
                 id_student: "",
                 id_session: "",
                 massar_number: "", // for establish the link between absenceline and session and student tables after DB wippinge, wd can't satisfed with only id, because not necessery we will have the same id after new db populting.
+                full_name: "", // for keep it as history in case the student registrated in other classroom (for the same teacher or other teacher)
+                queuing_number: "", //the same case like full_name attribut
+                birth_date: "", //the same case like full_name attribut
                 is_student_fix_problem: ""
             };
 
@@ -447,7 +450,7 @@ angular.module('hdrApp')
                             var query_absentStudents = "";
 
                             absentStudents.forEach(function (absentStudent) {
-                                query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "',0);";
+                                query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "',0);";
                             }, this);
 
                             cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
@@ -479,12 +482,19 @@ angular.module('hdrApp')
                 }
                 var sessions_view_obj_arr = [];
 
-                var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number," +
+                /*                 var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number," +
+                                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.parity as parity," +
+                                    "c.id as classroomId, c.title as classroomTitle " +
+                                    "from " +
+                                    "student st inner join absenceline a on a.massar_number=st.massar_number " +
+                                    "inner join session s on s.id=a.id_session " +
+                                    "inner join classroom c on c.id=s.id_classroom " +
+                                    "order by s.unix_time desc"; */
+                var sql = "select a.full_name as full_name, a.queuing_number as queuing_number,a.massar_number as massar_number," +
                     "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.parity as parity," +
                     "c.id as classroomId, c.title as classroomTitle " +
                     "from " +
-                    "student st inner join absenceline a on a.massar_number=st.massar_number " +
-                    "inner join session s on s.id=a.id_session " +
+                    "session s inner join absenceline a on s.id=a.id_session " +
                     "inner join classroom c on c.id=s.id_classroom " +
                     "order by s.unix_time desc";
                 vm.db.transaction(function (tx) {
@@ -522,9 +532,11 @@ angular.module('hdrApp')
                                     if (curr_unix_time == res.rows.item(i).unix_time) {
 
                                         var student = {};
-                                        student.id = res.rows.item(i).studentId;
+                                        //student.id = res.rows.item(i).studentId;
                                         student.full_name = res.rows.item(i).full_name;
                                         student.queuing_number = res.rows.item(i).queuing_number;
+                                        student.massar_number = res.rows.item(i).massar_number;
+                                        student.birth_date = res.rows.item(i).birth_date;
                                         sessions_view_obj.students.push(student);
 
                                     }
@@ -565,18 +577,22 @@ angular.module('hdrApp')
                     students: []
                 }
 
-                var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number, st.birth_date as birth_date," +
+                /*                 var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number, st.birth_date as birth_date," +
+                                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
+                                    "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
+                                    "from " +
+                                    "((session s inner join classroom c on s.id_classroom=c.id) " +
+                                    "left join " +
+                                    "(student st left join absenceline a on a.massar_number=st.massar_number) " +
+                                    "on a.id_session = s.id) " +
+                                    "where s.id=?"; */
+                var sql = "select a.full_name as full_name, a.queuing_number as queuing_number, a.massar_number as massar_number, a.birth_date as birth_date," +
                     "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
                     "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
                     "from " +
-                    /*                     "student st inner join absenceline a on a.massar_number=st.massar_number " +
-                                        "inner join session s on s.id=a.id_session " +
-                                        "inner join classroom c on c.id=s.id_classroom " +
-                                        "where s.id=?"; */
-                    "((session s inner join classroom c on s.id_classroom=c.id) " +
+                    "(session s inner join classroom c on s.id_classroom=c.id)" +
                     "left join " +
-                    "(student st left join absenceline a on a.massar_number=st.massar_number) " +
-                    "on a.id_session = s.id) " +
+                    "absenceline a on a.id_session = s.id " +
                     "where s.id=?";
                 vm.db.transaction(function (tx) {
                     tx.executeSql(sql, [session.id],
@@ -801,8 +817,8 @@ angular.module('hdrApp')
 
             vm.selectStudentAbsences = function (massar_number) {
                 var q = $q.defer();
-                var query = "select al.id as id,s.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title,al.is_student_fix_problem as is_student_fix_problem from absenceline al inner join student s on al.massar_number=s.massar_number " +
-                    "inner join session ss on al.id_session=ss.id  where s.massar_number=?"; 
+                var query = "select al.id as id,al.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title,al.is_student_fix_problem as is_student_fix_problem from " +
+                    "absenceline al inner join session ss on al.id_session=ss.id where al.massar_number=?";
 
 
                 vm.db.transaction(function (tx) {
@@ -837,8 +853,10 @@ angular.module('hdrApp')
 
                 var q = $q.defer();
 
-                var query = "select al.id as id,s.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title, count(al.id) as absences_count from absenceline al inner join student s on al.massar_number=s.massar_number " +
-                    "inner join session ss on al.id_session=ss.id  group by s.massar_number HAVING s.massar_number in " + inString;
+                /*                 var query = "select al.id as id,al.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title, count(al.id) as absences_count from absenceline al inner join student s on al.massar_number=s.massar_number " +
+                                    "inner join session ss on al.id_session=ss.id  group by s.massar_number HAVING s.massar_number in " + inString; */
+                var query = "select al.id as id,al.massar_number as massar_number, ss.unix_time as unix_time,ss.title as title, count(al.id) as absences_count from " +
+                    "absenceline al inner join session ss on al.id_session=ss.id  group by al.massar_number HAVING al.massar_number in " + inString;
                 console.log(query);
 
                 vm.db.transaction(function (tx) {
@@ -976,6 +994,7 @@ angular.module('hdrApp')
 
                 return q.promise;
             }
+
             vm.removeStudentFromAbsenceLine = function (massar_number, session_id) {
                 var q = $q.defer();
 
@@ -1023,6 +1042,51 @@ angular.module('hdrApp')
                 return q.promise;
 
             }
+
+            vm.removedata = function (removAllFalg) {
+
+
+                if (removAllFalg) {
+                    vm.wipeDB();
+                } else {
+
+                    var q = $q.defer();
+
+                    /**
+                     * remove all tables 
+                     * execption:
+                     * classroom table
+                     * session table
+                     * student table
+                     * 
+                     */
+
+
+                    var query = "";
+                    query += "drop table if exists student;";
+                    query += "drop table if exists teacher;";
+                    query += "drop table if exists school;";
+                    query += "drop table if exists rd;";
+                    query += "drop table if exists academy;";
+
+                    cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                        successFn: function (count) {
+                            console.log("Successfully drop tables");
+                            q.resolve(count);
+                        },
+                        errorFn: function (err) {
+                            console.log("***Error while droping tables " + err.message);
+                            console.log(err);
+                            q.reject(err);
+                        }
+                    });
+
+                    return q.promise;
+                }
+
+
+            }
+
 
 
             return vm;
