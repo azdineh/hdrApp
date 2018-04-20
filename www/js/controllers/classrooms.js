@@ -85,35 +85,35 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
 
-/*                                         hdrdbx.selectRows('academy')
-                                            .then(function (res) {
-
-                                                $rootScope.academy = res.rows.item(0);
-                                                $window.localStorage['hdr.academy'] = angular.toJson($rootScope.academy);
-                                            }, function (err) {
-                                                console.log(err);
-                                            });
-                                        hdrdbx.selectRows('rd')
-                                            .then(function (res) {
-                                                $rootScope.rd = res.rows.item(0);
-                                                $window.localStorage['hdr.rd'] = angular.toJson($rootScope.rd);
-                                            }, function (err) {
-                                                console.log(err);
-                                            });
-                                        hdrdbx.selectRows('school')
-                                            .then(function (res) {
-                                                $rootScope.school = res.rows.item(0);
-                                                $window.localStorage['hdr.school'] = angular.toJson($rootScope.school);
-                                            }, function (err) {
-                                                console.log(err);
-                                            });
-                                        hdrdbx.selectRows('teacher')
-                                            .then(function (res) {
-                                                $rootScope.teacher = res.rows.item(0);
-                                                $window.localStorage['hdr.teacher'] = angular.toJson($rootScope.teacher);
-                                            }, function (err) {
-                                                console.log(err);
-                                            }); */
+                                        /*                                         hdrdbx.selectRows('academy')
+                                                                                    .then(function (res) {
+                                        
+                                                                                        $rootScope.academy = res.rows.item(0);
+                                                                                        $window.localStorage['hdr.academy'] = angular.toJson($rootScope.academy);
+                                                                                    }, function (err) {
+                                                                                        console.log(err);
+                                                                                    });
+                                                                                hdrdbx.selectRows('rd')
+                                                                                    .then(function (res) {
+                                                                                        $rootScope.rd = res.rows.item(0);
+                                                                                        $window.localStorage['hdr.rd'] = angular.toJson($rootScope.rd);
+                                                                                    }, function (err) {
+                                                                                        console.log(err);
+                                                                                    });
+                                                                                hdrdbx.selectRows('school')
+                                                                                    .then(function (res) {
+                                                                                        $rootScope.school = res.rows.item(0);
+                                                                                        $window.localStorage['hdr.school'] = angular.toJson($rootScope.school);
+                                                                                    }, function (err) {
+                                                                                        console.log(err);
+                                                                                    });
+                                                                                hdrdbx.selectRows('teacher')
+                                                                                    .then(function (res) {
+                                                                                        $rootScope.teacher = res.rows.item(0);
+                                                                                        $window.localStorage['hdr.teacher'] = angular.toJson($rootScope.teacher);
+                                                                                    }, function (err) {
+                                                                                        console.log(err);
+                                                                                    }); */
 
                                         $scope.hide();
                                         hdrFileSystem.classrooms = [];
@@ -256,7 +256,7 @@ angular.module('hdrApp').controller('ClassroomsController',
             ionic.Platform.ready(function () {
                 hdrdbx.initDB();
                 $scope.show();
-                var path = cordova.file.applicationStorageDirectory + "/hodoor-classrooms";
+                var path = pathDist + "/hodoor-classrooms";
                 console.log(path);
                 window.resolveLocalFileSystemURL(path, function (directoryentry) {
 
@@ -289,10 +289,10 @@ angular.module('hdrApp').controller('ClassroomsController',
                                             //$rootScope.classrooms_view = hdrdbx.classrooms_view;
                                             $interval(function () {
                                                 var shifted = hdrdbx.classrooms_view.shift();
-                                                if(shifted.students.length>0){
-                                                $rootScope.classrooms_view.push(shifted);
-                                                $rootScope.students_count_global += shifted.students.length;
-                                            }
+                                                if (shifted.students.length > 0) {
+                                                    $rootScope.classrooms_view.push(shifted);
+                                                    $rootScope.students_count_global += shifted.students.length;
+                                                }
 
                                                 if (hdrdbx.classrooms_view.length == 0) {
 
@@ -306,37 +306,16 @@ angular.module('hdrApp').controller('ClassroomsController',
 
                                         });
 
+                                        window.resolveLocalFileSystemURL(cordova.file.cacheDirectory + "/hodoor-classrooms",
+                                            function (direntry) {
+                                                direntry.removeRecursively(function () {
+                                                    console.log("Remove Recursively Succeeded");
+                                                }, function (err) {
+                                                    alert("Failed to remove directory or it's contents: " + error.code);
+                                                });
+                                            }, function (err) {
 
-
-/*                                         hdrdbx.selectRows('academy')
-                                            .then(function (res) {
-
-                                                $rootScope.academy = res.rows.item(0);
-                                                $window.localStorage['hdr.academy'] = angular.toJson($rootScope.academy);
-                                            }, function (err) {
-                                                console.log(err);
                                             });
-                                        hdrdbx.selectRows('rd')
-                                            .then(function (res) {
-                                                $rootScope.rd = res.rows.item(0);
-                                                $window.localStorage['hdr.rd'] = angular.toJson($rootScope.rd);
-                                            }, function (err) {
-                                                console.log(err);
-                                            });
-                                        hdrdbx.selectRows('school')
-                                            .then(function (res) {
-                                                $rootScope.school = res.rows.item(0);
-                                                $window.localStorage['hdr.school'] = angular.toJson($rootScope.school);
-                                            }, function (err) {
-                                                console.log(err);
-                                            });
-                                        hdrdbx.selectRows('teacher')
-                                            .then(function (res) {
-                                                $rootScope.teacher = res.rows.item(0);
-                                                $window.localStorage['hdr.teacher'] = angular.toJson($rootScope.teacher);
-                                            }, function (err) {
-                                                console.log(err);
-                                            }); */
 
                                         $scope.hide();
                                         hdrFileSystem.classrooms = [];
@@ -381,41 +360,35 @@ angular.module('hdrApp').controller('ClassroomsController',
 
         };
 
-
+        var pathDist = cordova.file.cacheDirectory;
         $scope.zipFilesAndImportClassrooms = function () {
             if (ionic.Platform.isWebView()) {
                 fileChooser.open(function (uripath) {
 
+                    //alert('file chooser uripath :' + uripath)
                     window.FilePath.resolveNativePath(uripath, successNative, failNative);
                     function successNative(finalpath) {
-                        console.log("url of file is " + finalpath); successNative
-                        //$cordovaFile.removeDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms");
+                        //alert("url of file is " + finalpath);
+                        console.log("url of file is " + finalpath);
+                        
+                        zip.unzip(finalpath, pathDist + "hodoor-classrooms/", function (arg) {
+                            console.log("dist : " + pathDist);
+                            if (arg == 0) {
+                                //alert("unzipping is done");
+                                console.log("unzipping is done");
+                                $cordovaFile.createDir(pathDist, "hodoor-classrooms", false);
+                                $scope.importClassrooms();
 
-                        $cordovaFile.removeRecursively(cordova.file.applicationStorageDirectory, "hodoor-classrooms")
-                            .then(function (success) {
-                                // success
-                                console.log("remove all files from hodoor-classroom successfully..");
-                                $cordovaFile.createDir(cordova.file.applicationStorageDirectory, "hodoor-classrooms", false);
-                                zip.unzip(finalpath, cordova.file.applicationStorageDirectory + "hodoor-classrooms/", function (arg) {
-                                    console.log("dist : " + cordova.file.applicationStorageDirectory);
-                                    if (arg == 0) {
-                                        console.log("unzipping is done");
-                                        $scope.importClassrooms();
-
-                                    } else {
-                                        console.log('errore while unzipping');
-                                        alert('يبدو أن الملف المحدد غير مناسب..');
-                                    }
-                                });
-                            }, function (error) {
-                                // error
-                                console.log('Error while removing files from hodoor-classrooms');
-                            });
-
+                            } else {
+                                alert('يبدو أن الملف المحدد غير مناسب..');
+                                console.log('errore while unzipping');
+                            }
+                        });
 
                     }
 
-                    function failNative() {
+                    function failNative(err) {
+                        alert('code :' + err.code + " message : " + err.message);
                         console.log("error while resolving native file path");
                     }
                 });

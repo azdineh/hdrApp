@@ -22,9 +22,11 @@
             </div>
 
             <ul class="list">
-
-                <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view"
-                    ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+                <div class="dark padding">
+                    <i class="ion-information-circled assertive"></i>
+                    <span class="assertive">  لبدء عملية النداء، قم بنقر القسم المراد.</span>
+                </div>
+                <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
                     <div class="hdr-classroom-container">
                         <div id="hdr-item0" class="hdr-item">
@@ -59,9 +61,7 @@
                         </div>
                     </div>
                 </li>
-                <div class="dark padding">
-                    <i class="ion-information-circled"></i>
-                    <span> </span> لبدء عملية النداء، قم بنقر القسم المراد. </div>
+
             </ul>
 
         </div>

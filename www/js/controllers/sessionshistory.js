@@ -1,20 +1,27 @@
 
 angular.module('hdrApp')
-    .controller('SessionshistoryController', function ($scope, hdrdbx, $timeout, $ionicScrollDelegate, $state, $ionicPopup) {
+    .controller('SessionshistoryController', function ($scope, hdrdbx, $timeout, $window,$ionicScrollDelegate, $state, $ionicPopup) {
 
         //$state.go($state.current, $stateParams, {reload: true, inherit: false});
         //$watch
 
 
         $scope.$on('$ionicView.beforeEnter', function () {
-            $scope.daies = [];
-            $scope.lastday = false;
-            
+            /*  $scope.daies = [];*/
+            $scope.lastday = true;
+            $scope.spinnershown = true;
+            if ($window.localStorage["hdr.classrooms_view"])
+                $scope.classroomsImported = true
+            else
+                $scope.classroomsImported = false;
+
             if (ionic.Platform.isWebView()) {
 
                 $scope.selectSessionsHistory(0);
 
             } else {
+
+                /* $scope.daies = []; */
 
                 $scope.daies = [
                     {
@@ -166,28 +173,44 @@ angular.module('hdrApp')
             hdrdbx.selectRows('session', "date(substr(unix_time,1,length(unix_time)-3), 'unixepoch') in ( " + subquery + " ) order by unix_time desc")
                 .then(function (sessions_arr) {
 
+                    if (sessions_arr.length == 0) {
+                        $timeout(function () {
+                            $scope.spinnershown = false;
+                            $scope.daies = [];
+                        }, 150);
+                    }
+
                     hdrdbx.daies_arr = [];
                     //var start_index = hdrdbx.sessions_view_obj_arr.length > 0 ? hdrdbx.sessions_view_obj_arr.length - 1 : 0;
                     hdrdbx.selectSessionsView2(sessions_arr, 0, sessions_arr.length,
                         function () {
-                            if (offset == 0)
-                                $scope.daies = hdrdbx.daies_arr;
-                            else {
-                                $scope.daies = $scope.daies.concat(hdrdbx.daies_arr);
-                                $ionicScrollDelegate.resize();
-                            }
 
-                            hdrdbx.selectDaies()
-                                .then(function (daies) {
-                                    if (daies.length == $scope.daies.length) {
-                                        $scope.lastday = true;
-                                    }
-                                    else {
-                                        $scope.lastday = false;
-                                    }
-                                }, function (err) {
-                                    console.log(err);
-                                })
+                            $timeout(function () {
+                                $scope.spinnershown = false;
+
+                                if (offset == 0)
+                                    $scope.daies = hdrdbx.daies_arr;
+                                else {
+                                    $scope.daies = $scope.daies.concat(hdrdbx.daies_arr);
+
+                                    $ionicScrollDelegate.resize();
+                                }
+
+                                hdrdbx.selectDaies()
+                                    .then(function (daies) {
+                                        if (daies.length == $scope.daies.length) {
+                                            $scope.lastday = true;
+                                        }
+                                        else {
+                                            $scope.lastday = false;
+                                        }
+
+                                    }, function (err) {
+                                        console.log(err);
+                                    })
+
+                            }, 250);
+
 
 
                         });
@@ -275,12 +298,19 @@ angular.module('hdrApp')
             });
         };
 
-        $scope.showHelpPopup = function (number) {
+        $scope.showHelpPopup = function (arr) {
             var template = "";
-            if (number == 0)
+
+            if (arr != null) {
+                var number = arr.length
+                if (number == 0)
+                    template = '<p dir="rtl">السجل فارغ.. </p>';
+                else
+                    template = '<p dir="rtl">لتحرير أو حذف حصة ما من السجل، قم بالنقر عليها مرتين ثم اختر الأمر المناسب قي القائمة أعلاه.</p>';
+            }
+            else {
                 template = '<p dir="rtl">السجل فارغ.. </p>';
-            else
-                template = '<p dir="rtl">لتحرير أو حذف حصة ما من السجل، قم بالنقر عليها مرتين ثم اختر الأمر المناسب قي القائمة أعلاه.</p>';
+            }
 
             var helpPopup = $ionicPopup.show({
                 /* templateUrl: "views/sessionshistory/helpsessionshistoryview.html", */

@@ -976,23 +976,48 @@ angular.module('hdrApp')
             }
 
             vm.saveObservations = function (session_id, observation) {
+                /*  var q = $q.defer();
+ 
+                 var query = "update session set observation='" + observation + "' where id='" + session_id + "'";
+ 
+                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                     successFn: function (count) {
+                         console.log("Successfully uptade lines from " + count + " tables");
+                         q.resolve(count);
+                     },
+                     errorFn: function (err) {
+                         console.log("***Error while updating lines from session table ;" + err.message);
+                         console.log(err);
+                         q.reject(err);
+                     }
+                 });
+ 
+                 return q.promise; */
+
+
+                var query = "update session set observation=? where id='" + session_id + "'";
+
                 var q = $q.defer();
 
-                var query = "update session set observation='" + observation + "' where id='" + session_id + "'";
 
-                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
-                    successFn: function (count) {
-                        console.log("Successfully uptade lines from " + count + " tables");
-                        q.resolve(count);
-                    },
-                    errorFn: function (err) {
-                        console.log("***Error while updating lines from session table ;" + err.message);
-                        console.log(err);
-                        q.reject(err);
-                    }
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [observation],
+                        function (tx, res) {
+                            q.resolve(1);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
                 });
 
                 return q.promise;
+
+
             }
 
             vm.removeStudentFromAbsenceLine = function (massar_number, session_id) {

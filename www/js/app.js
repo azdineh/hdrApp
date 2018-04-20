@@ -91,7 +91,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             .state('tab.sessionalter', {
                 url: '/sessionshistory/sessionalter',
                 params: { session_view: null },
-                cache: false,
+                cache: true,
                 views: {
                     'tab-sessionshistory': {
                         templateUrl: 'views/sessionshistory/sessionalter/view.html',

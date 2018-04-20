@@ -52,6 +52,9 @@ angular.module('hdrApp')
 
         }
 
+        $scope.goToBlog=function(){
+            cordova.InAppBrowser.open("http://7odoor.blogspot.com/", '_system');
+        }
 
 
 

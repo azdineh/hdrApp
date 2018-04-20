@@ -1,6 +1,6 @@
 <style>
     #hdr-table-006 td {
-     /*     border: 1px solid red;  */
+        /*     border: 1px solid red;  */
         text-align: center;
         vertical-align: middle;
         width: 14.29%
@@ -14,8 +14,8 @@
             <tr>
                 <td>
 
-                    <button class="button button-clear" style="zoom: 0.8;width: 45px;height: 45px" ng-click="showHelpPopup(daies.length)">
-                            <i class="icon ion-help" style="font-size: 12px;color: rgba(25, 24, 29,0.8);filter: saturate(0.3)"></i>
+                    <button class="button button-clear" style="zoom: 0.8;width: 45px;height: 45px" ng-click="showHelpPopup(daies)">
+                        <i class="icon ion-help" style="font-size: 12px;color: rgba(25, 24, 29,0.8);filter: saturate(0.3)"></i>
                     </button>
 
                 </td>
@@ -48,18 +48,22 @@
     <ion-content scroll="true" dir="rtl" style="margin-top: 45px;padding-top: 10px">
 
         <hdrabsencehistoryitem ng-repeat="day in daies track by $index"></hdrabsencehistoryitem>
-        <div style="padding: 11px;zoom: 1.25;position: relative;top:-9px;color: rgb(169, 169, 169)" ng-show="lastday">
+        <div style="padding: 11px;zoom: 1.25;position: relative;top:-9px;color: rgb(169, 169, 169)" ng-show="lastday && daies.length>0">
             <span class="icon ion-record"></span>
         </div>
         <div style="text-align: center" ng-hide="lastday || daies.length==0">
             <button class="button button-large button-clear ion-ios-arrow-down" style="font-size: 40px" ng-click="more()"></button>
         </div>
 
-        <div ng-show="daies.length==0" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
-            <p class="title" style="font-size: 1.7em;line-height: 2em;padding: 14px;padding-top: 10vmax">
-           <!--  هنا، سيتم إظهار سجل تغيبات التلاميذ عبر الحصص المسجلة. -->
-           <i class="icon ion-filing" style="font-size: 45vmax;opacity: 0.2"></i>
+        <div ng-show="daies.length==0 || !classroomsImported" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
+            <p class="title" style="font-size: 1.7em;line-height: 2em;padding: 14px;padding-top: 5vmax">
+                <!--  هنا، سيتم إظهار سجل تغيبات التلاميذ عبر الحصص المسجلة. -->
+                <i class="icon ion-filing" style="font-size: 45vmax;opacity: 0.2"></i>
+                <p style="font-size: 20px;text-align: center;opacity: 0.6">السجل فارغ..</p>
             </p>
+        </div>
+        <div ng-show="spinnershown && classroomsImported" style="text-align: center;padding-top: 10vmax">
+            <ion-spinner icon="lines" style="zoom: 4;opacity: 0.4"></ion-spinner>
         </div>
     </ion-content>
 

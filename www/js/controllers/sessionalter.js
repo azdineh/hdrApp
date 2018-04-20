@@ -2,26 +2,34 @@ angular.module('hdrApp')
 	.controller('SessionalterController', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, hdrdbx) {
 
 		$scope.initialobservation = "";
-
+		$scope.session_view = $stateParams.session_view;
 
 
 		if (ionic.Platform.isWebView()) {
 
-			$scope.session_view = $stateParams.session_view;
+			$scope.$on('$ionicView.enter', function () {
 
-			$scope.session_view.session.observation = $scope.session_view.session.observation.replace(/<br>/g, "\r");
-/* 			$scope.initialobservation = $scope.session_view.session.observation;
+				/* if (!$scope.session_view) {
 
+					$scope.session_view = $stateParams.session_view;
+				} */
 
-			$scope.hidden = true;
-			$scope.$watch('session_view.session.observation', function (newVal, oldval) {
-				if (newVal == $scope.initialobservation) {
-					$scope.hidden = true;
-				}
-				else {
-					$scope.hidden = false;
-				}
-			}); */
+				$scope.session_view.session.observation = $scope.session_view.session.observation.replace(/<br>/g, "\r");
+				$scope.sessionalterchange = 0;
+			});
+
+			/* 			$scope.initialobservation = $scope.session_view.session.observation;
+			
+			
+						$scope.hidden = true;
+						$scope.$watch('session_view.session.observation', function (newVal, oldval) {
+							if (newVal == $scope.initialobservation) {
+								$scope.hidden = true;
+							}
+							else {
+								$scope.hidden = false;
+							}
+						}); */
 
 			$scope.saveObservation = function (session, observation) {
 				var obsToDB = observation.replace(/\r/g, "\n");
@@ -40,17 +48,29 @@ angular.module('hdrApp')
 				document.getElementById('hdr-session-alter-confirm' + id).classList.add("ng-hide");
 			}
 
-			$scope.removeStudent = function (id, session_id) {
+			$scope.removeStudent = function (student, session_id) {
 
-				hdrdbx.removeStudentFromAbsenceLine(id, session_id)
+				hdrdbx.removeStudentFromAbsenceLine(student.massar_number, session_id)
 					.then(function (count) {
-						document.getElementById('hdr-session-alter-student' + id).classList.add("ng-hide");
-						document.getElementById('hdr-session-alter-confirm' + id).classList.add("ng-hide");
+						document.getElementById('hdr-session-alter-student' + student.massar_number).classList.add("ng-hide");
+						document.getElementById('hdr-session-alter-confirm' + student.massar_number).classList.add("ng-hide");
+						var index0 = $scope.session_view.students.indexOf(student);
+						var newarr = [];
+						$scope.session_view.students.forEach(function (student, index) {
+							if (index != index0) {
+								newarr.push(student);
+							}
+							$scope.session_view.students = newarr;
+						}, this);
 					}, function (err) {
 
 					});
 			}
-			$scope.sessionalterchange = 0;
+
+/* 			$scope.$on('$ionicView.leave', function () {
+				$stateParams.session_view = $scope.session_view;
+			}); */
+
 			$scope.changeStudentFixProblem = function (student, session_id) {
 				hdrdbx.changeStudentFixProblem(student, session_id)
 					.then(function (count) {

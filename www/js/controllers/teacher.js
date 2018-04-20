@@ -4,49 +4,41 @@ angular.module('hdrApp')
 
 
 
-
         if (ionic.Platform.isWebView()) {
 
-            $scope.$on('$ionicView.beforeEnter', function () {
+            $scope.$on('$ionicView.enter', function () {
 
+                $scope.teacher_view = $window.localStorage['hdr.teacher_view'] ? angular.fromJson($window.localStorage['hdr.teacher_view']) : null;
 
-                $scope.teacher_view = null;
                 $scope.removeAllFlag = {
                     status: false
                 };
-                hdrdbx.selectRows('teacher', '')
-                    .then(function (arr) {
-                        $scope.teacher_view = {};
-                        $scope.teacher_view.teacher = arr[0];
-                        hdrdbx.selectRows('school', '')
-                            .then(function (arr) {
-                                $scope.teacher_view.school = arr[0];
-                                hdrdbx.selectRows('rd', '')
-                                    .then(function (arr) {
-                                        $scope.teacher_view.rd = arr[0];
-                                        hdrdbx.selectRows('academy', '')
-                                            .then(function (arr) {
-                                                $scope.teacher_view.academy = arr[0];
-                                            });
-                                    });
-                            });
-                    }, function (err) {
 
-                    });
+                if ($scope.teacher_view == null) {
+
+                    hdrdbx.selectRows('teacher', '')
+                        .then(function (arr) {
+                            $scope.teacher_view = {};
+                            $scope.teacher_view.teacher = arr[0];
+                            hdrdbx.selectRows('school', '')
+                                .then(function (arr) {
+                                    $scope.teacher_view.school = arr[0];
+                                    hdrdbx.selectRows('rd', '')
+                                        .then(function (arr) {
+                                            $scope.teacher_view.rd = arr[0];
+                                            hdrdbx.selectRows('academy', '')
+                                                .then(function (arr) {
+                                                    $scope.teacher_view.academy = arr[0];
+                                                    $window.localStorage['hdr.teacher_view'] = angular.toJson($scope.teacher_view);
+                                                });
+                                        });
+                                });
+                        }, function (err) {
+
+                        });
+                }
             });
 
-
-            /*             $scope.clearDb = function () {
-                            if (ionic.Platform.isWebView()) {
-                                hdrdbx.wipeDB();
-                                $scope.clearStorage();
-            
-                            }
-                            else {
-                                $scope.clearStorage();
-                            }
-            
-                        } */
 
             $scope.clearStorage = function () {
                 //hdrdbx.hdrdbtest();
@@ -55,9 +47,11 @@ angular.module('hdrApp')
                 $window.localStorage.removeItem("hdr.academy");
                 $window.localStorage.removeItem("hdr.rd");
                 $window.localStorage.removeItem("hdr.school");
-                $window.localStorage.removeItem("hdr.teacher");
+                $window.localStorage.removeItem("hdr.teacher_view");
                 $window.localStorage.removeItem("hdr.helpPopupShown");
                 $rootScope.classrooms_view = [];
+                $rootScope.students_view = [];
+                $rootScope.textToSearch = '';
                 $ionicViewService.clearHistory();
 
             }
@@ -115,7 +109,7 @@ angular.module('hdrApp')
 
         $scope.share = function () {
             //message, image and link
-            window.plugins.socialsharing.share('تطبيق رائع، يستعمل كأداة مساعدة للأستاذ في بعض ممارساته الصفية..', null,
+            window.plugins.socialsharing.share('تطبيق رائع، يستعمل كأداة مساعدة للأستاذ(ة) في بعض ممارساته الصفية..', null,
                 'www/img/hodoor_pic.png',
                 'https://goo.gl/Fzo544');
         }
