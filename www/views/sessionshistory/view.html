@@ -55,16 +55,16 @@
             <button class="button button-large button-clear ion-ios-arrow-down" style="font-size: 40px" ng-click="more()"></button>
         </div>
 
-        <div ng-show="daies.length==0 || !classroomsImported" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
+        <div ng-show="daies.length==0" style="height: 100%;width: 100%;padding-top: 20px;text-align: center">
             <p class="title" style="font-size: 1.7em;line-height: 2em;padding: 14px;padding-top: 5vmax">
                 <!--  هنا، سيتم إظهار سجل تغيبات التلاميذ عبر الحصص المسجلة. -->
                 <i class="icon ion-filing" style="font-size: 45vmax;opacity: 0.2"></i>
                 <p style="font-size: 20px;text-align: center;opacity: 0.6">السجل فارغ..</p>
             </p>
         </div>
-        <div ng-show="spinnershown && classroomsImported" style="text-align: center;padding-top: 10vmax">
+        <!-- <div ng-show="spinnershown && classrooms_view.length > 0" style="text-align: center;padding-top: 10vmax">
             <ion-spinner icon="lines" style="zoom: 4;opacity: 0.4"></ion-spinner>
-        </div>
+        </div> -->
     </ion-content>
 
 </ion-view>

@@ -1,19 +1,19 @@
 
 angular.module('hdrApp')
-    .controller('SessionshistoryController', function ($scope, hdrdbx, $timeout, $window,$ionicScrollDelegate, $state, $ionicPopup) {
+    .controller('SessionshistoryController', function ($scope, $rootScope, hdrdbx, $ionicLoading, $timeout, $window, $ionicScrollDelegate, $state, $ionicPopup) {
 
         //$state.go($state.current, $stateParams, {reload: true, inherit: false});
         //$watch
 
 
         $scope.$on('$ionicView.beforeEnter', function () {
-            /*  $scope.daies = [];*/
+
             $scope.lastday = true;
-            $scope.spinnershown = true;
-            if ($window.localStorage["hdr.classrooms_view"])
+            //$scope.spinnershown = true;
+            /* if ($rootScope.classrooms_view.length > 0)
                 $scope.classroomsImported = true
             else
-                $scope.classroomsImported = false;
+                $scope.classroomsImported = false; */
 
             if (ionic.Platform.isWebView()) {
 
@@ -21,9 +21,9 @@ angular.module('hdrApp')
 
             } else {
 
-                /* $scope.daies = []; */
 
-                $scope.daies = [
+
+                $rootScope.daies = [
                     {
                         date: '1254876321545454',
                         sessions_view: [
@@ -168,6 +168,9 @@ angular.module('hdrApp')
 
         $scope.selectSessionsHistory = function (offset) {
 
+            if ($rootScope.classrooms_view.length > 0)
+                $ionicLoading.show({});
+
             var subquery = "select date(substr(unix_time,1,length(unix_time)-3), 'unixepoch') as sdate from session group by sdate order by sdate desc limit 3 offset " + offset;
 
             hdrdbx.selectRows('session', "date(substr(unix_time,1,length(unix_time)-3), 'unixepoch') in ( " + subquery + " ) order by unix_time desc")
@@ -175,8 +178,9 @@ angular.module('hdrApp')
 
                     if (sessions_arr.length == 0) {
                         $timeout(function () {
-                            $scope.spinnershown = false;
-                            $scope.daies = [];
+                            //$scope.spinnershown = false;
+                            $ionicLoading.hide({});
+                            $rootScope.daies = [];
                         }, 150);
                     }
 
@@ -186,19 +190,20 @@ angular.module('hdrApp')
                         function () {
 
                             $timeout(function () {
-                                $scope.spinnershown = false;
+                                //$scope.spinnershown = false;
+                                $ionicLoading.hide({});
 
                                 if (offset == 0)
-                                    $scope.daies = hdrdbx.daies_arr;
+                                    $rootScope.daies = hdrdbx.daies_arr;
                                 else {
-                                    $scope.daies = $scope.daies.concat(hdrdbx.daies_arr);
+                                    $rootScope.daies = $rootScope.daies.concat(hdrdbx.daies_arr);
 
                                     $ionicScrollDelegate.resize();
                                 }
 
                                 hdrdbx.selectDaies()
                                     .then(function (daies) {
-                                        if (daies.length == $scope.daies.length) {
+                                        if (daies.length == $rootScope.daies.length) {
                                             $scope.lastday = true;
                                         }
                                         else {
@@ -209,7 +214,7 @@ angular.module('hdrApp')
                                         console.log(err);
                                     })
 
-                            }, 250);
+                            }, 10);
 
 
 
@@ -272,6 +277,7 @@ angular.module('hdrApp')
 
                 })
         }
+
 
         $scope.showConfirm = function () {
             var template = "";

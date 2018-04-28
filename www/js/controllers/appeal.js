@@ -264,7 +264,7 @@ angular.module('hdrApp')
 				id: null,
 				id_classroom: $scope.classroom.id,
 				classroom_title: $scope.classroom.title,
-				id_teacher: $rootScope.teacher.id,
+				id_teacher: 1,
 				unix_time: Date.now(),
 				title: $scope.data.choice,
 				students_count: $scope.classroom.students.length,

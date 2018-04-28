@@ -1,39 +1,44 @@
 angular.module('hdrApp')
-    .controller('HomeController', function ($scope, $http, $rootScope, $ionicScrollDelegate,$window, hdrFileSystem, $ionicPlatform, hdrdbx) {
+    .controller('HomeController', function ($scope, $http, $rootScope, $ionicScrollDelegate, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
 
         $scope.page = "home";
-        $rootScope.deviceWidth = $window.innerWidth;
-        $rootScope.deviceHeight = $window.innerHeight;
+        /*         $rootScope.deviceWidth = $window.innerWidth;
+                $rootScope.deviceHeight = $window.innerHeight; */
 
-        $rootScope.hideTab=false;
+        $rootScope.classrooms_view = $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : [];
+        $rootScope.students_count_global = $window.localStorage['hdr.students_count_global'] ? angular.fromJson($window.localStorage['hdr.students_count_global']) : 0;
+        $rootScope.daies = [];
+
+
+        $rootScope.hideTab = false;
 
         window.addEventListener('keyboardWillShow', function (event) {
-			// Describe your logic which will be run each time when keyboard is about to be shown.
-			console.log(event.keyboardHeight);
-			console.log("keuborad whill show, process to hide tab..");
-			document.getElementById('hdr-tabs-bar').classList.add("keyboard-open");
-			$ionicScrollDelegate.scrollBottom();
-		});
+            // Describe your logic which will be run each time when keyboard is about to be shown.
+            console.log(event.keyboardHeight);
+            console.log("keuborad whill show, process to hide tab..");
+            document.getElementById('hdr-tabs-bar').classList.add("keyboard-open");
+            $ionicScrollDelegate.scrollBottom();
+        });
 
-		window.addEventListener('keyboardWillHide', function() {
-			// Describe your logic which will be run each time when keyboard is about to be closed.
-			//document.getElementById('hdr-Tab').style.display=
+        window.addEventListener('keyboardWillHide', function () {
+            // Describe your logic which will be run each time when keyboard is about to be closed.
+            //document.getElementById('hdr-Tab').style.display=
             document.getElementById('hdr-tabs-bar').classList.remove("keyboard-open");
             $ionicScrollDelegate.scrollTop();
-		});
+        });
 
         /* $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY'); */
 
-    
+
 
         $scope.$on('$ionicView.enter', function () {
             $rootScope.today = Date.now();
         })
-
-        $rootScope.academy = $window.localStorage['hdr.academy'] ? angular.fromJson($window.localStorage['hdr.academy']) : {};
-        $rootScope.rd = $window.localStorage['hdr.rd'] ? angular.fromJson($window.localStorage['hdr.rd']) : {};
-        $rootScope.school = $window.localStorage['hdr.school'] ? angular.fromJson($window.localStorage['hdr.school']) : {};
-        $rootScope.teacher = $window.localStorage['hdr.teacher'] ? angular.fromJson($window.localStorage['hdr.teacher']) : {};
+        /* 
+                $rootScope.academy = $window.localStorage['hdr.academy'] ? angular.fromJson($window.localStorage['hdr.academy']) : {};
+                $rootScope.rd = $window.localStorage['hdr.rd'] ? angular.fromJson($window.localStorage['hdr.rd']) : {};
+                $rootScope.school = $window.localStorage['hdr.school'] ? angular.fromJson($window.localStorage['hdr.school']) : {};
+                $rootScope.teacher = $window.localStorage['hdr.teacher'] ? angular.fromJson($window.localStorage['hdr.teacher']) : {}; */
 
         $rootScope.isDBThere = false;
 
@@ -52,7 +57,7 @@ angular.module('hdrApp')
 
         }
 
-        $scope.goToBlog=function(){
+        $scope.goToBlog = function () {
             cordova.InAppBrowser.open("http://7odoor.blogspot.com/", '_system');
         }
 

@@ -40,21 +40,7 @@ angular.module('hdrApp')
             });
 
 
-            $scope.clearStorage = function () {
-                //hdrdbx.hdrdbtest();
-                $window.localStorage.removeItem("hdr.classrooms_view");
-                $window.localStorage.removeItem("hdr.students_count_global");
-                $window.localStorage.removeItem("hdr.academy");
-                $window.localStorage.removeItem("hdr.rd");
-                $window.localStorage.removeItem("hdr.school");
-                $window.localStorage.removeItem("hdr.teacher_view");
-                $window.localStorage.removeItem("hdr.helpPopupShown");
-                $rootScope.classrooms_view = [];
-                $rootScope.students_view = [];
-                $rootScope.textToSearch = '';
-                $ionicViewService.clearHistory();
 
-            }
         } else {
             $scope.teacher_view = {
                 teacher: {
@@ -74,6 +60,30 @@ angular.module('hdrApp')
 
 
         }
+
+
+        $scope.clearStorage = function (flag) {
+
+            //hdrdbx.hdrdbtest();
+            if (flag) {
+
+                $window.localStorage.removeItem("hdr.classrooms_view");
+                $window.localStorage.removeItem("hdr.students_count_global");
+                $window.localStorage.removeItem("hdr.teacher_view");
+                $window.localStorage.removeItem("hdr.helpPopupShown");
+                $rootScope.classrooms_view = [];
+                $rootScope.daies=[];
+                $rootScope.students_view = [];
+            }
+            else {
+                $window.localStorage['hdr.classrooms_view'] = angular.toJson([]);
+                $window.localStorage['hdr.students_count_global'] = angular.toJson(0);
+                $rootScope.classrooms_view = [];
+            }
+
+            $ionicViewService.clearHistory();
+        };
+
 
         /*         $scope.showFlaf = function () {
                     console.log("flag status :" + $scope.removeAllFlag.status);
@@ -97,7 +107,7 @@ angular.module('hdrApp')
             confirmPopup.then(function (res) {
                 if (res) {
                     console.log('You are sure');
-                    $scope.clearStorage();
+                    $scope.clearStorage($scope.removeAllFlag.status);
                     hdrdbx.removedata($scope.removeAllFlag.status);
                     $scope.teacher_view = null;
                     $ionicScrollDelegate.resize();
