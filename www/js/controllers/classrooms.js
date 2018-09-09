@@ -40,7 +40,12 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
         $scope.goToStudentsView = function (classroom) {
-            $state.go('tab.classroom', { 'classroom_title': classroom.title });
+            if(classroom.students.length==0){
+                alert("يبدو أن اللوائح المصدرة من موقع مسار فارغة من أسماء التلاميذ..");
+            }
+            else{
+                $state.go('tab.classroom', { 'classroom_title': classroom.title });
+            }
         }
 
         $scope.importSimulatedClassrooms = function () {
@@ -285,14 +290,15 @@ angular.module('hdrApp').controller('ClassroomsController',
                                     .then(function (classrooms) {
                                         hdrdbx.addStudentsToClassrooms(classrooms, 0, function () {
 
-
                                             //$rootScope.classrooms_view = hdrdbx.classrooms_view;
                                             $interval(function () {
                                                 var shifted = hdrdbx.classrooms_view.shift();
-                                                if (shifted.students.length > 0) {
-                                                    $rootScope.classrooms_view.push(shifted);
-                                                    $rootScope.students_count_global += shifted.students.length;
-                                                }
+
+        /*                                         if (shifted.students.length > 0) {
+                                                } */
+                                                
+                                                $rootScope.classrooms_view.push(shifted);
+                                                $rootScope.students_count_global += shifted.students.length;
 
                                                 if (hdrdbx.classrooms_view.length == 0) {
 

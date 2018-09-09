@@ -24,7 +24,7 @@
             <ul class="list">
                 <div class="dark padding">
                     <i class="ion-information-circled assertive"></i>
-                    <span class="assertive">  لبدء عملية النداء، قم بنقر القسم المراد.</span>
+                    <span class="assertive"> لبدء عملية النداء، قم بنقر القسم المراد.</span>
                 </div>
                 <li class="item hdr-list-item" style="padding:0;height: auto" ng-repeat="classroom in classrooms_view" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
@@ -55,7 +55,7 @@
                         </div>
                         <div id="hdr-item2" class="hdr-item">
                             <button class="button button-outline button-dark" ng-click="goToStudentsView(classroom)">
-                                {{classroom.students.length}} تلميذ
+                                <span ng-if="classroom.students.length>0"> {{classroom.students.length}} تلميذ</span>
                                 <i class="ion-chevron-left"></i>
                             </button>
                         </div>

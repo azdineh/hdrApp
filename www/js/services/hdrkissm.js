@@ -107,10 +107,11 @@ angular.module('hdrApp')
                 };
                 crrHeadCell = colsNames.ra9mTasjiil;
                 var crrHeadCellValue = '';
-                do {
+
+                while (angular.isDefined(sheet[crrHeadCell]) && angular.isDefined(sheet[colsNames.ra9mMasar])) {
                     var attilmid = that.tilmiid();
                     //if (crrHeadCell ==='B80') break;
-                    crrHeadCellValue = sheet[crrHeadCell].v
+                    crrHeadCellValue = sheet[crrHeadCell].v;
                     attilmid.ra9mTasjiil = crrHeadCellValue;
                     attilmid.ra9mMasar = sheet[colsNames.ra9mMasar].v;
                     attilmid.issmKamel = sheet[colsNames.issmKamel].v;
@@ -121,7 +122,9 @@ angular.module('hdrApp')
                     colsNames.tari5Izdiad = that.nextCell(colsNames.tari5Izdiad);
                     //console.log(crrHeadCell + " --- " + attilmid.issmKamel + " -- ");
                     talaamiid.push(attilmid);
-                } while (angular.isDefined(sheet[crrHeadCell]) && angular.isDefined(sheet[colsNames.ra9mMasar]));
+                }
+
+
                 return talaamiid;
             };
             that.getKissm = function (workbook) {

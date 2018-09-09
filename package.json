@@ -7,10 +7,10 @@
         "cordova-android": "^6.2.3",
         "cordova-browser": "^4.1.0",
         "cordova-filepath-resolver": "^1.0.4",
-        "cordova-plugin-crosswalk-webview": "^2.3.0",
         "cordova-plugin-filechooser": "^1.0.1",
         "cordova-plugin-inappbrowser": "^3.0.0",
         "cordova-plugin-ionic-keyboard": "^2.0.5",
+        "cordova-plugin-ionic-webview": "^2.1.3",
         "cordova-plugin-whitelist": "^1.3.3",
         "cordova-plugin-x-socialsharing": "^5.3.2",
         "cordova-plugin-zip": "^3.1.0",
@@ -30,7 +30,6 @@
         "shelljs": "^0.3.0"
     },
     "cordovaPlugins": [
-        "cordova-plugin-crosswalk-webview",
         "cordova-plugin-whitelist",
         "uk.co.workingedge.cordova.plugin.sqliteporter",
         "cordova-sqlite-storage",
@@ -39,7 +38,9 @@
         "cordova-filepath-resolver",
         "cordova-plugin-ionic-keyboard",
         "cordova-plugin-x-socialsharing",
-        "cordova-plugin-inappbrowser"
+        "cordova-plugin-inappbrowser",
+        "cordova-plugin-ionic-webview@latest",
+        "cordova-plugin-ionic-webview"
     ],
     "cordovaPlatforms": [
         "android"
@@ -50,13 +51,6 @@
             "browser"
         ],
         "plugins": {
-            "cordova-plugin-crosswalk-webview": {
-                "XWALK_VERSION": "23+",
-                "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
-                "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
-                "XWALK_MODE": "embedded",
-                "XWALK_MULTIPLEAPK": "true"
-            },
             "cordova-plugin-whitelist": {},
             "uk.co.workingedge.cordova.plugin.sqliteporter": {},
             "cordova-sqlite-storage": {},
@@ -65,7 +59,8 @@
             "cordova-filepath-resolver": {},
             "cordova-plugin-ionic-keyboard": {},
             "cordova-plugin-x-socialsharing": {},
-            "cordova-plugin-inappbrowser": {}
+            "cordova-plugin-inappbrowser": {},
+            "cordova-plugin-ionic-webview": {}
         }
     }
 }
