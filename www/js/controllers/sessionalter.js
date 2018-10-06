@@ -41,6 +41,9 @@ angular.module('hdrApp')
 					})
 			}
 
+		
+
+
 			$scope.showConfirmForRemoveStudent = function (id) {
 				document.getElementById('hdr-session-alter-confirm' + id).classList.remove("ng-hide");
 			}

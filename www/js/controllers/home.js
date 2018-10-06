@@ -17,14 +17,14 @@ angular.module('hdrApp')
             console.log(event.keyboardHeight);
             console.log("keuborad whill show, process to hide tab..");
             document.getElementById('hdr-tabs-bar').classList.add("keyboard-open");
-            $ionicScrollDelegate.scrollBottom();
+            $ionicScrollDelegate.scrollBottom(true);
         });
 
         window.addEventListener('keyboardWillHide', function () {
             // Describe your logic which will be run each time when keyboard is about to be closed.
             //document.getElementById('hdr-Tab').style.display=
             document.getElementById('hdr-tabs-bar').classList.remove("keyboard-open");
-            $ionicScrollDelegate.scrollTop();
+            $ionicScrollDelegate.scrollTop(true);
         });
 
         /* $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY'); */

@@ -1,11 +1,16 @@
 angular.module('hdrApp')
 	.directive('hdrStudent', function (hdrdbx, $timeout, $state) {
+
+
 		return {
 			restrict: 'E',
 			templateUrl: "js/directives/hdrstudent.html",
 			controller: function ($scope, $element, $attrs) {
 
-				$scope.showtitle=true;
+				$scope.showtitle = true;
+				$scope.showmore = true;
+				$scope.shomeqn = true;
+
 
 				if (ionic.Platform.isWebView()) {
 					hdrdbx.selectStudentAbsences($scope.student.massar_number)

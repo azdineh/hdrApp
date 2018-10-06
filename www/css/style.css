@@ -12,7 +12,7 @@ html,body{
   color: rgb(22, 21, 33)
 }
 
-div,p,button,li, span,input,i,h1,h2,h3{
+div,p,button,li, span,input,i,h1,h2,h3,textarea{
   font-family: hdrFont;
 }
 
@@ -37,6 +37,7 @@ ion-content{
 
 .card-blue .item{
   background: #4E5AFF;
+  overflow-y: scroll;
 }
 
 .card-green .item{

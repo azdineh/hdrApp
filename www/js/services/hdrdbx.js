@@ -94,7 +94,7 @@ angular.module('hdrApp')
                 full_name: "",
                 registration_number: "",
                 massar_number: "",
-                birth_date: "",
+                birth_date: "", // format 18/06/1998
                 queuing_number: "",
                 observation: "",
                 id_classroom: ""
@@ -593,7 +593,7 @@ angular.module('hdrApp')
                     "(session s inner join classroom c on s.id_classroom=c.id)" +
                     "left join " +
                     "absenceline a on a.id_session = s.id " +
-                    "where s.id=?";
+                    "where s.id=? order by queuing_number asc";
                 vm.db.transaction(function (tx) {
                     tx.executeSql(sql, [session.id],
                         function (tx, res) {
@@ -1041,6 +1041,74 @@ angular.module('hdrApp')
             }
 
 
+            //Lorsque un élève quitte sa classe, l'enseignant procède à le supprimer de la liste des élèves, pour que 
+            //les nouveaux nombres d'ordre se synchronisent avec ceux de l'administration.
+            //pour garder la traçabilité de l'ancienne absence de l'élève supprimé dans la table AbsenceLine, on le supprime pas de la table Student (pour ne pas casser la liaison relationnelle)
+            // mais on se contente seulement de changer sa proprité id_classroom à Null.
+            //lorsque le Prof. veut ajouter un nouvel élève à une classeroom, l'app lui propose : est ce qu'il s'agit d'un nouvel élève ou bien d'un ancien élève qui rejoindre la classroom à nouveua,
+            // dans le 2ème cas, l'app affiche tous les élèves déja supprimés (qui ont id_classroom=null), à ce moment là, le prof n'a que lui ajouté en en seul clic au lieu de remplir le formaulaire d'ajout.
+            //comme cela on garde l'historique de l'absence de lélève qui quite sa classe ensuite il le rejoint après.
+            vm.removeStudentFromClassroom = function (student, classroom) {
+                // 1-> update student.id_classroom by Null
+                var q = $q.defer();
+
+                var query = "update student set id_classroom=? where id='" + student.id + "'";
+                
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [null],
+                        function (tx, res) {
+                            
+                            //Ensuite, on procède à mettre à jour les nombres d'ordre par les nouvelles valeurs dans la table Student
+                            // 2--> updateStudentsQNOf(classroom) 
+                            vm.updateStudentsQNinStudentandAbsenceLine(classroom)
+                                .then(function (res) {
+                                    console.log("student removed from this " + classroom.title + " classroom and student and absenceline tables updated")
+                                }, function (err) { });
+                            q.resolve(1);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+
+
+
+
+
+            }
+
+
+            // Mettre à jour les nombres d'ordre de tous les élèves
+            // classroom contains students with new values of queuing number (QN)
+            vm.updateStudentsQNinStudentandAbsenceLine = function (classroom) {
+                var q = $q.defer();
+                var sqlStudent = "";
+                var sqlAbsenceLine = "";
+
+                classroom.students.forEach(function (student) {
+                    sqlStudent = sqlStudent + "update student set queuing_number=" + student.queuing_number + " where id=" + student.id + "; ";
+                    sqlAbsenceLine = sqlAbsenceLine + "update absenceline set queuing_number=" + student.queuing_number + " where id_student=" + student.id + "; ";
+
+                }, this);
+                //console.log(sql);
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, sqlStudent + sqlAbsenceLine, {
+                    successFn: function (count) {
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) { console.log("***Error whiile updating students QN: " + err.message); console.log(err); q.reject(err) }
+                    //progressFn: function (current, total) { console.log(current + "/" + total) }
+                });
+
+                return q.promise;
+            }
+
+
             vm.changeStudentFixProblem = function (student, session_id) {
 
                 var q = $q.defer();
@@ -1059,6 +1127,29 @@ angular.module('hdrApp')
                     },
                     errorFn: function (err) {
                         console.log("***Error while updating line from absenceline table ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
+
+                return q.promise;
+
+            }
+
+            vm.updateStudent = function (student,newStudent) {
+
+                var q = $q.defer();
+                
+
+               var query="update student set full_name='"+newStudent.full_name+"',registration_number='"+newStudent.registration_number+"',massar_number='"+newStudent.massar_number+"',birth_date='"+newStudent.birth_date+"',queuing_number='"+newStudent.queuing_number+"',observation='"+newStudent.observation+"' where id="+student.id+";";
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                    successFn: function (count) {
+                        console.log("Successfully update line from student ");
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while updating line from student table ;" + err.message);
                         console.log(err);
                         q.reject(err);
                     }

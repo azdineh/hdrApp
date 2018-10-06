@@ -40,10 +40,10 @@ angular.module('hdrApp').controller('ClassroomsController',
 
 
         $scope.goToStudentsView = function (classroom) {
-            if(classroom.students.length==0){
+            if (classroom.students.length == 0) {
                 alert("يبدو أن اللوائح المصدرة من موقع مسار فارغة من أسماء التلاميذ..");
             }
-            else{
+            else {
                 $state.go('tab.classroom', { 'classroom_title': classroom.title });
             }
         }
@@ -294,9 +294,9 @@ angular.module('hdrApp').controller('ClassroomsController',
                                             $interval(function () {
                                                 var shifted = hdrdbx.classrooms_view.shift();
 
-        /*                                         if (shifted.students.length > 0) {
-                                                } */
-                                                
+                                                /*                                         if (shifted.students.length > 0) {
+                                                                                        } */
+
                                                 $rootScope.classrooms_view.push(shifted);
                                                 $rootScope.students_count_global += shifted.students.length;
 
@@ -366,9 +366,9 @@ angular.module('hdrApp').controller('ClassroomsController',
 
         };
 
-        var pathDist = cordova.file.cacheDirectory;
         $scope.zipFilesAndImportClassrooms = function () {
             if (ionic.Platform.isWebView()) {
+                var pathDist = cordova.file.cacheDirectory;
                 fileChooser.open(function (uripath) {
 
                     //alert('file chooser uripath :' + uripath)
@@ -376,7 +376,7 @@ angular.module('hdrApp').controller('ClassroomsController',
                     function successNative(finalpath) {
                         //alert("url of file is " + finalpath);
                         console.log("url of file is " + finalpath);
-                        
+
                         zip.unzip(finalpath, pathDist + "hodoor-classrooms/", function (arg) {
                             console.log("dist : " + pathDist);
                             if (arg == 0) {
@@ -400,12 +400,12 @@ angular.module('hdrApp').controller('ClassroomsController',
                 });
             } else {
                 console.log("classrooms page");
-                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", students: [{ full_name: "عمر فيلالي", queuing_number: "10" }, { full_name: "كريم زرهوني", queuing_number: "12" }, { full_name: "سفياني بدر", queuing_number: "22" }] });
-                $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
-                $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
-                $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
-                $rootScope.classrooms_view.push({ id: "5", title: "TCPS1", level: "جذع مشترك خدماتي", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
-                $rootScope.classrooms_view.push({ id: "6", title: "TCSH7", level: "جذع مشترك خدماتي", students: [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", students: [{ id:"1",full_name: "عمر فيلالي", queuing_number: "1" }, { id:"2",full_name: "كريم زرهوني", queuing_number: "2" }, { id:"3",full_name: "سفياني بدر", queuing_number: "3" }] });
+                $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "1" }, { id:2,full_name: "كريم جلول", queuing_number: "2" }, { id:3,full_name: "سفياني حنان", queuing_number: "3" }] });
+                $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "5" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "17" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "5", title: "TCPS1", level: "جذع مشترك خدماتي", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "17" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "6", title: "TCSH7", level: "جذع مشترك خدماتي", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "17" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
 
                 $rootScope.classrooms_view.forEach(function (classroom) {
                     $rootScope.students_count_global += classroom.students.length;
@@ -422,7 +422,7 @@ angular.module('hdrApp').controller('ClassroomsController',
         $scope.showHelpPopup = function () {
             var helpPopup = $ionicPopup.show({
                 templateUrl: "views/classrooms/helpclassroomsview.html",
-                title: '<h3 class="title assertive-bg padding light" >معلومة</h3>',
+                title: '<h3 class="title positive-bg padding light" >دليل استعمال</h3>',
                 subTitle: '',
                 scope: $scope,
                 buttons: [
