@@ -23,7 +23,7 @@ angular.module('hdrApp')
 		/**
 		* @description return session title array like 14-15, 15-16
 		* it catch the session according to the current system time.
-		* @return array session title [3-4 , 2-4] or [8-9,8-10]
+		* @return array session title [4-3 , 4-2] or [9-8,10-9]
 		*/
 		$scope.catchSessions = function () {
 			var session = [];
@@ -31,12 +31,12 @@ angular.module('hdrApp')
 			//var h = moment().hour();
 			var h = $filter('date')(Date.now(), 'H');
 			var h1 = h - (-1);
-			session.push(h + "-" + h1);
+			session.push(h1 + "-" + h);
 			if (h % 2 !== 0) {
 				h = h - 1;
 			}
 			var h2 = h - (-2);
-			session.push(h + "-" + h2);
+			session.push(h2 + "-" + h);
 
 			return session;
 		};

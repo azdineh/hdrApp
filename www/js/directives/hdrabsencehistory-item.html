@@ -43,7 +43,7 @@
                                 <i class="fa fa-clock-o" aria-hidden="true"></i>
                             </span>
                             <span>حصة :</span>
-                            <span>{{session_view.session.title}} </span>
+                            <span dir="rtl">{{session_view.session.title}} </span>
                             <i class="icon ion-android-arrow-dropleft"></i>
 
 
@@ -87,12 +87,7 @@
                         <div style="display: block;padding-right:0px ;list-style-type:none" ng-show="session_view.session.students_count > session_view.students.length">
                             <div ng-repeat="student in session_view.students|limitTo:limitstudent:0 track by $index" style="font-size: 0.8em;width: 100%">
 
-                                <div style="font-size: 1em;" >
-                                    <span ng-style="student.is_student_fix_problem==0?{}:{'text-decoration': 'line-through','opacity': '0.6'}">{{student.full_name}}</span>
-                                    <span style="font-size: 1em">
-                                        <sub> ({{student.queuing_number}})</sub>
-                                    </span>
-                                </div>
+                               <hdr-student ng-init="mode='m3'"></hdr-student>
 
                             </div>
                             <button class="button button-clear button-positive" style="font-size: 0.9em;padding: 0px;" ng-click="moreStudent()" ng-hide="limitstudent>=session_view.students.length">إظهار المزيد..</button>

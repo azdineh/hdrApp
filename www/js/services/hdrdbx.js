@@ -34,7 +34,8 @@ angular.module('hdrApp')
             "foreign key (id_teacher) references teacher(id));";
 
         var absenceline_table_query = "CREATE TABLE IF NOT EXISTS absenceline(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "id_student INTEGER,id_session INTEGER,massar_number TEXT(255),full_name TEXT(255),queuing_number INTEGER,birth_date TEXT(255),is_student_fix_problem INTEGER," +
+            "id_student INTEGER,id_session INTEGER,massar_number TEXT(255),full_name TEXT(255),queuing_number INTEGER,birth_date TEXT(255),classroom_title TEXT(255)," +
+            "is_student_fix_problem INTEGER," +
             "foreign key (id_session) references session(id)," +
             "foreign key (id_student) references student(id));";
 
@@ -105,8 +106,9 @@ angular.module('hdrApp')
                 id_session: "",
                 massar_number: "", // for establish the link between absenceline and session and student tables after DB wippinge, wd can't satisfed with only id, because not necessery we will have the same id after new db populting.
                 full_name: "", // for keep it as history in case the student registrated in other classroom (for the same teacher or other teacher)
-                queuing_number: "", //the same case like full_name attribut
-                birth_date: "", //the same case like full_name attribut
+                queuing_number: "", //the same case like full_name attribute
+                birth_date: "", //the same case like full_name attribute
+                classroom_title: "", //the same case like full_name attribute
                 is_student_fix_problem: ""
             };
 
@@ -450,7 +452,7 @@ angular.module('hdrApp')
                             var query_absentStudents = "";
 
                             absentStudents.forEach(function (absentStudent) {
-                                query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "',0);";
+                                query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "','" + session.classroom_title + "',0);";
                             }, this);
 
                             cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
@@ -586,7 +588,7 @@ angular.module('hdrApp')
                                     "(student st left join absenceline a on a.massar_number=st.massar_number) " +
                                     "on a.id_session = s.id) " +
                                     "where s.id=?"; */
-                var sql = "select a.full_name as full_name, a.queuing_number as queuing_number, a.massar_number as massar_number, a.birth_date as birth_date," +
+                var sql = "select a.full_name as full_name, a.queuing_number as queuing_number, a.massar_number as massar_number, a.birth_date as birth_date, a.classroom_title as classroom_title," +
                     "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
                     "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
                     "from " +
@@ -623,6 +625,9 @@ angular.module('hdrApp')
                                         student.full_name = res.rows.item(i).full_name;
                                         student.queuing_number = res.rows.item(i).queuing_number;
                                         student.birth_date = res.rows.item(i).birth_date;
+                                        //I can name it h_classroom_title--> juste question of history needs
+                                        student.classroom_title = res.rows.item(i).classroom_title;
+
                                         if (res.rows.item(i).is_student_fix_problem == 0)
                                             student.is_student_fix_problem = false;
                                         else
@@ -976,23 +981,6 @@ angular.module('hdrApp')
             }
 
             vm.saveObservations = function (session_id, observation) {
-                /*  var q = $q.defer();
- 
-                 var query = "update session set observation='" + observation + "' where id='" + session_id + "'";
- 
-                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
-                     successFn: function (count) {
-                         console.log("Successfully uptade lines from " + count + " tables");
-                         q.resolve(count);
-                     },
-                     errorFn: function (err) {
-                         console.log("***Error while updating lines from session table ;" + err.message);
-                         console.log(err);
-                         q.reject(err);
-                     }
-                 });
- 
-                 return q.promise; */
 
 
                 var query = "update session set observation=? where id='" + session_id + "'";
@@ -1003,6 +991,34 @@ angular.module('hdrApp')
 
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [observation],
+                        function (tx, res) {
+                            q.resolve(1);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+
+
+            }
+
+            vm.updateSessionTitle = function (session_id, newTitle) {
+
+
+                var query = "update session set title=? where id='" + session_id + "'";
+
+                var q = $q.defer();
+
+
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [newTitle],
                         function (tx, res) {
                             q.resolve(1);
                         }, function (err) {
@@ -1052,17 +1068,19 @@ angular.module('hdrApp')
                 // 1-> update student.id_classroom by Null
                 var q = $q.defer();
 
-                var query = "update student set id_classroom=? where id='" + student.id + "'";
-                
+                var query = "update student set id_classroom=?, queuing_number=0 where massar_number='" + student.massar_number + "'";
+
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [null],
                         function (tx, res) {
-                            
+
                             //Ensuite, on procède à mettre à jour les nombres d'ordre par les nouvelles valeurs dans la table Student
-                            // 2--> updateStudentsQNOf(classroom) 
-                            vm.updateStudentsQNinStudentandAbsenceLine(classroom)
+                            // 2--> updateStudentsQNof(classroom) 
+                            vm.updateStudentsQNinStudentof(classroom)
                                 .then(function (res) {
-                                    console.log("student removed from this " + classroom.title + " classroom and student and absenceline tables updated")
+                                    console.log("student removed from this " + classroom.title + " classroom and student and absenceline tables updated");
+
+                                    //vm.updateAbsenceLine("queuing_number", 0, " massar_number ='" + student.massar_number + "'");
                                 }, function (err) { });
                             q.resolve(1);
                         }, function (err) {
@@ -1079,30 +1097,49 @@ angular.module('hdrApp')
 
 
 
-
-
             }
 
 
-            // Mettre à jour les nombres d'ordre de tous les élèves
+            // Mettre à jour les nombres d'ordre de tous les élèves dans la table students
+            // On change pas les QN dans absenceline
             // classroom contains students with new values of queuing number (QN)
-            vm.updateStudentsQNinStudentandAbsenceLine = function (classroom) {
+            vm.updateStudentsQNinStudentof = function (classroom) {
                 var q = $q.defer();
                 var sqlStudent = "";
                 var sqlAbsenceLine = "";
 
                 classroom.students.forEach(function (student) {
                     sqlStudent = sqlStudent + "update student set queuing_number=" + student.queuing_number + " where id=" + student.id + "; ";
-                    sqlAbsenceLine = sqlAbsenceLine + "update absenceline set queuing_number=" + student.queuing_number + " where id_student=" + student.id + "; ";
+                    //sqlAbsenceLine = sqlAbsenceLine + "update absenceline set queuing_number=" + student.queuing_number + " where id_student=" + student.id + "; ";
 
                 }, this);
                 //console.log(sql);
-                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, sqlStudent + sqlAbsenceLine, {
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, sqlStudent, {
                     successFn: function (count) {
                         q.resolve(count);
                     },
                     errorFn: function (err) { console.log("***Error whiile updating students QN: " + err.message); console.log(err); q.reject(err) }
                     //progressFn: function (current, total) { console.log(current + "/" + total) }
+                });
+
+                return q.promise;
+            }
+
+            vm.updateAbsenceLine = function (champ, newValue, critere) {
+                var q = $q.defer(); 1;
+
+                var query = "update absenceline set " + champ + "=" + newValue + " where " + critere + ";";
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                    successFn: function (count) {
+                        console.log("Successfully update line from absenceline ");
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while updating line from absenceline table ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
                 });
 
                 return q.promise;
@@ -1136,12 +1173,12 @@ angular.module('hdrApp')
 
             }
 
-            vm.updateStudent = function (student,newStudent) {
+            vm.updateStudent = function (student, newStudent) {
 
                 var q = $q.defer();
-                
 
-               var query="update student set full_name='"+newStudent.full_name+"',registration_number='"+newStudent.registration_number+"',massar_number='"+newStudent.massar_number+"',birth_date='"+newStudent.birth_date+"',queuing_number='"+newStudent.queuing_number+"',observation='"+newStudent.observation+"' where id="+student.id+";";
+
+                var query = "update student set full_name='" + newStudent.full_name + "',registration_number='" + newStudent.registration_number + "',massar_number='" + newStudent.massar_number + "',birth_date='" + newStudent.birth_date + "',queuing_number='" + newStudent.queuing_number + "',observation='" + newStudent.observation + "',id_classroom=" + newStudent.id_classroom + " where id=" + student.id + ";";
 
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
                     successFn: function (count) {
@@ -1158,6 +1195,7 @@ angular.module('hdrApp')
                 return q.promise;
 
             }
+
 
             vm.removedata = function (removAllFalg) {
 

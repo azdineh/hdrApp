@@ -4,6 +4,10 @@ angular.module('hdrApp')
 		$scope.initialobservation = "";
 		$scope.session_view = $stateParams.session_view;
 
+		$scope.test009 = function () {
+			//alert('dfdfdf');
+			$scope.showUpdateSessionConfirm();
+		}
 
 		if (ionic.Platform.isWebView()) {
 
@@ -41,7 +45,14 @@ angular.module('hdrApp')
 					})
 			}
 
-		
+			$scope.updateSession = function (session_id) {
+				var newTitle = $scope.hEnd + "-" + $scope.hStart;
+				hdrdbx.updateSessionTitle(session_id, newTitle);
+			}
+
+
+
+
 
 
 			$scope.showConfirmForRemoveStudent = function (id) {
@@ -70,9 +81,9 @@ angular.module('hdrApp')
 					});
 			}
 
-/* 			$scope.$on('$ionicView.leave', function () {
-				$stateParams.session_view = $scope.session_view;
-			}); */
+			/* 			$scope.$on('$ionicView.leave', function () {
+							$stateParams.session_view = $scope.session_view;
+						}); */
 
 			$scope.changeStudentFixProblem = function (student, session_id) {
 				hdrdbx.changeStudentFixProblem(student, session_id)
@@ -95,7 +106,7 @@ angular.module('hdrApp')
 			$scope.session_view.students = students;
 
 			var session = {};
-			session.title = "10-11";
+			session.title = "11-10";
 			session.parity = "odd";
 			session.unix_time = "15478421547";
 
@@ -118,6 +129,38 @@ angular.module('hdrApp')
 						}
 					}
 				]
+			});
+		};
+
+
+		$scope.showUpdateSessionConfirm = function () {
+
+			//session_view.session.title
+			var str = new String($scope.session_view.session.title);
+			var tiretIndex = str.indexOf('-');
+			$scope.hStart = parseInt(str.substring(tiretIndex + 1, str.length));
+			$scope.hEnd = parseInt(str.substring(0, tiretIndex));
+
+			var confirmPopup = $ionicPopup.confirm({
+				title: 'تعديل الفترة الزمنية',
+				templateUrl: "views/sessionshistory/sessionalter/updatesession.html",
+				scope: $scope,
+				cancelText: 'إلغاء الأمر',
+				okText: 'تعديل'
+			});
+
+			confirmPopup.then(function (res) {
+				if (res) {
+					console.log('You are sure');
+					$scope.session_view.session.title = $scope.hEnd + "-" + $scope.hStart;
+					if(ionic.Platform.isWebView()){
+
+						$scope.updateSession($scope.session_view.session.id)
+					}
+
+				} else {
+					console.log('You are not sure');
+				}
 			});
 		};
 

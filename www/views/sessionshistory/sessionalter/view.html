@@ -46,9 +46,11 @@
 
                             <span>
                                 <span>حصة :</span>
-                                <span>
-                                    {{session_view.session.title}}
-                                </span>
+                                <div on-tap="test009()" dir="rtl" style="background-color: rgba(144, 238, 144, 0.571);width: fit-content;display: inline-block;padding: 5px;padding-top: 6px;padding-right: 7px;border-radius:10px ">
+                                    <span style="">
+                                        {{session_view.session.title}}
+                                    </span>
+                                </div>
                             </span>
                             <i class="icon ion-android-arrow-dropleft"></i>
                             <span style="padding: 4px;border-radius: 10px 10px 10px 10px;">
@@ -103,7 +105,7 @@
                                 </button>
                             </div>
                             <div id="hdr-item1" class="hdr-item" style="position: relative;">
-                                <hdr-student ng-init="showborder=false;showtitle=false"  ></hdr-student>
+                                <hdr-student ng-init="showborder=false;showtitle=false;mode='m2'"></hdr-student>
                             </div>
                         </div>
                         <div class="hdr-classroom-container ng-hide" style="z-index: 100;position: absolute;top: 0px;height: 50px;" id="hdr-session-alter-confirm{{student.massar_number}}">
@@ -141,14 +143,13 @@
                         </tr>
                         <tr>
                             <td style="text-align: left;padding-left: 4px;height: 50px">
-                                <button class="button button-outline"  ng-click="saveObservation(session_view.session,session_view.session.observation)"
-                                    style="width: 70px;border:0px;color: rgb(8, 14, 54)">حفظ</button>
+                                <button class="button button-outline" ng-click="saveObservation(session_view.session,session_view.session.observation)" style="width: 70px;border:0px;color: rgb(8, 14, 54)">حفظ</button>
                             </td>
                         </tr>
                     </table>
 
                 </div>
- 
+
             </div>
 
 
@@ -157,3 +158,5 @@
     </ion-content>
 
 </ion-view>
+
+

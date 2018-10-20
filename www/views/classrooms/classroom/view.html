@@ -98,7 +98,7 @@
         عدد التلاميذ : {{classroom.students.length}}
       </div>
  -->
-      <hdr-student ng-repeat="student in classroom.students" ng-init="showborder=true;showtitle=false;simplemode=true" id="hdr-student-item{{student.id}}"
+      <hdr-student ng-repeat="student in classroom.students" ng-init="showborder=true;showtitle=false;mode='simple'" id="hdr-student-item{{student.id}}"
         on-double-tap="selectElement(student)"></hdr-student>
 
 
@@ -160,7 +160,7 @@
 
 
      <div style="text-align:center;width:100%"> 
-       <button class="button icon-right ion-person-add button-positive" ng-click="addStudent()" style="width:40%">إضافة</button>
+       <button class="button icon-right ion-person-add button-positive" ng-click="addStudent(false)" style="width:40%">إضافة</button>
        <button class="button button-outline " ng-click="closeModal()">رجوع</button>
       </div>
 
@@ -188,9 +188,9 @@
 
           <br/>
           <div style="padding-bottom:4px"> لائحة التلاميذ الذي سبق حذفهم :</div>
-          <div style="height:30vh;">
+          <div>
             <div>
-                <hdr-student ng-repeat="student in removedStudents" ng-init="showborder=true;showtitle=false;simplemode=true;showmore=false;shomeqn=false" id="hdr-student-item{{student.id}}"
+                <hdr-student ng-repeat="student in removedStudents" ng-init="showborder=true;showtitle=false;mode='simple';showmore=false;shomeqn=false" id="hdr-student-item{{student.id}}"
                 on-double-tap="selectElement(student)"></hdr-student>
           </div>
           </div>
@@ -198,7 +198,7 @@
           <br/>
 
      <div style="text-align:center;width:100%"> 
-        <button class="button icon-right ion-person-add button-positive" ng-click="addStudent()" style="width:40%">إضافة</button>
+        <button class="button icon-right ion-person-add button-positive" ng-click="addStudent(true)" ng-disabled="itemSelected==false" style="width:40%">إضافة</button>
         <button class="button button-outline " ng-click="closeModal()">رجوع</button>
        </div>
 

@@ -29,9 +29,67 @@
     background-color: rgba(23, 57, 228, 0.434);
     margin: 1px;
   }
+
+  .hdr-student-mode_m3 div {
+    margin-right: 2px
+  }
 </style>
 
-<div style="background-color:inherit;width: 100%;height: 100%" ng-show="simplemode">
+<div ng-show="mode=='m3'" dir="rtl">
+
+  <div>
+
+    <div style="font-size: 1em" class="hdr-student-mode_m3">
+      <div ng-style="student.is_student_fix_problem==0?{}:{'text-decoration': 'line-through','opacity': '0.6'}"> {{student.full_name}} </div>
+
+      <div ng-if="flagMessage">
+        <!-- eleve a une classe -->
+        <span ng-if="studentQN>0">
+          <!-- meme classe -->
+          <span ng-if="currentClassroomTitle==student.classroom_title">
+            <!-- eleve chande de numro d ordre-->
+            <span ng-if="studentQN!=student.queuing_number">
+              <div> {{student.queuing_number|hdrnumber}}</div>
+              <div class="icon ion-arrow-left-c" style="zoom: 1.2"></div>
+              <div>{{studentQN|hdrnumber}}</div>
+            </span>
+            <!-- else, eleve ne change pas de num d ordre -->
+            <span ng-if="studentQN==student.queuing_number">
+              <div>{{studentQN|hdrnumber}}</div>
+            </span>
+          </span>
+          <!-- else, pad de meme classe-->
+          <span ng-if="currentClassroomTitle!=student.classroom_title">
+
+            <div>{{student.queuing_number|hdrnumber}}</div>
+            <div>
+              <!--  <small style="color: red"> إنتقل الى</small> -->
+              <div class="icon ion-reply assertive" style="zoom: 1.6"></div>
+              <div>{{currentClassroomTitle}} </div>
+            </div>
+            <div class="icon ion-arrow-left-b" style="zoom: 1.2"></div>
+            <div>{{studentQN|hdrnumber}}</div>
+
+          </span>
+
+        </span>
+        <!--eleve pas de classe -->
+        <span ng-if="studentQN==0">
+          <span ng-show="flagMessage">
+            <div>{{student.queuing_number|hdrnumber}}</div>
+            <div class="icon ion-close-round assertive" style="zoom: 1.3"></div>
+            <!--  <small style="color: red"> (حُذف من لائحة القسم) </small> -->
+          </span>
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div style="background-color:inherit;width: 100%;height: 100%" ng-show="mode=='simple'">
 
   <table class="classroom_item" style="width:inherit" id="ggh">
     <tr>
@@ -84,7 +142,7 @@
   </table>
 
 </div>
-<div style="background-color:inherit;width: 100%;height: 100%" ng-show="!simplemode">
+<div style="background-color:inherit;width: 100%;height: 100%" ng-show="mode=='m2'">
   <button class="button button-small button-outline" style="width:inherit;height: inherit;text-align: right;border:0;padding:4px"
     ng-click="goToStudentView(student,{title:student.title})">
 
@@ -110,7 +168,7 @@
             <!-- <div class="hdr-absent-symbol-item" ng-repeat="t in student.times track by $index"></div> -->
 
             <div ng-repeat="absenceline in student_absences" class="hdr_sessionalter_fix{{absenceline.is_student_fix_problem}}"></div>
-            
+
             <!-- <div class="hdr-absent-symbol-item-blu" ng-repeat="absenceline in student_absences" ng-show="absenceline.is_student_fix_problem==1"></div> -->
 
             <div class="hdr-absent-symbol-item" ng-show="tapped"></div>
