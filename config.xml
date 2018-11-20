@@ -16,6 +16,7 @@
     <preference name="SplashScreenDelay" value="2500" />
     <preference name="AndroidPersistentFileLocation" value="Internal" />
     <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,assets,root" />
+    <preference name="KeyboardResize" value="false" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>

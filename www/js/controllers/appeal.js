@@ -14,7 +14,7 @@ angular.module('hdrApp')
 		$scope.absentStudents = [];
 		/** @param this param is for be allimented in dr-student-card-appeal directive*/
 		$scope.hdriterator = "all";
-		$scope.pagename = $scope.choiceIndexOfFastCase == '-1' ? "نداء القسم" : "تحديد تغيبات القسم";
+		$scope.pagename = $scope.choiceIndexOfFastCase == '-1' ? "نداء القسم" : "القسم";
 
 		$scope.studentsDistribuedBy5InArray = [];
 
@@ -183,8 +183,19 @@ angular.module('hdrApp')
 						onTap: function (e) {
 							//console.log($scope.data.choice);
 
+							// all students are absents
 							if (index == 1) {
-								$scope.absentStudents = $scope.classroom.students;
+								if ($scope.currentGroup == "all") {
+									$scope.absentStudents = $scope.classroom.students;
+								}
+								// impairs
+								if ($scope.currentGroup == "odd") {
+									$scope.absentStudents = $scope.classroom.students.filter($scope.odd);
+								}
+								//pairs
+								if ($scope.currentGroup == "even") {
+									$scope.absentStudents = $scope.classroom.students.filter($scope.even);
+								}
 							}
 
 							$scope.saveSession(function () {
@@ -233,6 +244,10 @@ angular.module('hdrApp')
 			}
 			else {
 				$scope.showPopup($scope.choiceIndexOfFastCase);
+				
+				$timeout(function () {
+					$scope.selectSessionParity("all");
+				}, 520);
 			}
 
 		});
@@ -278,17 +293,12 @@ angular.module('hdrApp')
 
 			console.log("Current parity: " + session.parity);
 
-			if ($scope.absentStudents.length == 0) {
-				session.observation = "لم يتغيب أحد.";
-			}
-			if ($scope.absentStudents.length == $scope.classroom.students.length) {
-				session.observation = "غياب جماعي.";
-			}
-
-			if (session.isExamSession == 1) {
-				session.observation += "~" + "حصة اختبار.";
-			}
-
+			/* 			if ($scope.absentStudents.length == 0) {
+							session.observation = "لم يتغيب أحد.";
+						}
+						if ($scope.absentStudents.length == $scope.classroom.students.length) {
+							session.observation = "غياب جماعي.";
+						} */
 
 
 			hdrdbx.saveAbsentStudents(session, $scope.absentStudents)
@@ -302,6 +312,37 @@ angular.module('hdrApp')
 					console.log(err);
 				});
 		}
+
+		$scope.selectSessionParity = function (id) {
+			if (id == "all") {
+				document.getElementById("hdr-parity-odd").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-parity-even").style.backgroundColor = "rgb(212, 223, 206)";
+				$scope.currentGroup = "all";
+			}
+			if (id == "odd") {
+				document.getElementById("hdr-parity-all").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-parity-even").style.backgroundColor = "rgb(212, 223, 206)";
+				$scope.currentGroup = "odd";
+			}
+			if (id == "even") {
+				document.getElementById("hdr-parity-all").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-parity-odd").style.backgroundColor = "rgb(212, 223, 206)";
+				$scope.currentGroup = "even";
+			}
+
+			var elm = document.getElementById("hdr-parity-" + id);
+			var initbgColor = elm.style.backgroundColor;
+			elm.style.backgroundColor = "rgb(114, 241, 41)";
+			
+			/* if (elm.style.backgroundColor == "rgb(114, 241, 41)") {
+			}
+			else {
+				elm.style.backgroundColor = "rgb(114, 241, 41)";
+			} */
+
+		}
+
+
 
 
 

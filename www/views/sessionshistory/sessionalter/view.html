@@ -32,7 +32,7 @@
 <ion-view view-title="تعديل حصة">
 
     <ion-content scroll="true" dir="rtl" style="background-color: rgba(228, 223, 69, 0.25)">
-        <div class="hdr-cntr-003" style="width: inherit">
+        <div ng-show="observationUpdateMode==false" class="hdr-cntr-003" style="width: inherit">
             <div style="padding-top: 25px;padding-bottom: 25px;background-color: rgba(228, 223, 69, 0.1)">
                 <table style="width: 99%;font-size: 16px;margin: auto" class="hdr-g009">
                     <tr>
@@ -125,38 +125,95 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="hdr-classroom-container ng-hide" style="z-index: 100;position: absolute;top: 0px;height: 50px;" id="hdr-session-alter-spinner{{student.massar_number}}">
+                            <div style="height: 100%;width: 100%;background: linear-gradient(to left,rgba(0, 0, 0, 0.85),rgba(0, 0, 0, 0.7))">
+                                <table style="width: 100%;height: 100%;font-size: 0.8em" class="hdr-g009">
+                                    <tr>
+                                        <td style="width: 15%;padding-right: 3px;vertical-align: middle">
+                                            <ion-spinner class="spinner-energized"></ion-spinner>
+
+                                        </td>
+                                        <td>
+                                            <span class="energized">جار الحذف..</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+                    <li style="padding: 8px" ng-show="restOfStudents.length>0">
+                        <table style="width: 100%;">
+                            <tr style="">
+                                <td style="vertical-align: middle;width:10%">
+                                    <button class="button" ng-click="showAddAbsentsStudentsConfirm()" style="font-size: 2em;background-color: rgba(144, 237, 144, 0.573)">
+                                        <span>+</span>
+                                    </button>
+                                </td>
+                                <td style="vertical-align: middle">
+                                    <span style="padding: 4px">
+                                        إضافة متغيب أخر
+
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
                     </li>
                 </ul>
 
-                <div class="hdr-session-alter-observation" style="position: relative;">
-                    <div style="padding: 8px;font-size: 14px;padding-right: 14px;background-color: rgba(45, 51, 9, 0.062);border-bottom: 1px solid rgb(37, 37, 6)">
-                        ملاحظات تخص هذه الحصة:</div>
-                    <div style="position: absolute;top:0px;left: 8px">
+                <table>
+                    <tr>
+                    </tr>
+                </table>
 
-                    </div>
-                    <table style="margin-top: 4px;width: 100%;background: linear-gradient(to bottom,rgba(235, 235, 235, 0.325),rgba(255, 255, 255, 0));">
-                        <tr>
-                            <td style="width: 80%">
-                                <textarea placeholder="هنا، يمكنك كتابة ملاحظة تهم هذه الحصة." ng-model="session_view.session.observation" id="" style="width: 100%;background-color: inherit;padding: 12px;font-size: 14px;font-family: hdrFont"
-                                    rows="6"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left;padding-left: 4px;height: 50px">
-                                <button class="button button-outline" ng-click="saveObservation(session_view.session,session_view.session.observation)" style="width: 70px;border:0px;color: rgb(8, 14, 54)">حفظ</button>
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
 
             </div>
+        </div>
+        <div class="hdr-session-alter-observation" style="position: relative;">
 
-
+            <div style="padding: 4px;font-size: 14px;padding-right: 14px;background-color: rgba(45, 51, 9, 0.062);border-bottom: 1px solid rgb(37, 37, 6)">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="width: 80%;vertical-align: middle">
+                            <div>
+                                ملاحظات تخص هذه الحصة:</div>
+                        </td>
+                        <td style="vertical-align: middle" ng-show="observationUpdateMode==false">
+                           <!--  <button class="button button-small" ng-click=""
+                             style="background-color: transparent;width: 70px;border:1px solid black;color: rgb(8, 14, 54)">تعديل</button> -->
+                        </td>
+                        <td style="vertical-align: middle" ng-show="observationUpdateMode==true">
+                            <button class="button button-small" ng-click="saveObservation(session_view.session,session_view.session.observation)"
+                             style="background-color: transparent;width: 70px;border:1px solid black;color: rgb(8, 14, 54)">حفظ</button>
+                        </td>
+                        <td style="vertical-align: middle" ng-show="observationUpdateMode==true">
+                            <button class="button button-small" ng-click="switchObservationUpateMode()"
+                             style="background-color: transparent;width: 70px;border:1px solid black;color: rgb(8, 14, 54)">رجــوع</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
         </div>
+
+        <table ng-show="observationUpdateMode==true" style="margin-top: 4px;width: 100%;background: linear-gradient(to bottom,rgba(235, 235, 235, 0.325),rgba(255, 255, 255, 0));">
+            <tr>
+                <td style="width: 80%">
+                    <textarea placeholder="قم بالنقر على الزر تعدبل، لإضافة ملاحظة تخص الحصة." ng-model="session_view.session.observation" style="width: 100%;background-color: inherit;padding: 12px;font-size: 14px;font-family: hdrFont"
+                        rows="6"></textarea>
+                </td>
+            </tr>
+        </table>
+        <table ng-show="observationUpdateMode==false" style="margin-top: 4px;width: 100%;
+        background: linear-gradient(to bottom,rgba(235, 235, 235, 0.325),rgba(255, 255, 255, 0));">
+            <tr>
+                <td style="width: 80%">
+                    <textarea disabled  on-tap="switchObservationUpateMode()" placeholder="قم بالنقر على الزر تعدبل، لإضافة ملاحظة تخص الحصة."
+                     ng-model="session_view.session.observation"
+                        style="width: 100%;;padding: 12px;font-size: 14px;font-family: hdrFont" rows="10"></textarea>
+                </td>
+            </tr>
+        </table>
+
     </ion-content>
 
 </ion-view>
-
-

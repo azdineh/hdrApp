@@ -1,8 +1,8 @@
 angular.module('hdrApp')
-    .controller('HomeController', function ($scope, $http, $rootScope, $ionicScrollDelegate, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
+    .controller('HomeController', function ($scope, $http, $state, $rootScope, $location, $timeout, $ionicScrollDelegate, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
 
         $scope.page = "home";
-        /*         $rootScope.deviceWidth = $window.innerWidth;
+        /*       $rootScope.deviceWidth = $window.innerWidth;
                 $rootScope.deviceHeight = $window.innerHeight; */
 
         $rootScope.classrooms_view = $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : [];
@@ -11,20 +11,53 @@ angular.module('hdrApp')
 
 
         $rootScope.hideTab = false;
+        // if($state.current.name==""
 
-        window.addEventListener('keyboardWillShow', function (event) {
-            // Describe your logic which will be run each time when keyboard is about to be shown.
-            console.log(event.keyboardHeight);
-            console.log("keuborad whill show, process to hide tab..");
-            document.getElementById('hdr-tabs-bar').classList.add("keyboard-open");
-            $ionicScrollDelegate.scrollBottom(true);
+        window.addEventListener('keyboardDidShow', function (event) {
+            /*       console.log("intial content height : " + $rootScope.session_alter_content_height);
+                  console.log("keyboad height : " + event.keyboardHeight);
+      
+                  var contentHeight = document.getElementById('hdr-sessionalter-content').clientHeight;
+                  console.log("current content height :" + contentHeight); */
+
+
+            /*5) */
+
+            //$rootScope.keyboraedShown = true;
+
+/*             $timeout(function () {
+                $location.hash("hdr-anchre1");
+                $ionicScrollDelegate.$getByHandle('mainScroll').anchorScroll(true);
+            }, 50) */
+
+
+        });
+
+        window.addEventListener('keyboardDidHide', function () {
+            // $ionicScrollDelegate.scrollBottom();
+            /*  var contentHeight = document.getElementById('hdr-sessionalter-content').clientHeight;
+             console.log("current content height :" + contentHeight); */
+
+            //document.getElementById('hdr-sessionalter-content').style.height = $rootScope.session_alter_content_height + "px";
+
+            /**/
+
+            /*             $ionicScrollDelegate.$getByHandle('mainScroll').resize();
+                        // $ionicScrollDelegate.$getByHandle('mainScroll').resize();
+                        $timeout(function () {
+                            $ionicScrollDelegate.$getByHandle('mainScroll').scrollBottom();
+                        }, 50) */
+
+            //$rootScope.keyboraedShown = false;
+
+        });
+
+        window.addEventListener('keyboardWillShow', function () {
+
         });
 
         window.addEventListener('keyboardWillHide', function () {
-            // Describe your logic which will be run each time when keyboard is about to be closed.
-            //document.getElementById('hdr-Tab').style.display=
-            document.getElementById('hdr-tabs-bar').classList.remove("keyboard-open");
-            $ionicScrollDelegate.scrollTop(true);
+
         });
 
         /* $rootScope.today = moment().local('ar-ma').format('dddd Do MMMM YYYY'); */

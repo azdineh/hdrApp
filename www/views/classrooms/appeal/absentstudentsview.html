@@ -16,26 +16,50 @@
 		height: 50px;
 		margin: 8px 0 8px 0;
 	}
+
+	.hdr-parity-classroom {}
 </style>
 
 
 <div class="appeal-abstent-student" style="border: 1px solid lightgray;;padding: 8px;padding-top: 0px">
 	<div ng-show="choiceIndexOfFastCase==-1">
-		<span ng-repeat="student in absentStudents|orderBy:'queuing_number'" ng-show="absentStudents.length>0 && classroom.students.length>absentStudents.length" ><b>{{student.queuing_number | hdrnumber}}</b><i ng-show="!$last">, </i><i ng-show="$last">.</i></span>
+		<span ng-repeat="student in absentStudents|orderBy:'queuing_number'" ng-show="absentStudents.length>0 && classroom.students.length>absentStudents.length">
+			<b>{{student.queuing_number | hdrnumber}}</b>
+			<i ng-show="!$last">, </i>
+			<i ng-show="$last">.</i>
+		</span>
 		<span ng-show="0==absentStudents.length" style="float: right">حضر جميع التلاميذ</span>
 		<span ng-show="classroom.students.length==absentStudents.length" style="float: right">تغيب جميع التلاميذ</span>
 
 	</div>
 	<span ng-show="choiceIndexOfFastCase==0" style="float: right">حضر جميع التلاميذ</span>
-<!-- 	<span ng-show="choiceIndexOfFastCase==1" style="float: right">أدخل أرقام التلاميذ الذين تغيبوا</span> -->
+	<!-- 	<span ng-show="choiceIndexOfFastCase==1" style="float: right">أدخل أرقام التلاميذ الذين تغيبوا</span> -->
 	<span ng-show="choiceIndexOfFastCase==1" style="float: right">تغيب جميع التلاميذ</span>
-<!-- 	<span ng-show="choiceIndexOfFastCase==3" style="float: right">أدخل أرقام التلاميذ الذين حضروا</span> -->
+	<!-- 	<span ng-show="choiceIndexOfFastCase==3" style="float: right">أدخل أرقام التلاميذ الذين حضروا</span> -->
 </div>
-<div dir="rtl" style="margin-top: 30px;font-size: 0.8em">قبل تسجيل الغياب، حدد الحصة الزمنية المناسية. </div>
+<div dir="rtl" ng-show="choiceIndexOfFastCase==0 || choiceIndexOfFastCase==1">
+	<div>حصة تتعلق ب: ؟</div>
+	<div class="hdr-parity-classroom">
+		<table>
+			<tr>
+				<td on-tap="selectSessionParity('all')" id="hdr-parity-all">جميع</td>
+				<td on-tap="selectSessionParity('odd')" id="hdr-parity-odd">فرديين</td>
+				<td on-tap="selectSessionParity('even')" id="hdr-parity-even">زوجيين</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div dir="rtl" style="margin-top: 10px;">حدد الحصة الزمنية المناسية. </div>
 <div style="font-size: 12em; background: none;margin: auto;margin-top: 10px;width: 100%">
 	<ion-list>
-		<ion-radio ng-model="data.choice" ng-value="catchedSessions[0]"><i class="icon ion-android-time"> {{catchedSessions[0]}}</i> <span>(ساعة)</span></ion-radio>
-		<ion-radio ng-model="data.choice" ng-value="catchedSessions[1]"><i class="icon ion-android-time"> {{catchedSessions[1]}}</i> <span>(ساعتين)</span></ion-radio>
+		<ion-radio ng-model="data.choice" ng-value="catchedSessions[0]">
+			<i class="icon ion-android-time"> {{catchedSessions[0]}}</i>
+			<span>(ساعة)</span>
+		</ion-radio>
+		<ion-radio ng-model="data.choice" ng-value="catchedSessions[1]">
+			<i class="icon ion-android-time"> {{catchedSessions[1]}}</i>
+			<span>(ساعتين)</span>
+		</ion-radio>
 
 	</ion-list>
 

@@ -47,7 +47,25 @@
 
     <ion-content scroll="true" dir="rtl" style="margin-top: 45px;padding-top: 10px">
 
-        <hdrabsencehistoryitem ng-repeat="day in daies track by $index"></hdrabsencehistoryitem>
+        <div ng-repeat="day in daies track by $index" dir="rtl" style="margin-bottom: 1vmax;width: 94%;margin: auto;margin-top: 4px">
+            <div class=" light-bg dark" style="border:0px;text-align: right;margin-bottom:2px;background-color: inherit;opacity: 0.9;font-size: 1em">
+                <table style="width: 100%;" id="gg">
+                    <tr>
+                        <td style="text-align: right" class="positive">
+                            <div style="text-align: center;width: 20px;height: 20px;border-radius: 50%">
+                                <i class="ion ion-android-bookmark positive" aria-hidden="true" style="zoom: 1.4;"></i>
+                            </div>
+                            <div style="padding-right: 4px">{{day.date|date:'fullDate'}}</div>
+                            <!-- <span> - </span> -->
+                            <!-- <span>({{day.sessions_view.length|hdrsession}})</span> -->
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <hdrabsencehistoryitem ng-repeat="session_view in day.sessions_view track by $index" ></hdrabsencehistoryitem>
+        </div>
+
         <div style="padding: 11px;zoom: 1.25;position: relative;top:-9px;color: rgb(169, 169, 169)" ng-show="lastday && daies.length>0">
             <span class="icon ion-record"></span>
         </div>

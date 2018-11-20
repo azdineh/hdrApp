@@ -443,34 +443,63 @@ angular.module('hdrApp')
 
 
 
-            vm.saveAbsentStudents = function (session, absentStudents) {
+            vm.saveAbsentStudents = function (session, absentStudents, flag) {
+
                 var q = $q.defer();
-                vm.insertRow('session', session)
-                    .then(function (session) {
-                        if (absentStudents.length > 0) {
 
-                            var query_absentStudents = "";
+                if (flag != true) {
 
-                            absentStudents.forEach(function (absentStudent) {
-                                query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "','" + session.classroom_title + "',0);";
-                            }, this);
+                    vm.insertRow('session', session)
+                        .then(function (session) {
+                            if (absentStudents.length > 0) {
 
-                            cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
-                                successFn: function (count) {
-                                    q.resolve(count);
-                                },
-                                errorFn: function (err) {
-                                    q.reject(err);
-                                },
-                                progressFn: function () { }
-                            })
-                        } else {
-                            q.resolve(0);
-                        }
+                                var query_absentStudents = "";
 
-                    }, function (err) {
-                        q.reject(err);
-                    })
+                                absentStudents.forEach(function (absentStudent) {
+                                    query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "','" + session.classroom_title + "',0);";
+                                }, this);
+
+                                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
+                                    successFn: function (count) {
+                                        q.resolve(count);
+                                    },
+                                    errorFn: function (err) {
+                                        q.reject(err);
+                                    },
+                                    progressFn: function () { }
+                                })
+                            } else {
+                                q.resolve(0);
+                            }
+
+                        }, function (err) {
+                            q.reject(err);
+                        })
+                }
+                else {
+                    console.log("update session: absent students");
+                    if (absentStudents.length > 0) {
+                        console.log('absent student lentgth' + absentStudents.length);
+                        var query_absentStudents = "";
+
+                        absentStudents.forEach(function (absentStudent) {
+                            query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "','" + session.classroom_title + "',0);";
+                        }, this);
+
+                        cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
+                            successFn: function (count) {
+                                q.resolve(count);
+                            },
+                            errorFn: function (err) {
+                                q.reject(err);
+                            },
+                            progressFn: function () { }
+                        })
+                    } else {
+                        q.resolve(0);
+                    }
+                }
+
 
                 return q.promise;
             };
@@ -1034,6 +1063,90 @@ angular.module('hdrApp')
                 return q.promise;
 
 
+            }
+
+            vm.updateSessionParity = function (session_id, newParity) {
+
+
+                var query = "update session set parity=? where id='" + session_id + "'";
+
+                var q = $q.defer();
+
+
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [newParity],
+                        function (tx, res) {
+                            q.resolve(1);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+
+
+            }
+            vm.updateSessionisExamSession = function (session_id, newFlag) {
+
+
+                var query = "update session set isExamSession=? where id='" + session_id + "'";
+
+                var q = $q.defer();
+
+
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [newFlag],
+                        function (tx, res) {
+                            q.resolve(1);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+
+
+            }
+
+            vm.updateSessionAbsentStudents = function (session, absentStudents_to_remove) {
+                var q = $q.defer();
+                //delete all correspondance line in absenceline
+
+                if (absentStudents_to_remove.length > 0) {
+                    var query = "";
+                    absentStudents_to_remove.forEach(function (student) {
+                        query = query + "delete from absenceline where id_session='" + session.id + "' and massar_number='" + student.massar_number + "';";
+                    }, this);
+
+
+                    cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                        successFn: function (count) {
+                            console.log("delete " + absentStudents_to_remove.length + " absent students from session " + session.id);
+                            q.resolve(count);
+                        },
+                        errorFn: function (err) {
+                            q.reject(err);
+                        },
+                        progressFn: function () { }
+                    })
+                }
+                else {
+                    q.resolve(0);
+                }
+
+                return q.promise;
             }
 
             vm.removeStudentFromAbsenceLine = function (massar_number, session_id) {

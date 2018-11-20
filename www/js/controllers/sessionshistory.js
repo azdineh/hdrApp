@@ -34,6 +34,7 @@ angular.module('hdrApp')
                                     title: '10-11',
                                     students_count: 50,
                                     parity: 'odd',
+                                    isExamSession:1,
                                     observation: "حصة امتحان<br/>kjkljkljl <br/>:;j;,kljkl"
 
                                 },
@@ -100,11 +101,12 @@ angular.module('hdrApp')
                                     title: '10-11',
                                     students_count: 50,
                                     parity: 'even',
+                                    isExamSession:0,
                                     observation: "حصة امتحان"
 
                                 },
                                 classroom: {
-                                    title: 'TCS-3'
+                                    title: 'TCS-2'
                                 },
                                 students: [
                                     {
@@ -134,11 +136,12 @@ angular.module('hdrApp')
                                     title: '10-11',
                                     students_count: 50,
                                     parity: 'all',
+                                    isExamSession:0,
                                     observation: "حصة امتحان"
 
                                 },
                                 classroom: {
-                                    title: 'TCS-3'
+                                    title: 'TCS-5'
                                 },
                                 students: [
                                     {

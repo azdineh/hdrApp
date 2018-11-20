@@ -23,7 +23,7 @@ angular.module('hdrApp')
 				if (ionic.Platform.isWebView()) {
 
 
-					if ($state.current.name == "tab.sessionshistory") {
+					if ($state.current.name == "tab.sessionshistory" || $state.current.name == "tab.sessionalter") {
 						console.log("current state :" + $state.current.name);
 
 						$timeout(function () {
@@ -34,6 +34,7 @@ angular.module('hdrApp')
 
 									hdrdbx.selectRows('classroom', "id='" + std.id_classroom + "'")
 										.then(function (classrooms) {
+
 											if (classrooms[0] != null)
 												$scope.currentClassroomTitle = classrooms[0].title;
 											else
@@ -42,11 +43,24 @@ angular.module('hdrApp')
 											/* $scope.student.queuing_number = std.queuing_number; */
 
 
+											if ($state.current.name == "tab.sessionalter") {
+												if ($scope.currentClassroomTitle != $scope.session_view.classroom.title) {
+													$scope.student.queuing_number = $scope.student.queuing_number + "*";
+													$scope.student.isMoved = true;
+												}
+												else {
+													$scope.student.isMoved = false;
+												}
+
+												if ($scope.studentQN != $scope.student.queuing_number) {
+													$scope.student.queuing_number = $scope.student.queuing_number + "(" + $scope.studentQN + ")"
+												}
+											}
 
 
 										}, function (err) { });
 								}, function (err) { });
-						}, 2500)
+						}, $state.current.name == "tab.sessionshistory" ? 2000 : 1500)
 					}
 					else {
 
@@ -54,6 +68,7 @@ angular.module('hdrApp')
 						hdrdbx.selectStudentAbsences($scope.student.massar_number)
 							.then(function (arr) {
 								$scope.student_absences = arr;
+
 
 							}, function (err) {
 								console.log('Error while getting student absences');

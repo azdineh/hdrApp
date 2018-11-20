@@ -239,7 +239,7 @@ angular.module('hdrApp').controller('ClassroomsController',
             } else {
                 // actions for computer platforms
                 console.log("classrooms page");
-                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", 'students': [{ full_name: "عمر فيلالي", queuing_number: "10" }, { full_name: "كريم زرهوني", queuing_number: "12" }, { full_name: "سفياني بدر", queuing_number: "22" }] });
+                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", 'students': [{ id: '1', full_name: "عمر فيلالي", queuing_number: "10" }, { id: '2', full_name: "كريم زرهوني", queuing_number: "12" }, { id: '3', full_name: "سفياني بدر", queuing_number: "22" }] });
                 $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
                 $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
                 $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", 'students': [{ full_name: "زيد فيلالي", queuing_number: "17" }, { full_name: "كريم جلول", queuing_number: "33" }, { full_name: "سفياني حنان", queuing_number: "5" }] });
@@ -255,12 +255,14 @@ angular.module('hdrApp').controller('ClassroomsController',
             }
         };
 
+       
 
         $scope.importClassrooms = function () {
 
             ionic.Platform.ready(function () {
                 hdrdbx.initDB();
                 $scope.show();
+                var pathDist = cordova.file.cacheDirectory;
                 var path = pathDist + "/hodoor-classrooms";
                 console.log(path);
                 window.resolveLocalFileSystemURL(path, function (directoryentry) {
@@ -400,12 +402,12 @@ angular.module('hdrApp').controller('ClassroomsController',
                 });
             } else {
                 console.log("classrooms page");
-                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", students: [{ id:"1",full_name: "عمر فيلالي", queuing_number: "1" }, { id:"2",full_name: "كريم زرهوني", queuing_number: "2" }, { id:"3",full_name: "سفياني بدر", queuing_number: "3" }] });
-                $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "1" }, { id:2,full_name: "كريم جلول", queuing_number: "2" }, { id:3,full_name: "سفياني حنان", queuing_number: "3" }] });
-                $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "5" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
-                $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "17" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
-                $rootScope.classrooms_view.push({ id: "5", title: "TCPS1", level: "جذع مشترك خدماتي", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "17" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
-                $rootScope.classrooms_view.push({ id: "6", title: "TCSH7", level: "جذع مشترك خدماتي", students: [{ id:1,full_name: "زيد فيلالي", queuing_number: "17" }, { id:2,full_name: "كريم جلول", queuing_number: "33" }, { id:3,full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "1", title: "TCS4", level: "جذع مشترك علمي", students: [{ id: "1", full_name: "عمر فيلالي", queuing_number: "1" }, { id: "2", full_name: "كريم زرهوني", queuing_number: "2" }, { id: "3", full_name: "سفياني بدر", queuing_number: "3" }] });
+                $rootScope.classrooms_view.push({ id: "2", title: "TCLSH2", level: "جذع مشترك أداب و علوم إنسانية", students: [{ id: 1, full_name: "زيد فيلالي", queuing_number: "1" }, { id: 2, full_name: "كريم جلول", queuing_number: "2" }, { id: 3, full_name: "سفياني حنان", queuing_number: "3" }] });
+                $rootScope.classrooms_view.push({ id: "3", title: "1BacSM4", level: "أولى باك علوم رياضية", students: [{ id: 1, full_name: "زيد فيلالي", queuing_number: "5" }, { id: 2, full_name: "كريم جلول", queuing_number: "33" }, { id: 3, full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "4", title: "2BacSP3", level: "ثانية علوم فيزيائية", students: [{ id: 1, full_name: "زيد فيلالي", queuing_number: "17" }, { id: 2, full_name: "كريم جلول", queuing_number: "33" }, { id: 3, full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "5", title: "TCPS1", level: "جذع مشترك خدماتي", students: [{ id: 1, full_name: "زيد فيلالي", queuing_number: "17" }, { id: 2, full_name: "كريم جلول", queuing_number: "33" }, { id: 3, full_name: "سفياني حنان", queuing_number: "5" }] });
+                $rootScope.classrooms_view.push({ id: "6", title: "TCSH7", level: "جذع مشترك خدماتي", students: [{ id: 1, full_name: "زيد فيلالي", queuing_number: "17" }, { id: 2, full_name: "كريم جلول", queuing_number: "33" }, { id: 3, full_name: "سفياني حنان", queuing_number: "5" }] });
 
                 $rootScope.classrooms_view.forEach(function (classroom) {
                     $rootScope.students_count_global += classroom.students.length;
