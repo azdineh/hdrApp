@@ -20,6 +20,11 @@ angular.module('hdrApp')
             }
             else {
                 $timeout(function(){
+                    $scope.student.massar_number="S9865452151";
+                    $scope.student.birth_date="04/06/2003";
+                    $scope.student.full_name="فاطمة الزهراء العمراوي";
+                    $scope.classroom.title="TCLSH-1";
+
                     $scope.student_absences = [
                         { id: '1', unix_time: '1520027361941', title: "10-11" },
                         { id: '1', unix_time: '1520027361941', title: "10-11" },

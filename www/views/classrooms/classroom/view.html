@@ -98,7 +98,7 @@
         عدد التلاميذ : {{classroom.students.length}}
       </div>
  -->
-      <hdr-student ng-repeat="student in classroom.students" ng-init="showborder=true;showtitle=false;mode='simple'" id="hdr-student-item{{student.id}}"
+      <hdr-student ng-repeat="student in classroom.students" ng-init="showborder=true;showtitle=false;mode='simple';student.title=classroom.title" id="hdr-student-item{{student.id}}"
         on-double-tap="selectElement(student)"></hdr-student>
 
 
@@ -133,18 +133,18 @@
 
     <div id="hdr-new-student" ng-if="isNewStudent">
 
-      <div class="hdr-parag" style="padding:16px" dir="rtl">
-        أدخل بيانات التلميذ الجديد ثم أنقر على الزر إضافة أسفل الواجهة.
+      <div class="hdr-parag" style="padding:16px;font-size:12px" dir="rtl">
+        أدخل الإسم الكامل للتلميذ الجديد ثم أنقر على الزر إضافة.
       </div>
       <div class="list" dir="rtl">
         <label class="item item-input">
-          <input type="text" ng-model="student.full_name" placeholder="الإسم الكامل">
-          <span style="font-size:18px;color:red">*</span>
+          <input type="text" ng-model="student.full_name" style="fontt-size:22px" id="hdr-add-student-name" placeholder="الإسم الكامل">
+         <!--  <span style="font-size:18px;color:red">*</span> -->
         </label>
 <!--         <label class="item item-input">
           <input type="text" placeholder="رقم مسار">
         </label> -->
-        <label class="item item-input">
+<!--         <label class="item item-input">
           <div style="padding-right:25px;opacity:0.5;font-size:15px">تاريخ الازدياد</div>
           <input type="date" placeholder="تاريخ الازدياد" ng-model="student.birth_date" value="">
        
@@ -155,7 +155,7 @@
         <div style="padding-right:25px;padding-top:10px">      
           <span style="font-size:18px;color:red">*</span>
           <span> حقل ضروري</span>
-        </div>
+        </div> -->
       </div>
 
 

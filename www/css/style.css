@@ -178,19 +178,33 @@ body{
   
 
 
-.hdr-slider-container{
+#hdr-slider-container{
   display: flex;
-  height: inherit;
-  padding: 16px;
+  height: 92%;
+  width: auto;
+  padding: 14px;
+  position: relative;
+  left: 0px;
+  opacity: 1;
   flex-direction: column;
+  flex-wrap: wrap;
+  /* justify-content: space-around; */
+  align-content: flex-start;
+  transition: left .15s ease .02s;
 }
 
-.hdr-slider-container .hdr-slider-item{
-margin-bottom: 4vh
+.student-item-card{
+  
+}
+
+#hdr-slider-container .hdr-slider-item{
+margin-bottom: 2vh;
+margin-left: 1vh;
+width: 100%;
 }
 
 #content-appeal{
-  
+  background-color: rgb(191, 196, 202)
 }
 
 /*http://www.svgeneration.com/recipes/GPlay/ */
@@ -223,7 +237,7 @@ margin-bottom: 30px;
 #hdr-appeal-subheader{
   display: flex;
   flex-direction: row;
-  height: auto;
+  height: 60px;
   background-color:white;
   border-bottom: 1px solid darkgray;
   overflow: hidden;
@@ -266,7 +280,8 @@ flex-grow: 3
   }
 
   .hdr-second-txt{
-    color: rgb(144, 142, 149)!important;
+ /*    color: rgb(83, 79, 94)!important; */
+ color: #666
   }
   
   .hdr-card-session{
@@ -310,4 +325,13 @@ flex-grow: 3
 
 .hdr-session-is-no-exam{
   
+}
+
+.insertEffect div:first-child{
+animation: insertEffectAnimation 1s;
+}
+
+@keyframes insertEffectAnimation{
+from {background-color: rgb(189, 189, 63)}
+to {background-color: whitesmoke}
 }

@@ -1,6 +1,6 @@
 <style>
     #gg td {
-        /*  border: 1px solid red; */
+        /* border: 1px solid red; */
         text-align: right;
         vertical-align: top;
         font-size: 0.9em;
@@ -59,54 +59,78 @@
 
         <table id="gg" style="width: 100%; border-collapse:separate;padding-right: 8px;padding-top: 4px;font-size: 0.8em">
             <tr>
-                <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length" style="width: 42%">
-                    <div>
-                        <span>المتغيبون</span> :
-                    </div>
-                </td>
                 <td ng-show="session_view.session.observation!='' || session_view.session.students_count==session_view.students.length || session_view.students.length==0 ">
-                    <div>
-                        <span>ملاحظات</span> :
+                    <div style="width: 100%">
+                        <b>ملاحظات</b> :
                     </div>
-                    <div>
+                    <div style="">
+                        <div style="width: 100%" ng-show="session_view.session.students_count==session_view.students.length">
+                            <div>غياب جماعي</div>
+                        </div>
+                        <div style="width: 100%" ng-show="session_view.students.length==0">
+                            <div>حضور كلي</div>
+                        </div>
+                        <div dir="rtl" style="line-height: 1.3em;width: 100%" ng-show="session_view.session.observation!=''" ng-bind-html="session_view.session.observation">
+
+                        </div>
+
+                        <br/>
+                        <!--                     <div ng-show="exception_students.length>0">
+                                <p>التلاميذ التالية أسماؤهم، إلتحقوا بالقسم في ما بعد :</p>
+                                <table>
+                                    <tr ng-repeat="student in exception_students">
+                                        <td>
+                                            <hdr-student ng-init="mode='m3'"></hdr-student>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> -->
 
                     </div>
+
                 </td>
             </tr>
             <tr>
-                <td style="width: fit-content;" ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length">
-                    <div style="display: block;padding-right:0px ;list-style-type:none" ng-show="session_view.session.students_count > session_view.students.length">
-                        <div ng-repeat="student in session_view.students|limitTo:limitstudent:0 track by $index" style="width: 100%">
+                <td ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length" style="width: 42%">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>
+                                <div style="width: 100%;margin-top: 4px">
+                                    <b>المتغيبون</b> :
+                                </div>
+                            </td>
+                           <!--  <td ng-show="session_view.students_not_absents.length<10">
+                                <div style="width: 100%;margin-top: 4px">
+                                    <b>الحضور</b> :
+                                </div>
+                            </td> -->
+                        </tr>
+                        <tr>
+                            <td style="width: 50%">
+                                <div style="width: fit-content;" ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length">
+                                    <div style="display: block;padding-right:0px ;list-style-type:none" ng-show="session_view.session.students_count > session_view.students.length">
+                                        <div ng-repeat="student in session_view.students|limitTo:limitstudent:0 track by $index" style="width: 100%">
 
-                            <hdr-student ng-init="mode='m3'"></hdr-student>
+                                            <hdr-student ng-init="mode='m3'"></hdr-student>
 
-                        </div>
-                        <button class="button button-clear button-positive" style="font-size: 0.8em;padding: 0px;" ng-click="moreStudent()" ng-hide="limitstudent>=session_view.students.length">إظهار المزيد..</button>
-                    </div>
-                </td>
-                <td style="">
-                    <div style="width: 100%" ng-show="session_view.session.students_count==session_view.students.length">
-                        <div>غياب جماعي</div>
-                    </div>
-                    <div style="width: 100%" ng-show="session_view.students.length==0">
-                        <div>حضور كلي</div>
-                    </div>
-                    <div dir="rtl" style="line-height: 1.3em;width: 100%" ng-show="session_view.session.observation!=''" ng-bind-html="session_view.session.observation">
+                                        </div>
+                                        <button class="button button-clear button-positive" style="font-size: 0.8em;padding: 0px;" ng-click="moreStudent()" ng-hide="limitstudent>=session_view.students.length">إظهار المزيد..</button>
+                                    </div>
+                                </div>
+                            </td>
+                          <!--   <td style="width: 50%" ng-show="session_view.students_not_absents.length<10">
+                                <div style="width: fit-content;" ng-show="session_view.students.length>0 && session_view.session.students_count > session_view.students.length">
+                                    <div style="display: block;padding-right:0px ;list-style-type:none" ng-show="session_view.session.students_count > session_view.students.length">
+                                        <div ng-repeat="student in session_view.students_not_absents track by $index" style="width: 100%">
 
-                    </div>
+                                            <hdr-student ng-init="mode='m3'"></hdr-student>
 
-                    <br/>
-                    <!--                     <div ng-show="exception_students.length>0">
-                        <p>التلاميذ التالية أسماؤهم، إلتحقوا بالقسم في ما بعد :</p>
-                        <table>
-                            <tr ng-repeat="student in exception_students">
-                                <td>
-                                    <hdr-student ng-init="mode='m3'"></hdr-student>
-                                </td>
-                            </tr>
-                        </table>
-                    </div> -->
-
+                                        </div>
+                                    </div>
+                                </div>
+                            </td> -->
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>

@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-	.directive('hdrabsencehistoryitem', function ($ionicScrollDelegate) {
+	.directive('hdrabsencehistoryitem', function ($ionicScrollDelegate, $rootScope, $filter) {
 		return {
 			restrict: 'E',
 			templateUrl: "js/directives/hdrabsencehistory-item.html",
@@ -14,43 +14,56 @@ angular.module('hdrApp')
 				}
 
 
-/* 				if (ionic.Platform.isWebView()) {
-
-					//$scope.exception_students = [];
-
-					var a_history_absents_students = $scope.session_view.students;
-
-					console.log("session_view.students");
-					console.log($scope.session_view.students);
-
-					var b_history_students_count = $scope.session_view.session.students_count;
-
-					console.log("session_view student_count");
-					console.log($scope.session_view.session.students_count);
-					//var c_current_classroom_students = $filter('filter')($rootScope.classrooms_view, scope.session_view.classroom.title)[0].students;
-					//var c_current_classroom_students = scope.c_current_classroom_students;
-
-					if (a_history_absents_students.length == b_history_students_count) {
-						$scope.session_view.self_observation = "غياب جماعي";
-						//scope.exception_students = absoluateDiff(c_current_classroom_students, a_history_absents_students);
-					}
-					else if (a_history_absents_students.length == 0) {
-						$scope.session_view.self_observation = "حضور كلي";
-						//scope.exception_students = absoluateDiff(c_current_classroom_students, a_history_absents_students);
-					}
-					else {
-						$scope.session_view.self_observation = "";
-					}
-
-					$scope.session_view.session.observation = $scope.session_view.self_observation + "\n" + $scope.session_view.session.observation;
-
-
-
-				} */
-
-
 			},
 			link: function (scope, element, attrs) {
+				
+
+				// Pour garder une trace des élèves qui n'ont pas absenté...
+				// on va les traite comme les absnets..---> une table assisanceLine
+
+				/* scope.$watch("session_view", function (newValue, oldValue) {
+
+					if (scope.session_view.students.length > 0) {
+						if ((scope.session_view.session.students_count - scope.session_view.students.length) < 10) {
+							console.log("Students not absents are less than 10");
+							var qn_not_absents = [];
+							scope.session_view.students_not_absents = [];
+
+							for (var i = 0; i < scope.session_view.students.length - 1; i++) {
+								var std_i = scope.session_view.students[i].queuing_number;
+								var std_j = scope.session_view.students[i + 1].queuing_number;
+
+								var qn_delta = std_j - std_i;
+
+								if (qn_delta > 1) {
+									for (var k = 1; k < qn_delta; k++) {
+										qn_not_absents.push(std_i + k);
+									}
+								}
+							}
+
+							console.log("queuing_numbers not absents")
+							console.log(qn_not_absents);
+
+							var classroom_students = $filter('filter')($rootScope.classrooms_view, scope.session_view.classroom.title)[0].students;
+
+							for (var i = 0; i < qn_not_absents.length; i++) {
+								var index = classroom_students.findIndex(function (item) { return (item.queuing_number == qn_not_absents[i]) })
+								var student = classroom_students[index];
+
+								student.is_student_fix_problem = false;
+								student.classroom_title = scope.session_view.classroom.title;
+
+								scope.session_view.students_not_absents.push(student);
+
+							}
+
+							console.log("students not absents")
+							console.log(scope.students_not_absents);
+
+						}
+					}
+				}) */
 
 				/* var absoluateDiff = function (arr1, arr2) {
 					var arr3 = [];

@@ -663,8 +663,29 @@ angular.module('hdrApp')
                                             student.is_student_fix_problem = true;
 
                                         session_view_obj.students.push(student);
+
                                     }
                                 }
+/* 
+                                var strin = "";
+                                session_view_obj.students.forEach(function (std) {
+                                    strin += ",'" + std.massar_number + "'";
+                                }, this);
+
+                                strin += ";"
+                                strin = strin.slice(1, strin.length - 1);
+
+                                console.log(strin);
+                                vm.selectRows('student', "massar_number not in (" + strin + ") and id_classroom ='" + session_view_obj.classroom.id + "'")
+                                    .then(function (students) {
+                                        for (var i = 0; i < students.length; i++) {
+                                            students[i].is_student_fix_problem = false;
+                                            students[i].classroom_title = session_view_obj.classroom.title;
+                                            session_view_obj.studentsNotAbsents.push(students[i]);
+                                        }
+                                    }, function (err) {
+                                        console.log(err);
+                                    }) */
 
                             }
 

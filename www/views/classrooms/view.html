@@ -30,14 +30,13 @@
 
                     <div class="hdr-classroom-container">
                         <div id="hdr-item0" class="hdr-item">
-                            <button class="button button-outline" ng-click="showActionSheet(classroom)">
+                            <button class="button button-outline" ng-disabled="classroom.students.length==0" ng-click="showActionSheet(classroom)">
                                 <i class="ion-android-more-vertical" ng-hide="clicked" style="zoom: 1.5"></i>
-
                             </button>
                         </div>
                         <div id="hdr-item1" class="hdr-item" style="position: relative">
 
-                            <button class="button button-outline" id="{{classroom.id}}" ng-click="startAttendanceCall(classroom,'-1')">
+                            <button ng-disabled="classroom.students.length==0" class="button button-outline" id="{{classroom.id}}" ng-click="startAttendanceCall(classroom,'-1')">
 
                                 <div class="hdr-main-text">
                                     <span class="positive">
@@ -54,8 +53,8 @@
 
                         </div>
                         <div id="hdr-item2" class="hdr-item">
-                            <button class="button button-outline button-dark" ng-click="goToStudentsView(classroom)">
-                                <span ng-if="classroom.students.length>0"> {{classroom.students.length}} تلميذ</span>
+                            <button class="button button-outline button-dark"  ng-disabled="classroom.students.length==0" ng-click="goToStudentsView(classroom)">
+                                <span ng-if="classroom.students.length>=0"> {{classroom.students.length}} تلميذ</span>
                                 <i class="ion-chevron-left"></i>
                             </button>
                         </div>

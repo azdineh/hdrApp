@@ -278,6 +278,7 @@ angular.module('hdrApp')
 										hdrdbx.updateAbsenceLine("queuing_number", 0, " massar_number ='" + student.massar_number + "'");
 
 										$scope.closeModal();
+										document.getElementById("hdr-add-student-name").value = "";
 
 										$ionicScrollDelegate.scrollBottom(true);
 
