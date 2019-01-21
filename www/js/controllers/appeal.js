@@ -10,6 +10,9 @@ angular.module('hdrApp')
 		$scope.choiceIndexOfFastCase = $stateParams.index;
 
 
+		$scope.isFirstSlide = true;
+		$scope.isLastSlide = false;
+
 		$scope.numOfSlides = 0;
 		$scope.catchedSessions = [];
 		$scope.absentStudents = [];
@@ -30,17 +33,40 @@ angular.module('hdrApp')
 			var session = [];
 			// see http://momentjs.com/docs/
 			//var h = moment().hour();
-			var h = $filter('date')(Date.now(), 'H');
-			var h1 = h - (-1);
+
+			var h = new String($filter('date')(Date.now(), 'H'));
+			var h1 = new String(parseInt(h) - (-1));
+
 			session.push(h1 + "-" + h);
-			if (h % 2 !== 0) {
-				h = h - 1;
+			if (parseInt(h) % 2 !== 0) {
+				h = new String(parseInt(h) - 1);
 			}
-			var h2 = h - (-2);
+			var h2 = new String(parseInt(h) - (-2));
 			session.push(h2 + "-" + h);
 
 			return session;
 		};
+
+		$scope.swipeCathedSession = function () {
+
+			/* var h_tmp = new String($scope.catchedSessions[0]);
+
+			if (h_tmp.includes(":")) {
+				$scope.catchedSessions[0] = h_tmp.replace(/:30/g,"");
+
+
+				h_tmp = new String($scope.catchedSessions[1]);
+				$scope.catchedSessions[1] = h_tmp.replace(/:30/g,"");
+
+			}
+			else {
+				$scope.catchedSessions[0]= ($scope.catchedSessions[0]+"").replace("-",":30-");
+				$scope.catchedSessions[0]+=":30";
+
+				$scope.catchedSessions[1]= ($scope.catchedSessions[1]+"").replace("-",":30-");
+				$scope.catchedSessions[1]+=":30";
+			} */
+		}
 
 		$scope.groups = ["all", "odd", "even"];
 		$scope.currentGroup = "all";
@@ -56,6 +82,16 @@ angular.module('hdrApp')
 
 
 			$scope.absentStudents = [];
+
+			$timeout(function () {
+				var itmes = document.getElementsByClassName("hdr-slider-item");
+				var lastItem = itmes[itmes.length - 1];
+				console.log(lastItem);
+				console.log("Left of last Item :" + lastItem.offsetLeft);
+
+				$scope.leftOfLastItem = lastItem.offsetLeft;
+			}, 250)
+
 
 		};
 
@@ -76,31 +112,73 @@ angular.module('hdrApp')
 		}
 
 
+		var getOffsetLeft = function (id) {
+			var elm = document.getElementById(id);
+			return elm.offsetLeft;
+		}
+
 		$scope.swipeRight = function () {
 
-			if (!$scope.islasteSlide) {
-
+			if (!$scope.isLastSlide) {
 				var hdrslider = document.getElementById("hdr-slider-container");
-				/* var slideritem=document.getElementsByClassName("hdr-slider-item").item(0); */
+
+
 				hdrslider.style.left = hdrslider.offsetLeft + hdrslider.clientWidth - 22 + "px";
+
+				var str_tmp = new String(hdrslider.style.left);
+				var leftasInt = Math.abs(parseInt(str_tmp.substr(0, str_tmp.length - 2)));
+
+				$scope.isFirstSlide = false;
+
+				if (leftasInt >= Math.abs($scope.leftOfLastItem)) {
+					$scope.isLastSlide = true;
+				}
+				else {
+					$scope.isLastSlide = false;
+				}
+				console.log("Left :" + leftasInt);
 			}
 
 		}
+
 		$scope.swipeLeft = function () {
-			var hdrslider = document.getElementById("hdr-slider-container");
-			/* var slideritem=document.getElementsByClassName("hdr-slider-item").item(0); */
-			hdrslider.style.left = hdrslider.offsetLeft - hdrslider.clientWidth + 22 + "px";
-			console.log("Swipe right");
+			if (!$scope.isFirstSlide) {
+				var hdrslider = document.getElementById("hdr-slider-container");
+				/* var slideritem=document.getElementsByClassName("hdr-slider-item").item(0); */
+				hdrslider.style.left = hdrslider.offsetLeft - hdrslider.clientWidth + 22 + "px";
+				console.log("Swipe left");
+
+				var str_tmp = new String(hdrslider.style.left);
+				var leftasInt = parseInt(str_tmp.substr(0, str_tmp.length - 2));
+
+				$scope.isLastSlide = false;
+
+				if (leftasInt == 0) {
+					$scope.isFirstSlide = true;
+				}
+				else {
+					$scope.isFirstSlide = false;
+				}
+				console.log("Left :" + leftasInt);
+
+			}
+			//var slideritem = document.getElementsByClassName("hdr-slider-item")[0];
 		}
+
+		$scope.$on('$ionicView.enter', function () {
+
+			var itmes = document.getElementsByClassName("hdr-slider-item");
+			var lastItem = itmes[itmes.length - 1];
+			console.log(lastItem);
+			console.log("Left of last Item :" + lastItem.offsetLeft);
+
+			$scope.leftOfLastItem = lastItem.offsetLeft;
+		});
 
 		if (ionic.Platform.isWebView()) {
 
 			$scope.$on('$ionicView.beforeEnter', function () {
 			})
-
-
-			$scope.$on('$ionicView.enter', function () {
-			});
 
 
 		} else {
@@ -200,7 +278,7 @@ angular.module('hdrApp')
 								{ text: '<div class="list"><a class="item hdr-to-right" href="#">حضر الجميع إلا</a></div>' },
 			 */     { text: '<div class="list"><a class="item hdr-to-right" href="#">حذف</a></div>' },
 					{ text: '<div class="list"><a class="item hdr-to-right" href="#">إضافة تلميذ بعد</a></div>' },
-					{ text: '<div class="list"><a class="item hdr-to-right" href="#">تحريك</a></div>' }
+					{ text: '<div class="list"><a class="item hdr-to-right" href="#">تغيير الترتيب</a></div>' }
 					/*                     { text: '<div class="list"><a class="item hdr-to-right" href="#">تغيب الجميع إلا</a></div>' }, */
 				],
 				titleText: '<div><div class="hdr-to-right positive hdr-main-text"> التلميذ : ' + student.full_name + '<b> رقم : ' + $filter('hdrnumber')(student.queuing_number) + '</b></div><div class="hdr-to-right hdr-sub-text">: حدد العملية للإنجاز </div></div>',
@@ -232,7 +310,9 @@ angular.module('hdrApp')
 					}
 					//move it
 					if (index == 3) {
-
+						$scope.index_of_selected_student = $scope.classroom.students.indexOf(student);
+						$scope.afterInsertEffectAnim($scope.classroom.students[$scope.index_of_selected_student]);
+						$scope.showUpDwonControll();
 					}
 					return true;
 				}
@@ -309,7 +389,135 @@ angular.module('hdrApp')
 
 		$scope.afterInsertEffectAnim = function (student) {
 			document.getElementById("student-item-card-" + student.id).classList.add("insertEffect");
+			$timeout(function () {
+				document.getElementById("student-item-card-" + student.id).classList.remove("insertEffect");
+			}, 500)
 		}
+
+		$scope.updownControlshwon = false;
+		$scope.hideUpDwonControll = function () {
+			$scope.updownControlshwon = false;
+		}
+		$scope.showUpDwonControll = function () {
+			$scope.updownControlshwon = true;
+
+			if ($scope.index_of_selected_student == 0) {
+				$scope.isFirstStudent = true;
+			} else {
+				$scope.isFirstStudent = false;
+			}
+
+			if ($scope.index_of_selected_student == $scope.classroom.students.length - 1) {
+				$scope.isLastStudent = true;
+			}
+		}
+
+		$scope.upStudentinList = function () {
+
+			var studentBefore = $scope.classroom.students[$scope.index_of_selected_student - 1];
+			$scope.classroom.students[$scope.index_of_selected_student - 1] = $scope.classroom.students[$scope.index_of_selected_student];
+			$scope.classroom.students[$scope.index_of_selected_student] = studentBefore;
+
+			$scope.classroom.students[$scope.index_of_selected_student].queuing_number++;
+			$scope.classroom.students[$scope.index_of_selected_student - 1].queuing_number--;
+
+
+			if ($scope.index_of_selected_student == 0) {
+				$scope.isFirstStudent = true;
+			} else {
+				$scope.isFirstStudent = false;
+			}
+			if ($scope.index_of_selected_student == $scope.classroom.students.length - 1) {
+				$scope.isLastStudent = true;
+			}
+			else {
+				$scope.isLastStudent = false;
+			}
+
+			if (ionic.Platform.isWebView()) {
+
+				hdrdbx.updateStudentsQNinStudentof($scope.classroom);
+			}
+
+			var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
+			$rootScope.classrooms_view[classroomIndex] = $scope.classroom
+			$window.localStorage['hdr.classrooms_view'] = angular.toJson($rootScope.classrooms_view);
+
+			$scope.index_of_selected_student--;
+			$scope.afterInsertEffectAnim($scope.classroom.students[$scope.index_of_selected_student]);
+
+			if ($scope.index_of_selected_student == 0) {
+				$scope.isFirstStudent = true;
+			} else {
+				$scope.isFirstStudent = false;
+			}
+
+			if ($scope.index_of_selected_student == $scope.classroom.students.length - 1) {
+				$scope.isLastStudent = true;
+			}
+			else {
+				$scope.isLastStudent = false;
+			}
+
+
+		}
+
+		$scope.downStudentinList = function () {
+
+			var studentAfter = $scope.classroom.students[$scope.index_of_selected_student + 1];
+			$scope.classroom.students[$scope.index_of_selected_student + 1] = $scope.classroom.students[$scope.index_of_selected_student];
+			$scope.classroom.students[$scope.index_of_selected_student] = studentAfter;
+
+			$scope.classroom.students[$scope.index_of_selected_student].queuing_number--;
+			$scope.classroom.students[$scope.index_of_selected_student + 1].queuing_number++;
+
+
+			if ($scope.index_of_selected_student == 0) {
+				$scope.isFirstStudent = true;
+			} else {
+				$scope.isFirstStudent = false;
+			}
+
+			if ($scope.index_of_selected_student == $scope.classroom.students.length - 1) {
+				$scope.isLastStudent = true;
+			}
+			else {
+				$scope.isLastStudent = false;
+			}
+
+			if ($scope.index_of_selected_student == 0) {
+				$scope.isFirstStudent = true;
+			} else {
+				$scope.isFirstStudent = false;
+			}
+
+			if (ionic.Platform.isWebView()) {
+
+				hdrdbx.updateStudentsQNinStudentof($scope.classroom);
+			}
+
+			var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
+			$rootScope.classrooms_view[classroomIndex] = $scope.classroom
+			$window.localStorage['hdr.classrooms_view'] = angular.toJson($rootScope.classrooms_view);
+
+			$scope.index_of_selected_student++;
+			if ($scope.index_of_selected_student == 0) {
+				$scope.isFirstStudent = true;
+			} else {
+				$scope.isFirstStudent = false;
+			}
+
+			if ($scope.index_of_selected_student == $scope.classroom.students.length - 1) {
+				$scope.isLastStudent = true;
+			}
+			else {
+				$scope.isLastStudent = false;
+			}
+
+			$scope.afterInsertEffectAnim($scope.classroom.students[$scope.index_of_selected_student]);
+
+		}
+
 
 		$scope.student = {
 			id: null,
@@ -424,9 +632,9 @@ angular.module('hdrApp')
 			else {
 				var revenantStudent = $scope.selectedStudent;
 				revenantStudent.id_classroom = $scope.classroom.id;
-				
+
 				// set the queuing_number to the student for save it in the db
-				revenantStudent.queuing_number = parseInt($scope.index_of_selected_student + 1+1);
+				revenantStudent.queuing_number = parseInt($scope.index_of_selected_student + 1 + 1);
 				hdrdbx.updateStudent($scope.selectedStudent, revenantStudent)
 					.then(function (count) {
 

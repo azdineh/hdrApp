@@ -1,5 +1,5 @@
 angular.module('hdrApp').controller('ClassroomsController',
-    function ($scope, $rootScope, hdrFileSystem, $filter, $window, $state, $ionicLoading, hdrdbx, $ionicActionSheet, $interval, $cordovaFile, $ionicPopup) {
+    function ($scope, $rootScope, hdrFileSystem, $filter ,$window, $state, $ionicLoading, hdrdbx, $ionicActionSheet, $interval, $cordovaFile, $ionicPopup) {
 
         $scope.page = "Classrooms";
         $rootScope.classrooms_view = $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : [];

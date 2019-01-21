@@ -1,21 +1,18 @@
 <ion-view view-title="{{pagename}} : {{classroom.title}}">
 
-  <ion-content scroll="false" id="content-appeal" on-swipe-right="swipeRight()" on-swipe-left="swipeLeft()">
+  <ion-content scroll="false" id="" on-swipe-right="swipeRight()" on-swipe-left="swipeLeft()">
 
     <div ng-show="choiceIndexOfFastCase=='-1'" style="height: 100%">
 
-      <div style="height: 100%">
-
-
         <div dir="rtl" id="hdr-appeal-subheader">
           <div>
-            <button ng-show="currentGroup=='odd'" ng-click="nextGroup()" ng-disabled="" class="button button-balanced" style="min-width: 50px;">
+            <button ng-show="currentGroup=='odd'" ng-click="nextGroup()" ng-disabled="!isFirstSlide" class="button button-balanced" style="min-width: 50px;">
               <b style="font-size: 1.5em">ف</b>
             </button>
-            <button ng-show="currentGroup=='even'" ng-click="nextGroup()" ng-disabled="" class="button button-balanced" style="min-width: 50px;">
-              <b style="font-size: 1.5em">ز </b>
+            <button ng-show="currentGroup=='even'" ng-click="nextGroup()" ng-disabled="!isFirstSlide" class="button button-balanced" style="min-width: 50px;">
+              <b style="font-size: 1.5em">ز</b>
             </button>
-            <button ng-show="currentGroup=='all'" ng-click="nextGroup()" ng-disabled="" class="button button-balanced" style="min-width: 50px;">
+            <button ng-show="currentGroup=='all'" ng-click="nextGroup()" ng-disabled="!isFirstSlide" class="button button-balanced" style="min-width: 50px;">
               <b style="font-size: 1em">جميع</b>
             </button>
           </div>
@@ -33,11 +30,11 @@
             </div>
           </div>
           <div>
-            <button class="button button-light" ng-show="isFirstSlide" ng-click="showPopup(-1)">
+            <button class="button button-light" ng-show="isLastSlide" ng-click="showPopup(-1)">
               <i class="icon ion-ios-bookmarks positive"></i>
             </button>
 
-            <button class="button button-clear" ng-show="isLastSlide" ng-click="showHelpPopup()">
+            <button class="button button-clear" ng-show="isFirstSlide" ng-click="showHelpPopup()">
               <i class="icon ion-help button-stable"></i>
             </button>
           </div>
@@ -48,25 +45,40 @@
         <div dir="rtl" id="hdr-slider-container">
 
           <div ng-repeat="student in classroom.students|filter:byGroupfilter" class="hdr-slider-item">
-            <hdr-student-card-appeal class="student-item-card" ></hdr-student-card-appeal>
+            <hdr-student-card-appeal class="student-item-card"></hdr-student-card-appeal>
           </div>
 
-          <div ng-if="$last" dir="rtl" class="hdr-slider-item" style="font-size: 12px;padding-right: 3vmax;position: relative;top:2vh"
+          <div dir="rtl" class="hdr-slider-item" style="font-size: 12px;padding-right: 3vmax;position: relative;top:2vh"
             class="dark">
             <i class="ion-record"></i> نهاية اللائحة
           </div>
 
         </div>
 
+    </div>
 
-
+    <div id="hdr-updown-control" ng-if="updownControlshwon" style="position: fixed; bottom: 100px;z-index: 5000;width: 100%;text-align: center">
+      <div class="button-bar">
+        <a class="button" on-tap="hideUpDwonControll()">
+          <span class="icon ion-close"></span>
+        </a>
+        <div ng-if="currentGroup!='all'" style="background-color: yellow;padding: 16px">لا يمكن تغيير الترتيب في حالة نداء بالأفواج، غير الى : جميع القسم</div>
+        <a class="button" ng-if="currentGroup=='all'" ng-class="isLastStudent?'disabled':''" on-tap="downStudentinList()">
+          <span class="icon ion-arrow-down-a"></span>
+        </a>
+        <a class="button" ng-if="currentGroup=='all'" ng-class="isFirstStudent?'disabled':''" on-tap="upStudentinList()">
+          <span class="icon ion-arrow-up-a"></span>
+        </a>
       </div>
-
     </div>
 
 
   </ion-content>
 </ion-view>
+
+
+
+
 
 <script id="addstudentmodal.html" type="text/ng-template">
   <ion-modal-view>

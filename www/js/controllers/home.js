@@ -1,5 +1,7 @@
 angular.module('hdrApp')
-    .controller('HomeController', function ($scope, $http, $state, $rootScope, $location, $timeout, $ionicScrollDelegate, $window, hdrFileSystem, $ionicPlatform, hdrdbx) {
+    .controller('HomeController', function ($scope, $http, $state, $rootScope, $location,
+        $timeout, $ionicScrollDelegate, $window, hdrFileSystem,
+        $ionicPlatform, hdrdbx) {
 
         $scope.page = "home";
         /*       $rootScope.deviceWidth = $window.innerWidth;
@@ -25,10 +27,10 @@ angular.module('hdrApp')
 
             //$rootScope.keyboraedShown = true;
 
-/*             $timeout(function () {
-                $location.hash("hdr-anchre1");
-                $ionicScrollDelegate.$getByHandle('mainScroll').anchorScroll(true);
-            }, 50) */
+            /*             $timeout(function () {
+                            $location.hash("hdr-anchre1");
+                            $ionicScrollDelegate.$getByHandle('mainScroll').anchorScroll(true);
+                        }, 50) */
 
 
         });
@@ -104,22 +106,9 @@ angular.module('hdrApp')
     });
 
 angular.module('hdrFilters', [])
-    .filter('hdrage', function () {
+    .filter('hdrage', function (azdutils) {
 
-        /**
-        * return Date()
-        * @param  {string} FrShortDateString string present french short date format like : dd/mm/yyyy
-        * @return {Date}  Date object.
-        */
-        var parseShortDate = function (FrShortDateString) {
-            console.log(FrShortDateString)
-            var str = FrShortDateString.trim();
-            var dd = parseInt(str.substr(0, 2));
-            var mm = parseInt(str.substr(3, 2)) - 1; // JS counts months from 0 to 11;
-            var yyyy = parseInt(str.substr(6, 4));
 
-            return new Date(yyyy, mm, dd);
-        };
 
         /**
          * calculate the age from a simple string format of the date
@@ -129,7 +118,7 @@ angular.module('hdrFilters', [])
      *  */
         var calculateAge = function (dateSimpleStringFormat) {
             var age = 0;
-            var birthdate = parseShortDate(dateSimpleStringFormat);
+            var birthdate = azdutils.dateTo_ISO8601(dateSimpleStringFormat);
 
             var ageDifMs = Date.now() - birthdate.getTime();
             var ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -147,10 +136,22 @@ angular.module('hdrFilters', [])
         };
 
         return function (input) {
-            return calculateAge(input);
+            if (input)
+                return calculateAge(input);
+            else
+                return "العمر غير متوفر"
         };
 
 
+    })
+    .filter('hdrFullDate', function (azdutils, $filter) {
+        return function (input) {
+
+            if (input)
+                return $filter('date')(azdutils.dateTo_ISO8601(input), 'fullDate');
+            else
+                return "تاريخ الأزدياد غير متوفر";
+        }
     })
     .filter('hdrnumber', function () {
         return function (input) {
@@ -161,6 +162,17 @@ angular.module('hdrFilters', [])
                 hdrnumber = input;
             }
             return hdrnumber;
+        }
+    })
+    .filter('hdrmassarnumber', function () {
+        return function (input) {
+
+            var str = new String(input);
+            if (str.length > 5) {
+                return input
+            }
+            else
+                return "رقم مسار غير متوفر"
         }
     })
     .filter('hdrparity', function () {

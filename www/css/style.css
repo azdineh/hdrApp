@@ -190,11 +190,11 @@ body{
   flex-wrap: wrap;
   /* justify-content: space-around; */
   align-content: flex-start;
-  transition: left .15s ease .02s;
+  transition: left .08s ease-out .02s;
 }
 
-.student-item-card{
-  
+#hdr-slider-container {
+  /* border: 2px solid green; */
 }
 
 #hdr-slider-container .hdr-slider-item{
@@ -204,7 +204,17 @@ width: 100%;
 }
 
 #content-appeal{
-  background-color: rgb(191, 196, 202)
+ background-image: linear-gradient(to bottom, #396ebe5a, #009ae277, #00c2cc9a, #00db83de, #b5e644b9); 
+}
+
+
+.lined-paper-pattern{
+  background-color: #fff !important;
+  background-image:
+  linear-gradient(90deg, transparent 95%, #abced4 95%, #abced4 95.4%, transparent 95.4%),
+  linear-gradient(#eee .1em, transparent .1em) !important;
+  background-size: 100% 1.42em !important;
+  padding-right: 7% !important;
 }
 
 /*http://www.svgeneration.com/recipes/GPlay/ */
@@ -334,4 +344,14 @@ animation: insertEffectAnimation 1s;
 @keyframes insertEffectAnimation{
 from {background-color: rgb(189, 189, 63)}
 to {background-color: whitesmoke}
+}
+#hdr-updown-control{
+  background-color: rgba(10, 92, 3, 0.371)
+}
+#hdr-updown-control a{
+ margin: 16px;
+}
+
+.item-radio .item-content{
+  direction: rtl;
 }

@@ -52,13 +52,13 @@
 <div dir="rtl" style="margin-top: 10px;">حدد الحصة الزمنية المناسية. </div>
 <div style="font-size: 12em; background: none;margin: auto;margin-top: 10px;width: 100%">
 	<ion-list>
-		<ion-radio ng-model="data.choice" ng-value="catchedSessions[0]">
+		<ion-radio  on-swipe="swipeCathedSession()" ng-model="data.choice" ng-value="catchedSessions[0]">
 			<i class="icon ion-android-time"> {{catchedSessions[0]}}</i>
-			<span>(ساعة)</span>
+			<span class="hdr-second-txt" style="font-size: 0.8em">(ساعة)</span>
 		</ion-radio>
 		<ion-radio ng-model="data.choice" ng-value="catchedSessions[1]">
 			<i class="icon ion-android-time"> {{catchedSessions[1]}}</i>
-			<span>(ساعتين)</span>
+			<span class="hdr-second-txt" style="font-size: 0.8em">(ساعتين)</span>
 		</ion-radio>
 
 	</ion-list>
