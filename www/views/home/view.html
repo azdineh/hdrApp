@@ -1,7 +1,37 @@
 <ion-view view-title="الصفحة الرئيسة">
   <ion-content>
+
+    <div class="card " dir="rtl" ng-if="isthereAreRemarkableStudents">
+      <div class="item item-text-wrap  hdr-bg">
+        <div class="hdr-parag">
+          <div class="hdr-title" style="margin-bottom: 12px;"> الملاحظات المدونة:</div>
+          <div style="padding: 4px;zoom: 0.88">
+            <div ng-repeat="student in remarkablesStudents" ng-class="'hdr-bg-second'">
+              <hdr-student ng-init="showborder=false;page='search';mode='m2'">
+              </hdr-student>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card " dir="rtl" ng-if="isthereAreAbsent">
+      <div class="item item-text-wrap  hdr-bg">
+        <div class="hdr-parag">
+          <div class="hdr-title" style="margin-bottom: 12px;"> التلاميذ الأكثر غيابا:</div>
+          <div style="padding: 4px;zoom: 0.88">
+            <div ng-repeat="student in mostabsentStudents" ng-class="'hdr-bg-second'">
+              <hdr-student ng-init="showborder=false;page='search';mode='m2'">
+              </hdr-student>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="card " dir="rtl">
-      <div class="item item-text-wrap">
+      <div class="item item-text-wrap  hdr-bg">
 
         <div class="hdr-parag">
           <div class="hdr-title" style="margin-bottom: 12px;"> نُبذة عن التطبيق</div>
@@ -41,13 +71,14 @@
     </div>
 
     <div class="card " dir="rtl">
-      <p style="padding: 16px" class="hdr-parag">
-        للمزيد من التفاصيل و التعرف على طريقة إشتغال التطبيق بمزيد من التوضيح، المرجو الإطلاع على المدونة الخاصة بالتطبيق على الرابط
-        التالي :
-        <!--  <a href="http://7odoor.blogspot.com/" target="_blank" style="font-size: 16px"></a> -->
-        <button class="button button-clear button-block" ng-click="goToBlog()">7odoor.blogspot.com</button>
-      </p>
-
+      <div class="item item-text-wrap  hdr-bg">
+        <p style="padding: 16px" class="hdr-parag ">
+          للمزيد من التفاصيل و التعرف على طريقة إشتغال التطبيق بمزيد من التوضيح، المرجو الإطلاع على المدونة الخاصة بالتطبيق على الرابط
+          التالي :
+          <!--  <a href="http://7odoor.blogspot.com/" target="_blank" style="font-size: 16px"></a> -->
+          <button class="button button-clear button-block" ng-click="goToBlog()">7odoor.blogspot.com</button>
+        </p>
+      </div>
     </div>
 
     <!-- <div class="card" dir="rtl">sty

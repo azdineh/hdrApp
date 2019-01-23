@@ -13,44 +13,15 @@ angular.module('hdrApp')
 
 
         $rootScope.hideTab = false;
+        $scope.thereAreSessions = false;
         // if($state.current.name==""
 
         window.addEventListener('keyboardDidShow', function (event) {
-            /*       console.log("intial content height : " + $rootScope.session_alter_content_height);
-                  console.log("keyboad height : " + event.keyboardHeight);
-      
-                  var contentHeight = document.getElementById('hdr-sessionalter-content').clientHeight;
-                  console.log("current content height :" + contentHeight); */
-
-
-            /*5) */
-
-            //$rootScope.keyboraedShown = true;
-
-            /*             $timeout(function () {
-                            $location.hash("hdr-anchre1");
-                            $ionicScrollDelegate.$getByHandle('mainScroll').anchorScroll(true);
-                        }, 50) */
 
 
         });
 
         window.addEventListener('keyboardDidHide', function () {
-            // $ionicScrollDelegate.scrollBottom();
-            /*  var contentHeight = document.getElementById('hdr-sessionalter-content').clientHeight;
-             console.log("current content height :" + contentHeight); */
-
-            //document.getElementById('hdr-sessionalter-content').style.height = $rootScope.session_alter_content_height + "px";
-
-            /**/
-
-            /*             $ionicScrollDelegate.$getByHandle('mainScroll').resize();
-                        // $ionicScrollDelegate.$getByHandle('mainScroll').resize();
-                        $timeout(function () {
-                            $ionicScrollDelegate.$getByHandle('mainScroll').scrollBottom();
-                        }, 50) */
-
-            //$rootScope.keyboraedShown = false;
 
         });
 
@@ -68,6 +39,12 @@ angular.module('hdrApp')
 
         $scope.$on('$ionicView.enter', function () {
             $rootScope.today = Date.now();
+            // getStudentsView();
+
+        })
+        $scope.$on('$ionicView.afterEnter', function () {
+            if ($rootScope.isDBThere)
+                getStudentsView();
         })
         /* 
                 $rootScope.academy = $window.localStorage['hdr.academy'] ? angular.fromJson($window.localStorage['hdr.academy']) : {};
@@ -76,8 +53,37 @@ angular.module('hdrApp')
                 $rootScope.teacher = $window.localStorage['hdr.teacher'] ? angular.fromJson($window.localStorage['hdr.teacher']) : {}; */
 
         $rootScope.isDBThere = false;
+        $scope.isthereAreAbsent = false;
+        $scope.isthereAreRemarkableStudents = false;
 
         var wind;
+
+        var getStudentsView = function () {
+            hdrdbx.getStudentsAbsencesCount("", 1)
+                .then(function (students_view) {
+                    
+                    if (students_view.length > 0) {
+                        $scope.mostabsentStudents = students_view;
+                        $scope.isthereAreAbsent = true;
+                    }
+                    else {
+                        $scope.isthereAreAbsent = false;
+                    }
+                });
+
+            hdrdbx.getRemarkablesStudents()
+                .then(function (students) {
+                    if (students.length > 0) {
+                        $scope.remarkablesStudents = students;
+                        $scope.isthereAreRemarkableStudents = true;
+                    }
+                    else {
+                        $scope.isthereAreRemarkableStudents = false;
+                    }
+                },function(err){
+                    console.log(err)
+                })
+        }
 
         $scope.btnWind = function () {
             console.log(wind);
@@ -86,9 +92,51 @@ angular.module('hdrApp')
         if (ionic.Platform.isWebView()) {
             $ionicPlatform.ready(function () {
                 hdrdbx.openDB();
+                $rootScope.isDBThere = true;
+                getStudentsView();
+
+                /*                 $timeout(function () {
+                                }, 225) */
+
             });
+
+
         }
         else {// browser 
+
+            $scope.isthereAreAbsent = true;
+            $scope.mostabsentStudents = [
+                {
+                    full_name: 'الرياحي منير',
+                    queuing_number: '15'
+                },
+                {
+                    full_name: 'كوثر قيلالي',
+                    queuing_number: '19',
+                    observation: 'مشاغب لا يهتم..'
+                },
+                {
+                    full_name: 'كمال مضعيف',
+                    queuing_number: '33'
+
+                },
+                {
+                    full_name: 'كمال مضعيف',
+                    queuing_number: '33'
+
+                },
+                {
+                    full_name: 'كمال مضعيف',
+                    queuing_number: '33'
+
+                },
+                {
+                    full_name: 'كمال مضعيف',
+                    queuing_number: '33'
+
+                }
+            ]
+
 
         }
 

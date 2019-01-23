@@ -608,15 +608,6 @@ angular.module('hdrApp')
                     students: []
                 }
 
-                /*                 var sql = "select st.id as studentId, st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number, st.birth_date as birth_date," +
-                                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
-                                    "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
-                                    "from " +
-                                    "((session s inner join classroom c on s.id_classroom=c.id) " +
-                                    "left join " +
-                                    "(student st left join absenceline a on a.massar_number=st.massar_number) " +
-                                    "on a.id_session = s.id) " +
-                                    "where s.id=?"; */
                 var sql = "select a.full_name as full_name, a.queuing_number as queuing_number, a.massar_number as massar_number, a.birth_date as birth_date, a.classroom_title as classroom_title," +
                     "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
                     "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
@@ -666,26 +657,26 @@ angular.module('hdrApp')
 
                                     }
                                 }
-/* 
-                                var strin = "";
-                                session_view_obj.students.forEach(function (std) {
-                                    strin += ",'" + std.massar_number + "'";
-                                }, this);
-
-                                strin += ";"
-                                strin = strin.slice(1, strin.length - 1);
-
-                                console.log(strin);
-                                vm.selectRows('student', "massar_number not in (" + strin + ") and id_classroom ='" + session_view_obj.classroom.id + "'")
-                                    .then(function (students) {
-                                        for (var i = 0; i < students.length; i++) {
-                                            students[i].is_student_fix_problem = false;
-                                            students[i].classroom_title = session_view_obj.classroom.title;
-                                            session_view_obj.studentsNotAbsents.push(students[i]);
-                                        }
-                                    }, function (err) {
-                                        console.log(err);
-                                    }) */
+                                /* 
+                                                                var strin = "";
+                                                                session_view_obj.students.forEach(function (std) {
+                                                                    strin += ",'" + std.massar_number + "'";
+                                                                }, this);
+                                
+                                                                strin += ";"
+                                                                strin = strin.slice(1, strin.length - 1);
+                                
+                                                                console.log(strin);
+                                                                vm.selectRows('student', "massar_number not in (" + strin + ") and id_classroom ='" + session_view_obj.classroom.id + "'")
+                                                                    .then(function (students) {
+                                                                        for (var i = 0; i < students.length; i++) {
+                                                                            students[i].is_student_fix_problem = false;
+                                                                            students[i].classroom_title = session_view_obj.classroom.title;
+                                                                            session_view_obj.studentsNotAbsents.push(students[i]);
+                                                                        }
+                                                                    }, function (err) {
+                                                                        console.log(err);
+                                                                    }) */
 
                             }
 
@@ -936,23 +927,45 @@ angular.module('hdrApp')
                 return q.promise;
             }
 
-            vm.getStudentsAbsencesCount = function (classroom_title) {
+            /**
+             * returne stuents view orderd by absence count desc
+             */
+            vm.getStudentsAbsencesCount = function (classroom_title, absence_nbr) {
 
                 var query = "";
                 var arrayy = [];
                 if (classroom_title != "") {
-                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, count(al.id) as absences_count, s.full_name as full_name from absenceline al inner join student s on al.massar_number=s.massar_number " +
+                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, s.observation as observation,count(al.id) as absences_count, s.full_name as full_name from absenceline al inner join student s on al.massar_number=s.massar_number " +
                         "inner join classroom c on s.id_classroom =c.id group by s.massar_number HAVING c.title=?";
                     arrayy.push(classroom_title);
                 }
                 else {
-                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, count(al.id) as absences_count, s.full_name as full_name, s.massar_number as massar_number, al.is_student_fix_problem as is_student_fix_problem from student s left join absenceline al on al.massar_number=s.massar_number " +
-                        "inner join classroom c on s.id_classroom =c.id group by s.massar_number order by full_name";
+                    query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number,s.observation as observation, count(al.id) as absences_count, " +
+                        "s.full_name as full_name, s.massar_number as massar_number, al.is_student_fix_problem as is_student_fix_problem from student s left join absenceline al on al.massar_number=s.massar_number " +
+                        "inner join classroom c on s.id_classroom =c.id group by s.massar_number order by absences_count desc ";
+
+                    if (absence_nbr) {
+                        query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number, s.observation as observation, count(al.id) as absences_count, " +
+                            "s.full_name as full_name, s.massar_number as massar_number, al.is_student_fix_problem as is_student_fix_problem from student s left join absenceline al on al.massar_number=s.massar_number " +
+                            "inner join classroom c on s.id_classroom =c.id where is_student_fix_problem=0 group by s.massar_number HAVING absences_count >" + absence_nbr + " order by absences_count desc ";
+                    }
                 }
 
                 var q = $q.defer();
 
 
+                //object returned
+                // students_view[]
+                // session_view{
+                //  title --> classroom
+                //  birth_date
+                //  queuing_number
+                //  observation
+                //  absences_count -->
+                //  full_name
+                //  massar_number
+                //  is_student_fix_problem
+                // }
 
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, arrayy,
@@ -976,6 +989,49 @@ angular.module('hdrApp')
 
             }
 
+            vm.getRemarkablesStudents = function () {
+
+                var query = "";
+                query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number,s.observation as observation, count(al.id) as absences_count, " +
+                "s.full_name as full_name, s.massar_number as massar_number, al.is_student_fix_problem as is_student_fix_problem from student s left join absenceline al on al.massar_number=s.massar_number " +
+                "inner join classroom c on s.id_classroom =c.id where observation !='' group by s.massar_number order by absences_count desc ";
+
+                var q = $q.defer();
+
+
+                //object returned
+                // students_view[]
+                // session_view{
+                //  title --> classroom
+                //  birth_date
+                //  queuing_number
+                //  observation
+                //  absences_count
+                //  full_name
+                //  massar_number
+                // }
+
+                vm.db.transaction(function (tx) {
+                    tx.executeSql(query, [],
+                        function (tx, res) {
+                            var items_arr = [];
+                            for (var i = 0, len = res.rows.length; i < len; i++) {
+                                items_arr.push(res.rows.item(i));
+                            }
+                            q.resolve(items_arr);
+                        }, function (err) {
+                            q.reject(err);
+                        });
+
+                }, function (error) {
+                    q.reject(error);
+                }, function () {
+
+                });
+
+                return q.promise;
+
+            }
 
             vm.removeSession = function (session_id) {
 

@@ -355,3 +355,11 @@ to {background-color: whitesmoke}
 .item-radio .item-content{
   direction: rtl;
 }
+
+.hdr-bg{
+  background-image: linear-gradient(to top,rgba(138, 120, 80, 0.104),rgba(230, 205, 173, 0.083) ) !important;
+}
+
+.hdr-bg-second{
+   border-bottom: 1px solid rgba(57, 57, 77, 0.309);
+}

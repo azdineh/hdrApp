@@ -47,7 +47,7 @@
         <span ng-if="studentQN>0">
           <!-- meme classe -->
           <span ng-if="currentClassroomTitle==student.classroom_title">
-            <!-- eleve chande de numro d ordre-->
+            <!-- eleve change de numro d ordre-->
             <span ng-if="studentQN!=student.queuing_number">
               <div> {{student.queuing_number|hdrnumber}}</div>
               <div class="icon ion-arrow-left-c" style="zoom: 1.2"></div>
@@ -183,6 +183,12 @@
         <td style="text-align: left;font-size: 14px;width: 24%" ng-show="showtitle">
           <div style="padding-left: 10px;margin: 2px"> {{student.title}}
           </div>
+        </td>
+      </tr>
+      <tr ng-if="student.observation.length>0">
+        <td colspan="4" style="padding-right: 4px">
+          <span class="icon ion-compose"></span>
+          {{student.observation}}
         </td>
       </tr>
     </table>
