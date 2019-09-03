@@ -11,10 +11,7 @@ angular.module('hdrApp')
 				$scope.showmore = true;
 				$scope.shomeqn = true;
 				//	$scope.mode = "simple";
-				$scope.currentClassroomTitle = null;
-				$scope.studentQN = null;
 				$scope.student_absences = [];
-				$scope.flagMessage = false;
 
 
 				//in the scope, there is stduent object that present student in the absenceline
@@ -24,43 +21,8 @@ angular.module('hdrApp')
 
 
 					if ($state.current.name == "tab.sessionshistory" || $state.current.name == "tab.sessionalter") {
-						console.log("current state :" + $state.current.name);
+						//console.log("current state :" + $state.current.name);
 
-						$timeout(function () {
-							hdrdbx.selectRows('student', "massar_number='" + $scope.student.massar_number + "'")
-								.then(function (students) {
-									var std = students[0];
-									$scope.studentQN = std.queuing_number;
-
-									hdrdbx.selectRows('classroom', "id='" + std.id_classroom + "'")
-										.then(function (classrooms) {
-
-											if (classrooms[0] != null)
-												$scope.currentClassroomTitle = classrooms[0].title;
-											else
-												$scope.currentClassroomTitle = null;
-											$scope.flagMessage = true;
-											/* $scope.student.queuing_number = std.queuing_number; */
-
-
-											if ($state.current.name == "tab.sessionalter") {
-												if ($scope.currentClassroomTitle != $scope.session_view.classroom.title) {
-													$scope.student.queuing_number = $scope.student.queuing_number + "*";
-													$scope.student.isMoved = true;
-												}
-												else {
-													$scope.student.isMoved = false;
-												}
-
-												if ($scope.studentQN != $scope.student.queuing_number) {
-													$scope.student.queuing_number = $scope.student.queuing_number + "(" + $scope.studentQN + ")"
-												}
-											}
-
-
-										}, function (err) { });
-								}, function (err) { });
-						}, $state.current.name == "tab.sessionshistory" ? 2000 : 1500)
 					}
 					else {
 
@@ -93,7 +55,7 @@ angular.module('hdrApp')
 
 				}
 				$scope.goToStudentView = function (student, classroom) {
-					$state.go('tab.student', { 'student': student, 'classroom': classroom });
+					$state.go('tab.student', { 'student': student, 'classroom': { 'title': classroom.title } });
 				}
 			},
 			link: function (scope, element, attrs) {

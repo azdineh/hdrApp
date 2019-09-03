@@ -57,29 +57,26 @@
     margin: 1px;
   }
 </style>
-<div style="position: relative;height: 10vh" id="student-item-card-{{student.id}}">
+<div style="position: relative;min-height: 10vh" id="student-item-card-{{student.id}}">
 
 
 
 
-  <div dir="rtl" class="card" on-double-tap="onDoubleTap(student)" ng-class="cardInRed" ng-class-even="cardInGray" style="height: inherit;padding: 0;margin:0px;">
-    <div class="item item-text-wrap" style="padding: 0;height: 10vh;padding-top: 2px;">
+  <div dir="rtl" class="card" on-double-tap="onDoubleTap(student)" ng-class="cardInRed" ng-class-even="cardInGray" style="min-height: inherit;padding: 0;margin:0px;">
+    <div class="item item-text-wrap" style="padding: 0;min-height: 10vh;padding-top: 2px;">
 
 
-
-
-
-      <table class="classroom_item" style="width:100%;height: 100%" id="ggh">
+      <table class="classroom_item" style="width:100%;min-height: inherit" id="ggh">
         <tr>
           <td style="text-align: center;height: 6vh;font-size: 18px;width: 12%">
             <button class="button button-clear" ng-disabled="" ng-click="showActionSheet(student)">
               <i class="ion-android-more-vertical" ng-hide="clicked" style="zoom: 1.5"></i>
             </button>
           </td>
-          <td style="text-align: center;height: 6vh;font-size: 18px;width: 12%;transition: filter 1s"  ng-style="student.isBarred?{'filter':'blur(2px)'}:{}">
+          <td style="text-align: center;height: 6vh;font-size: 18px;width: 12%;transition: filter 1s"  ng-style="student.isBarred==1?{'filter':'blur(2px)'}:{}">
             <div>{{student.queuing_number|hdrnumber}} </div>
           </td>
-          <td style="padding-right: 10px;width: 50%;transition: filter 1s"  ng-style="student.isBarred?{'filter':'blur(2px)'}:{}">
+          <td style="padding-right: 10px;width: 50%;transition: filter 1s"  ng-style="student.isBarred==1?{'filter':'blur(2px)'}:{}">
             <div>
               <div class="hdr-main-text positive">{{student.full_name}}</div>
               <div class="hdr-sub-text">
@@ -115,6 +112,14 @@
           <div style="padding-left: 10px;margin: 2px"> {{student.title}}</div>
         </td> -->
         </tr>
+        <tr ng-if="student.observation.length>0" class="lined-paper-pattern">
+          <td colspan="4"  ng-style="student.isBarred==1?{'opacity':'0.7'}:{}" style="padding: 10px;font-size: 0.75em;background-image:linear-gradient(to bottom, rgba(249, 234, 185, 0.344),rgba(247, 242, 201, 0.296))">
+            <span class="icon ion-compose" style="margin-right: 12px;"></span>
+            <span style="color:rgb(187, 34, 34)">
+              {{student.observation}}
+            </span>
+          </td>
+        </tr>
       </table>
 
 
@@ -122,15 +127,13 @@
 
   </div>
 
-  <div ng-if="student.isBarred" style="height:inherit;width:86%;position:relative;top: -10vh;left: -14%;z-index: 5000;opacity: 0.7;
-  background-image: linear-gradient(to right,rgba(158, 156, 182, 0.135),rgba(122, 123, 143, 0.268),rgba(100, 100, 100, 0.1));">
-    <table style="width:100%;height: 100%;overflow: hidden">
+  <div ng-if="student.isBarred==1" style="height:100%;width:86%;position:absolute;top: 0px;left: 0px;z-index: 5000;opacity: 0.7;
+  background-image: linear-gradient(to right,rgba(158, 156, 182, 0.135),rgba(122, 123, 143, 0.268),rgba(100, 100, 100, 0));">
+    <table style="width:100%;height: inherit;overflow: hidden">
       <tr>
-        <td dir="ltr" style="width: 100%;height: 100%;text-align: right;vertical-align: middle;font-size: 3.2em">
-          <div style="width: 100% ;padding-left: 20px;
-          color:#ee0c0c;text-align: left;">
-            <span class="icon ion-close"></span>
-          </div>
+        <td dir="ltr" style="width: 100%;height: inherit;text-align: left;padding-left: 20px;vertical-align: middle;font-size: 3.2em">
+
+        <span class="icon ion-close assertive"></span>
         </td>
       </tr>
     </table>

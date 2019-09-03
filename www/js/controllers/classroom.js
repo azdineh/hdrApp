@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-	.controller('ClassroomController', function ($scope, azdutils,$rootScope, $filter, $window, $ionicPopup, $ionicScrollDelegate, $ionicModal, $stateParams, $timeout, hdrdbx) {
+	.controller('ClassroomController', function ($scope, azdutils, $rootScope, $filter, $window, $ionicPopup, $ionicScrollDelegate, $ionicModal, $stateParams, $timeout, hdrdbx) {
 
 
 
@@ -118,7 +118,10 @@ angular.module('hdrApp')
 			$window.localStorage['hdr.classrooms_view'] = angular.toJson($rootScope.classrooms_view);
 
 			//update students in db
-			hdrdbx.removeStudentFromClassroom(student, $scope.classroom);
+			hdrdbx.removeStudentFromClassroom(student, $scope.classroom)
+				.then(function () {
+					$rootScope.isDBchanged = true;
+				})
 
 		}
 
@@ -150,7 +153,10 @@ angular.module('hdrApp')
 
 			if (ionic.Platform.isWebView()) {
 
-				hdrdbx.updateStudentsQNinStudentof($scope.classroom);
+				hdrdbx.updateStudentsQNinStudentof($scope.classroom)
+					.then(function () {
+						$rootScope.isDBchanged = true;
+					})
 			}
 
 			var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
@@ -192,7 +198,10 @@ angular.module('hdrApp')
 
 			if (ionic.Platform.isWebView()) {
 
-				hdrdbx.updateStudentsQNinStudentof($scope.classroom);
+				hdrdbx.updateStudentsQNinStudentof($scope.classroom)
+					.then(function () {
+						$rootScope.isDBchanged = true;
+					})
 			}
 
 			var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
@@ -245,6 +254,7 @@ angular.module('hdrApp')
 					birth_date: toMassarFormat($scope.student.birth_date),
 					queuing_number: $scope.classroom.students.length + 1,
 					observation: $scope.student.observation,
+					isBarred: 0,
 					id_classroom: $scope.classroom.id
 				};
 
@@ -268,6 +278,7 @@ angular.module('hdrApp')
 								hdrdbx.updateStudent(insertedStudent, newStudent)
 									.then(function () {
 										alert("تمت إضافة التلميذ بنجاح.");
+										$rootScope.isDBchanged = true;
 										//push newStudent to $scope.classroom.students
 										$scope.classroom.students.push(newStudent);
 
@@ -275,7 +286,8 @@ angular.module('hdrApp')
 										$rootScope.classrooms_view[classroomIndex] = $scope.classroom
 										$window.localStorage['hdr.classrooms_view'] = angular.toJson($rootScope.classrooms_view);
 
-										hdrdbx.updateAbsenceLine("queuing_number", 0, " massar_number ='" + student.massar_number + "'");
+										//update queuing_number in absenceline table by the new value
+										//hdrdbx.updateAbsenceLine("queuing_number", insertedStudent.queuing_number, " massar_number ='" + student.massar_number + "'");
 
 										$scope.closeModal();
 										document.getElementById("hdr-add-student-name").value = "";
@@ -306,6 +318,7 @@ angular.module('hdrApp')
 				hdrdbx.updateStudent($scope.selectedStudent, revenantStudent)
 					.then(function (count) {
 
+						$rootScope.isDBchanged=true;
 						$scope.classroom.students.push(revenantStudent);
 						var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
 						$rootScope.classrooms_view[classroomIndex] = $scope.classroom

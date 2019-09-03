@@ -3,8 +3,11 @@ angular.module('hdrApp')
 		$ionicModal, hdrdbx, $timeout, $state) {
 
 		//$rootScope.today already defined in home controller
-		$scope.classroom = $stateParams.classroom;
-		//$scope.classroom = $filter('filter')($rootScope.classrooms_view, $stateParams.classroom_title)[0];
+		//$scope.classroom = $stateParams.classroom;
+		console.log($stateParams.classroom);
+		$scope.classroom = $filter('filter')($rootScope.classrooms_view, { 'title': $stateParams.classroom.title })[0];
+		$scope.classroom.students = $filter('orderBy')($scope.classroom.students, "queuing_number");
+		//$scope.classroom presnet classroom_view
 
 
 		$scope.choiceIndexOfFastCase = $stateParams.index;
@@ -15,7 +18,7 @@ angular.module('hdrApp')
 
 		$scope.numOfSlides = 0;
 		$scope.catchedSessions = [];
-		$scope.absentStudents = [];
+		$rootScope.absentStudents = [];
 		/** @param this param is for be allimented in dr-student-card-appeal directive*/
 		$scope.hdriterator = "all";
 		$scope.pagename = $scope.choiceIndexOfFastCase == '-1' ? "نداء القسم" : "القسم";
@@ -29,44 +32,27 @@ angular.module('hdrApp')
 		* it catch the session according to the current system time.
 		* @return array session title [4-3 , 4-2] or [9-8,10-9]
 		*/
-		$scope.catchSessions = function () {
-			var session = [];
-			// see http://momentjs.com/docs/
-			//var h = moment().hour();
-
-			var h = new String($filter('date')(Date.now(), 'H'));
-			var h1 = new String(parseInt(h) - (-1));
-
-			session.push(h1 + "-" + h);
-			if (parseInt(h) % 2 !== 0) {
-				h = new String(parseInt(h) - 1);
-			}
-			var h2 = new String(parseInt(h) - (-2));
-			session.push(h2 + "-" + h);
-
-			return session;
-		};
-
-		$scope.swipeCathedSession = function () {
-
-			/* var h_tmp = new String($scope.catchedSessions[0]);
-
-			if (h_tmp.includes(":")) {
-				$scope.catchedSessions[0] = h_tmp.replace(/:30/g,"");
 
 
-				h_tmp = new String($scope.catchedSessions[1]);
-				$scope.catchedSessions[1] = h_tmp.replace(/:30/g,"");
-
-			}
-			else {
-				$scope.catchedSessions[0]= ($scope.catchedSessions[0]+"").replace("-",":30-");
-				$scope.catchedSessions[0]+=":30";
-
-				$scope.catchedSessions[1]= ($scope.catchedSessions[1]+"").replace("-",":30-");
-				$scope.catchedSessions[1]+=":30";
-			} */
+		//$scope.currentUnixtTime = 0;
+		//$scope.currentUnixtTime = Date.now();
+		$scope.catchSessionBegin = function () {
+			var h = new String($filter('date')(Date.now(), 'HH'));
+			var dt = new Date();
+			dt.setHours(h);
+			dt.setMinutes(0);
+			$scope.currentUnixtTime = dt.getTime();
+			//console.log("current short time :" + shortTime);
 		}
+
+		$scope.upCurrentTimeUnixBy_30minutes = function () {
+			$scope.currentUnixtTime += 1000 * 60 * 30;
+		}
+		$scope.downCurrentTimeUnixBy_30minutes = function () {
+			$scope.currentUnixtTime -= 1000 * 60 * 30;
+		}
+
+
 
 		$scope.groups = ["all", "odd", "even"];
 		$scope.currentGroup = "all";
@@ -81,7 +67,7 @@ angular.module('hdrApp')
 			}
 
 
-			$scope.absentStudents = [];
+			$rootScope.absentStudents = [];
 
 			$timeout(function () {
 				var itmes = document.getElementsByClassName("hdr-slider-item");
@@ -187,7 +173,7 @@ angular.module('hdrApp')
 			$scope.classroom.students.push({ id: '2', full_name: 'مريم يعقوبي', registration_number: '159986', massar_number: "S12345687", birth_date: "12/02/2000", queuing_number: '2' });
 			$scope.classroom.students.push({ id: '3', full_name: 'عزيز ملوكي', registration_number: '159986', massar_number: "S12345687", birth_date: "04/08/1986", queuing_number: '3' });
 			$scope.classroom.students.push({ id: '4', full_name: 'سناء عكرود', registration_number: '159986', massar_number: "S12345687", birth_date: "12/04/2000", queuing_number: '4' });
-			$scope.classroom.students.push({ id: '5', full_name: 'لحبيب نظيف', registration_number: '159986', massar_number: "S12345687", birth_date: "12/05/2000", queuing_number: '5' });
+			$scope.classroom.students.push({ id: '5', full_name: 'لحبيب نظيف', registration_number: '159986', massar_number: "S12345687", birth_date: "12/05/2000", queuing_number: '5', observation: 'حماسي..' });
 			$scope.classroom.students.push({ id: '6', full_name: 'كبور سميرس', registration_number: '159986', massar_number: "S12345687", birth_date: "12/06/2000", queuing_number: '6' });
 			$scope.classroom.students.push({ id: '7', full_name: 'بوكيمون لزعر', registration_number: '159986', massar_number: "S12345687", birth_date: "12/07/2000", queuing_number: '7' });
 			$scope.classroom.students.push({ id: '8', full_name: 'عبدو فريد', registration_number: '159986', massar_number: "S12345687", birth_date: "12/08/2000", queuing_number: '8' });
@@ -208,8 +194,13 @@ angular.module('hdrApp')
 		}
 
 
+		$scope.even = function (input, index) { return (input.queuing_number) % 2 === 0 };
+		$scope.odd = function (input, index) { return (input.queuing_number) % 2 === 1 };
+		//$scope.all = function (input, index) { return true };
+
 		$scope.showPopup = function (index) {
-			$scope.catchedSessions = $scope.catchSessions();
+
+			$scope.catchSessionBegin();
 			$scope.data = {
 				choice: $scope.catchedSessions[0]
 			};
@@ -243,19 +234,20 @@ angular.module('hdrApp')
 							// all students are absents
 							if (index == 1) {
 								if ($scope.currentGroup == "all") {
-									$scope.absentStudents = $scope.classroom.students;
+									$rootScope.absentStudents = $scope.classroom.students;
 								}
 								// impairs
 								if ($scope.currentGroup == "odd") {
-									$scope.absentStudents = $scope.classroom.students.filter($scope.odd);
+									$rootScope.absentStudents = $scope.classroom.students.filter($scope.odd);
 								}
 								//pairs
 								if ($scope.currentGroup == "even") {
-									$scope.absentStudents = $scope.classroom.students.filter($scope.even);
+									$rootScope.absentStudents = $scope.classroom.students.filter($scope.even);
 								}
 							}
 
 							$scope.saveSession(function () {
+								$rootScope.isDBchanged = true;
 								$state.go('tab.classrooms');
 							});
 							//e.preventDefault();
@@ -263,23 +255,25 @@ angular.module('hdrApp')
 					}
 				]
 			});
+			$timeout(function () {
+				$scope.selectSessionDuration("1");
+			}, 50);
 		};
 
 		$scope.showActionSheet = function (student) {
 
 			var shoteba_btn = "تشطيب";
-			if (student.isBarred) {
+			if (student.isBarred == 1) {
 				shoteba_btn = "إزالة التشطيب";
 			}
 			// Show the action sheet
 			var hideSheet = $ionicActionSheet.show({
 				buttons: [
-					{ text: '<div class="list"><a class="item hdr-to-right" href="#">' + shoteba_btn + '</a></div>' },/* 
-								{ text: '<div class="list"><a class="item hdr-to-right" href="#">حضر الجميع إلا</a></div>' },
-			 */     { text: '<div class="list"><a class="item hdr-to-right" href="#">حذف</a></div>' },
+					{ text: '<div class="list"><a class="item hdr-to-right" href="#">' + shoteba_btn + '</a></div>' },
+					{ text: '<div class="list"><a class="item hdr-to-right" href="#">حذف</a></div>' },
 					{ text: '<div class="list"><a class="item hdr-to-right" href="#">إضافة تلميذ بعد</a></div>' },
-					{ text: '<div class="list"><a class="item hdr-to-right" href="#">تغيير الترتيب</a></div>' }
-					/*                     { text: '<div class="list"><a class="item hdr-to-right" href="#">تغيب الجميع إلا</a></div>' }, */
+					{ text: '<div class="list"><a class="item hdr-to-right" href="#">تغيير الترتيب</a></div>' },
+					{ text: '<div class="list"><a class="item hdr-to-right" href="#">إطلاع على البطاقة</a></div>' }
 				],
 				titleText: '<div><div class="hdr-to-right positive hdr-main-text"> التلميذ : ' + student.full_name + '<b> رقم : ' + $filter('hdrnumber')(student.queuing_number) + '</b></div><div class="hdr-to-right hdr-sub-text">: حدد العملية للإنجاز </div></div>',
 				buttonClicked: function (index) {
@@ -289,11 +283,13 @@ angular.module('hdrApp')
 						//update students in localstorage
 						var studentIndex = $scope.classroom.students.indexOf(student);
 
-						if (student.isBarred) {
-							$scope.classroom.students[studentIndex].isBarred = false;
+						if (student.isBarred == 1) {
+							$scope.classroom.students[studentIndex].isBarred = 0;
+							hdrdbx.updateStudentIsBarred(student, 0);
 						}
 						else {
-							$scope.classroom.students[studentIndex].isBarred = true;
+							$scope.classroom.students[studentIndex].isBarred = 1;
+							hdrdbx.updateStudentIsBarred(student, 1);
 						}
 						var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
 						$rootScope.classrooms_view[classroomIndex] = $scope.classroom
@@ -313,6 +309,11 @@ angular.module('hdrApp')
 						$scope.index_of_selected_student = $scope.classroom.students.indexOf(student);
 						$scope.afterInsertEffectAnim($scope.classroom.students[$scope.index_of_selected_student]);
 						$scope.showUpDwonControll();
+					}
+					//to student information
+					if (index == 4) {
+						//$scope.index_of_selected_student = $scope.classroom.students.indexOf(student);
+						$state.go('tab.student', { 'student': student, 'classroom': { 'title': $scope.classroom.title } });
 					}
 					return true;
 				}
@@ -371,6 +372,11 @@ angular.module('hdrApp')
 			var studentIndex = $scope.classroom.students.indexOf(student);
 			//remove student from students array
 			$scope.classroom.students.splice(studentIndex, 1);
+
+			//if marked as absent, remove from absentStudents
+			$rootScope.absentStudents.splice($rootScope.absentStudents.indexOf(student), 1);
+
+			//recalculate queuing_numbers
 			for (var index = 0; index < $scope.classroom.students.length; index++) {
 				$scope.classroom.students[index].queuing_number = index + 1;
 
@@ -382,8 +388,23 @@ angular.module('hdrApp')
 
 			//update students in db
 			if (ionic.Platform.isWebView()) {
-				hdrdbx.removeStudentFromClassroom(student, $scope.classroom);
+				hdrdbx.removeStudentFromClassroom(student, $scope.classroom)
+					.then(function () {
+						$rootScope.isDBchanged = true;
+					})
+
 			}
+
+			//removing student provoks --> recalculate width of slider
+			$timeout(function () {
+				var itmes = document.getElementsByClassName("hdr-slider-item");
+				var lastItem = itmes[itmes.length - 1];
+				console.log(lastItem);
+				console.log("Left of last Item :" + lastItem.offsetLeft);
+
+				$scope.leftOfLastItem = lastItem.offsetLeft;
+			}, 250)
+
 
 		}
 
@@ -436,7 +457,10 @@ angular.module('hdrApp')
 
 			if (ionic.Platform.isWebView()) {
 
-				hdrdbx.updateStudentsQNinStudentof($scope.classroom);
+				hdrdbx.updateStudentsQNinStudentof($scope.classroom)
+					.then(function () {
+						$rootScope.isDBchanged = true;
+					})
 			}
 
 			var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
@@ -493,7 +517,10 @@ angular.module('hdrApp')
 
 			if (ionic.Platform.isWebView()) {
 
-				hdrdbx.updateStudentsQNinStudentof($scope.classroom);
+				hdrdbx.updateStudentsQNinStudentof($scope.classroom)
+					.then(function () {
+						$rootScope.isDBchanged = true;
+					})
 			}
 
 			var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
@@ -562,6 +589,7 @@ angular.module('hdrApp')
 					birth_date: toMassarFormat($scope.student.birth_date),
 					queuing_number: '',
 					observation: $scope.student.observation,
+					isBarred: 0,
 					id_classroom: $scope.classroom.id
 				};
 
@@ -585,6 +613,7 @@ angular.module('hdrApp')
 								hdrdbx.updateStudent(insertedStudent, newStudent)
 									.then(function () {
 										alert("تمت إضافة التلميذ بنجاح.");
+										$rootScope.isDBchanged = true;
 										//push newStudent to $scope.classroom.students
 										//$scope.classroom.students.push(newStudent);
 										if (addPosition == "after") {
@@ -596,6 +625,16 @@ angular.module('hdrApp')
 												student.queuing_number = index + 1;
 											}, this);
 
+											// recalculate slider width
+											$timeout(function () {
+												var itmes = document.getElementsByClassName("hdr-slider-item");
+												var lastItem = itmes[itmes.length - 1];
+												console.log(lastItem);
+												console.log("Left of last Item :" + lastItem.offsetLeft);
+
+												$scope.leftOfLastItem = lastItem.offsetLeft;
+											}, 250)
+
 										}
 
 										var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
@@ -606,7 +645,7 @@ angular.module('hdrApp')
 										hdrdbx.updateStudentsQNinStudentof($scope.classroom)
 											.then(function (res) {
 
-												hdrdbx.updateAbsenceLine("queuing_number", 0, " massar_number ='" + student.massar_number + "'");
+												//hdrdbx.updateAbsenceLine("queuing_number", 0, " massar_number ='" + student.massar_number + "'");
 												$scope.closeModal();
 												document.getElementById("hdr-add-student-name").value = "";
 
@@ -638,6 +677,7 @@ angular.module('hdrApp')
 				hdrdbx.updateStudent($scope.selectedStudent, revenantStudent)
 					.then(function (count) {
 
+						$rootScope.isDBchanged = true;
 						if (addPosition == "after") {
 							//insert new student in the given position
 							$scope.classroom.students.splice($scope.index_of_selected_student + 1, 0, revenantStudent);
@@ -659,6 +699,16 @@ angular.module('hdrApp')
 						$timeout(function () {
 							$scope.afterInsertEffectAnim(revenantStudent);
 						}, 250);
+
+						// recalculate slider width
+						$timeout(function () {
+							var itmes = document.getElementsByClassName("hdr-slider-item");
+							var lastItem = itmes[itmes.length - 1];
+							console.log(lastItem);
+							console.log("Left of last Item :" + lastItem.offsetLeft);
+
+							$scope.leftOfLastItem = lastItem.offsetLeft;
+						}, 250)
 
 						console.log("student has been updated succefully..")
 					}, function (err) {
@@ -763,12 +813,13 @@ angular.module('hdrApp')
 
 			if ($scope.choiceIndexOfFastCase == '-1') {
 
-				//$ionicSlideBoxDelegate.slide($scope.numOfSlides - 1, 30);
-
 				if ($scope.helpPopupShown <= 1) {
 					$timeout(function () {
 						$scope.showHelpPopup();
-					}, 750);
+					}, 50);
+
+
+
 					$scope.helpPopupShown += 1;
 					$window.localStorage['hdr.helpPopupShown'] = angular.toJson($scope.helpPopupShown);
 				}
@@ -779,8 +830,12 @@ angular.module('hdrApp')
 
 				$timeout(function () {
 					$scope.selectSessionParity("all");
-				}, 520);
+
+				}, 50);
+
 			}
+
+
 
 		});
 
@@ -792,7 +847,7 @@ angular.module('hdrApp')
 				classroom_title: $scope.classroom.title,
 				id_teacher: 1,
 				unix_time: Date.now(),
-				title: $scope.data.choice,
+				title: $scope.sessionDurationSelected = $filter('date')($scope.currentUnixtTime + 1000 * 60 * 60 * $scope.sessionDurationSelected, 'HH:mm') + "-" + $filter('date')($scope.currentUnixtTime, 'HH:mm'),
 				students_count: $scope.classroom.students.length,
 				parity: $scope.currentGroup,
 				isExamSession: 0,
@@ -800,22 +855,23 @@ angular.module('hdrApp')
 
 			}
 
+			console.log('session : ' + session.title);
 			session.isExamSession = $scope.data.isExamSession == true ? 1 : 0;
 
 			console.log("Current parity: " + session.parity);
 
-			/* 			if ($scope.absentStudents.length == 0) {
+			/* 			if ($rootScope.absentStudents.length == 0) {
 							session.observation = "لم يتغيب أحد.";
 						}
-						if ($scope.absentStudents.length == $scope.classroom.students.length) {
+						if ($rootScope.absentStudents.length == $scope.classroom.students.length) {
 							session.observation = "غياب جماعي.";
 						} */
 
 
-			hdrdbx.saveAbsentStudents(session, $scope.absentStudents)
+			hdrdbx.saveAbsentStudents(session, $rootScope.absentStudents)
 				.then(function (count) {
 					console.log('save ' + count + ' absent students is done');
-					//$scope.absentStudents = [];
+					//$rootScope.absentStudents = [];
 					//$scope.data.isExamSession = false;
 					alert("تم تسجيل الحصة بنجاح.");
 					callback();
@@ -850,6 +906,39 @@ angular.module('hdrApp')
 			else {
 				elm.style.backgroundColor = "rgb(114, 241, 41)";
 			} */
+
+		}
+
+		$scope.selectSessionDuration = function (id) {
+			if (id == "1") {
+				document.getElementById("hdr-session-duration-2").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-3").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-4").style.backgroundColor = "rgb(212, 223, 206)";
+				$scope.sessionDurationSelected = 1;
+			}
+			if (id == "2") {
+				document.getElementById("hdr-session-duration-1").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-3").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-4").style.backgroundColor = "rgb(212, 223, 206)";
+				$scope.sessionDurationSelected = 2;
+			}
+			if (id == "3") {
+				document.getElementById("hdr-session-duration-1").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-2").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-4").style.backgroundColor = "rgb(212, 223, 206)";
+				$scope.sessionDurationSelected = 3;
+			}
+			if (id == "4") {
+				document.getElementById("hdr-session-duration-1").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-2").style.backgroundColor = "rgb(212, 223, 206)";
+				document.getElementById("hdr-session-duration-3").style.backgroundColor = "rgb(212, 223, 206)";
+				$scope.sessionDurationSelected = 4;
+			}
+
+			var elm = document.getElementById("hdr-session-duration-" + id);
+			var initbgColor = elm.style.backgroundColor;
+			elm.style.backgroundColor = "rgb(114, 241, 41)";
+
 
 		}
 

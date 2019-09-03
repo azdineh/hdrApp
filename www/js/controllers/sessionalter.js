@@ -16,8 +16,14 @@ angular.module('hdrApp')
 
 			if ($scope.observationUpdateMode == true)
 				$scope.observationUpdateMode = false
-			else
+			else {
 				$scope.observationUpdateMode = true;
+
+				setTimeout(function () {
+					document.getElementById('hdr-textarea-observation').focus();
+				}, 20);
+
+			}
 
 			$ionicScrollDelegate.resize();
 		}
@@ -63,7 +69,8 @@ angular.module('hdrApp')
 			}
 
 			$scope.updateSession = function (session_id) {
-				var newTitle = $scope.hEnd + "-" + $scope.hStart;
+				//var newTitle = $scope.hEnd + "-" + $scope.hStart;
+				var newTitle = $scope.hEnd + ":" + $scope.mEnd + "-" + $scope.hStart + ":" + $scope.mStart;
 				hdrdbx.updateSessionTitle(session_id, newTitle);
 			}
 
@@ -165,9 +172,20 @@ angular.module('hdrApp')
 
 			//session_view.session.title
 			var str = new String($scope.session_view.session.title);
+			// session.title like 10:30-08:30
 			var tiretIndex = str.indexOf('-');
-			$scope.hStart = parseInt(str.substring(tiretIndex + 1, str.length));
-			$scope.hEnd = parseInt(str.substring(0, tiretIndex));
+			var timeStart = str.substring(tiretIndex + 1, str.length);
+			var timeEnd = str.substring(0, tiretIndex);
+
+			var doublepointIndex1 = timeStart.indexOf(':')>=0?timeStart.indexOf(':'): timeStart.length ; // 08:30
+			$scope.hStart = parseInt(timeStart.substring(0, doublepointIndex1));
+			$scope.mStart = parseInt(timeStart.substring(doublepointIndex1 + 1, timeStart.length)) == '' ? 0 : parseInt(timeStart.substring(doublepointIndex1 + 1, timeStart.length));
+
+
+			var doublepointIndex2 = timeEnd.indexOf(':')>=0?timeEnd.indexOf(':'): timeEnd.length; // 08:30
+			$scope.hEnd = parseInt(timeEnd.substring(0, doublepointIndex2));
+			$scope.mEnd = parseInt(timeEnd.substring(doublepointIndex2 + 1, timeEnd.length)) == '' ? 0 : parseInt(timeEnd.substring(doublepointIndex2 + 1, timeEnd.length));
+
 
 			var confirmPopup = $ionicPopup.confirm({
 				title: "<h3>تعديل الفترة الزمنية</h3>",
@@ -184,7 +202,23 @@ angular.module('hdrApp')
 			confirmPopup.then(function (res) {
 				if (res) {
 					console.log('You are sure');
-					$scope.session_view.session.title = $scope.hEnd + "-" + $scope.hStart;
+
+					if (!$scope.hStart) {
+						$scope.hStart = 0;
+					}
+					if (!$scope.mStart) {
+						$scope.mStart = 0;
+					}
+					if (!$scope.hEnd) {
+						$scope.hEnd = 0;
+					}
+					if (!$scope.mEnd) {
+						$scope.mEnd = 0;
+					}
+
+					$scope.session_view.session.title = $scope.hEnd + ":" + $scope.mEnd + "-" + $scope.hStart + ":" + $scope.mStart;
+
+					//$scope.session_view.session.title = $scope.hEnd + "-" + $scope.hStart;
 					if (ionic.Platform.isWebView()) {
 
 						var msg = "";
@@ -400,6 +434,7 @@ angular.module('hdrApp')
 							hdrdbx.saveAbsentStudents($scope.session_view.session, [$scope.selectedStudent])
 								.then(function (res) {
 									$scope.selectedStudent.isMoved = false;
+									$scope.selectedStudent.is_student_fix_problem = 0;
 									$scope.session_view.students.push($scope.selectedStudent);
 									$scope.session_view.students.sort(function (a, b) { return a.queuing_number - b.queuing_number });
 									console.log("add new absents student to the session");
@@ -484,6 +519,14 @@ angular.module('hdrApp')
 		$scope.removeStudnet = function (id) {
 			document.getElementById('hdr-session-alter-student' + id).classList.add("ng-hide");
 			document.getElementById('hdr-session-alter-confirm' + id).classList.add("ng-hide");
+		}
+
+		$scope.selectAll = function (id) {
+			var elm = document.getElementById(id);
+
+			$timeout(function () {
+				elm.select()
+			}, 50)
 		}
 
 

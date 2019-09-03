@@ -1,5 +1,5 @@
 angular.module('hdrApp')
-	.directive('hdrStudentCardAppeal', function (hdrdbx, $timeout) {
+	.directive('hdrStudentCardAppeal', function (hdrdbx, $rootScope,$timeout) {
 		return {
 			restrict: 'E',
 			templateUrl: "js/directives/hdrstudentcardappeal.html",
@@ -39,14 +39,14 @@ angular.module('hdrApp')
 						 * push a new absent student, all with skiping duplicat item in absentStudents array
 						 * see splice array method for more details
 						 */
-						$scope.absentStudents.splice($scope.absentStudents.indexOf(student), 1);
+						$rootScope.absentStudents.splice($rootScope.absentStudents.indexOf(student), 1);
 						//$rootscope.absentStudents.push(student);
 						$scope.cardInRed = "";
 						// $element.getElementById("hdr-absent-symbol").innerHTML=innerHTMLinitial;
 					} else {
 						$scope.tapped = true;
-						//$scope.absentStudents.push(student);
-						$scope.absentStudents.splice($scope.absentStudents.length, 0, student);
+						//$rootScope.absentStudents.push(student);
+						$rootScope.absentStudents.splice($rootScope.absentStudents.length, 0, student);
 						$scope.cardInRed = "card-red";
 					}
 				};

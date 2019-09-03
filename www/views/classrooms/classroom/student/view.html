@@ -51,9 +51,9 @@
 
     <table class="hdr-student2-tabel" style="">
       <tr>
-        <td style="width: 25%">
+        <!-- <td style="width: 25%">
           <img src="img/user-alt-128.png" style="width: 100%">
-        </td>
+        </td> -->
         <td style="width: 75%">
           <div>
             <h3 style="margin-bottom: 3hèèbpx">{{student.full_name}}</h3>
@@ -172,7 +172,7 @@
 
         <td ng-show="observationUpdateMode==true" style="text-align: right;vertical-align: top;height: 20vmax" class="lined-paper-pattern">
 
-          <textarea ng-model="student.observation" style="width: 100%;font-family: hdrFont;font-size: 1em;line-height: 1.4em;background-color: transparent"
+          <textarea ng-model="student.observation" id="hdr-textarea-observation" style="width: 100%;font-family: hdrFont;font-size: 1em;line-height: 1.4em;background-color: transparent"
             rows="10">
           </textarea>
 

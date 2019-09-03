@@ -67,7 +67,6 @@ ion-content{
   border: 0;
   display: table;
   width: 100%;
-  height: 100%;
 }
 
 .hdr-classroom-item{
@@ -285,13 +284,15 @@ flex-grow: 3
 
   .hdr-parag{
     font-size: 2.3vmax;
-    line-height: 3.55vmax;
+    line-height: 3.25vmax;
     text-align: justify;
+    padding-bottom: 2.0vmax;
   }
 
   .hdr-second-txt{
  /*    color: rgb(83, 79, 94)!important; */
- color: #666
+ color: #666;
+ font-size: 0.85em;
   }
   
   .hdr-card-session{
@@ -319,12 +320,12 @@ flex-grow: 3
    height: 100%;
 }
  .hdr-parity-classroom td {
-  width: 33%;
-  border: 1px solid rgb(7, 13, 35);
+   width: 33%;
+   font-size: 16px;
+  /* border: 1px solid rgb(7, 13, 35); */
   background-color: rgb(212, 223, 206);
   text-align: center;
   vertical-align: middle;
-  font-size: 1.2em;
 }
 
 .hdr-session-is-exam{
@@ -362,4 +363,55 @@ to {background-color: whitesmoke}
 
 .hdr-bg-second{
    border-bottom: 1px solid rgba(57, 57, 77, 0.309);
+}
+
+#hdr-session-time-picker{
+  width: 100%;
+  height: 100px;
+  direction: rtl;
+}
+#hdr-session-time-picker td{
+/* border: 1px solid green; */
+vertical-align: middle;
+padding: 0px;
+margin: 0px;
+}
+
+#hdr-session-time-picker tr:nth-child(2) td:nth-child(3){
+text-align: left;
+zoom: 1.5;
+}
+
+#hdr-session-time-picker tr:nth-child(2) td:nth-child(2) div {
+text-align: center;
+font-size: 2.7em;
+height: 50px;
+padding-top: 15px;
+}
+
+#hdr-session-time-picker tr:nth-child(2) td:nth-child(1){
+text-align: right;
+zoom: 1.5;
+}
+
+
+#hdr-session-time-picker tr:nth-child(4) td{
+width: 25%;
+text-align: center;
+vertical-align: middle;
+padding-top: 6px;
+}
+#hdr-session-time-picker tr:nth-child(4) td div{
+  margin: auto;
+  padding-top: 9px;
+text-align: center;
+width: 40px;
+height: 40px;
+font-size: 16px;
+border-radius: 50%;
+background-color: rgba(134, 158, 134, 0.462);
+}
+
+#hdr-session-time-picker tr:nth-child(4) td div span{
+  font-size: 12px;
 }

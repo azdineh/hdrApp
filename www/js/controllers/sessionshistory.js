@@ -5,19 +5,38 @@ angular.module('hdrApp')
         //$state.go($state.current, $stateParams, {reload: true, inherit: false});
         //$watch
 
+        //$rootScope.daies = [];
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $rootScope.isDBchanged = true;
+        $rootScope.lastday = true;
 
-            $scope.lastday = true;
-            //$scope.spinnershown = true;
-            /* if ($rootScope.classrooms_view.length > 0)
-                $scope.classroomsImported = true
-            else
-                $scope.classroomsImported = false; */
+        var deselectAll = function () {
+            var hdr_cards = document.getElementsByClassName("card hdr-card");
+            if (hdr_cards.length > 0) {
+
+
+                for (var i = 0; i < hdr_cards.length; i++) {
+                    var element = hdr_cards[i];
+                    element.classList.remove("hdr-card-session");
+
+                }
+
+                $scope.sessionsSelected = [];
+            }
+        }
+
+
+        $scope.$on('$ionicView.enter', function () {
+            //$scope.isDBchanged = $window.localStorage('hdr.isDBchanged') ? angular.fromJson($window.localStorage('hdr.isDBchanged')) : false;
+
 
             if (ionic.Platform.isWebView()) {
 
-                $scope.selectSessionsHistory(0);
+                if ($rootScope.isDBchanged == true) {
+                    deselectAll();
+                    $scope.selectSessionsHistory(0);
+                    $rootScope.isDBchanged = false;
+                }
 
             } else {
 
@@ -34,7 +53,7 @@ angular.module('hdrApp')
                                     title: '10-11',
                                     students_count: 50,
                                     parity: 'odd',
-                                    isExamSession:1,
+                                    isExamSession: 1,
                                     observation: "حصة امتحان<br/>kjkljkljl <br/>:;j;,kljkl"
 
                                 },
@@ -101,7 +120,7 @@ angular.module('hdrApp')
                                     title: '10-11',
                                     students_count: 50,
                                     parity: 'even',
-                                    isExamSession:0,
+                                    isExamSession: 0,
                                     observation: "حصة امتحان"
 
                                 },
@@ -136,7 +155,7 @@ angular.module('hdrApp')
                                     title: '10-11',
                                     students_count: 50,
                                     parity: 'all',
-                                    isExamSession:0,
+                                    isExamSession: 0,
                                     observation: "حصة امتحان"
 
                                 },
@@ -184,7 +203,7 @@ angular.module('hdrApp')
                             //$scope.spinnershown = false;
                             $ionicLoading.hide({});
                             $rootScope.daies = [];
-                        }, 150);
+                        }, 50);
                     }
 
                     hdrdbx.daies_arr = [];
@@ -207,10 +226,10 @@ angular.module('hdrApp')
                                 hdrdbx.selectDaies()
                                     .then(function (daies) {
                                         if (daies.length == $rootScope.daies.length) {
-                                            $scope.lastday = true;
+                                            $rootScope.lastday = true;
                                         }
                                         else {
-                                            $scope.lastday = false;
+                                            $rootScope.lastday = false;
                                         }
 
                                     }, function (err) {
@@ -271,10 +290,24 @@ angular.module('hdrApp')
 
 
 
+
+
+
         $scope.removeSeveralSessions = function (arr_of_session_view) {
 
             hdrdbx.removeSeveralSessions(arr_of_session_view)
                 .then(function (res) {
+                    $rootScope.isDBchanged = true;
+
+                    /*                     $scope.sessionsSelected.forEach(function (element) {
+                                            var elm = document.getElementById('hdr-session-card' + element.session.id);
+                                            elm.classList.remove("hdr-card-session");
+                    
+                                        }, this); */
+
+                    deselectAll();
+
+
                     $state.go($state.current, {}, { reload: true });
                 }, function (err) {
 

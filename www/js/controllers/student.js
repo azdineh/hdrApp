@@ -1,9 +1,18 @@
 angular.module('hdrApp')
-    .controller('StudentController', function ($scope, $stateParams,$timeout, $ionicScrollDelegate, $filter, hdrdbx) {
+    .controller('StudentController', function ($scope, $rootScope, $stateParams, $rootScope, $window, $timeout, $ionicScrollDelegate, $filter, hdrdbx) {
 
 
-        $scope.classroom = $stateParams.classroom;
-        //$scope.student = $stateParams.student;
+        $scope.classroom = $filter('filter')($rootScope.classrooms_view, $stateParams.classroom)[0];
+        $scope.student = $stateParams.student;
+
+        var currentStudent = $filter('filter')($scope.classroom.students, { massar_number: $stateParams.student.massar_number })[0];
+
+        var studentIndex = $scope.classroom.students.indexOf(currentStudent);
+        var classroomIndex = $rootScope.classrooms_view.indexOf($scope.classroom);
+
+        console.log(" student index :" + studentIndex)
+        console.log(" classromm index :" + classroomIndex)
+
 
         $scope.observationUpdateMode = false;
 
@@ -11,8 +20,12 @@ angular.module('hdrApp')
 
             if ($scope.observationUpdateMode == true)
                 $scope.observationUpdateMode = false
-            else
+            else {
                 $scope.observationUpdateMode = true;
+                setTimeout(function () {
+                    document.getElementById('hdr-textarea-observation').focus();
+                }, 40);
+            }
 
             $ionicScrollDelegate.resize();
         }
@@ -23,6 +36,19 @@ angular.module('hdrApp')
                 .then(function (res) {
 
                     // update localStorage here
+
+
+                    //$scope.student.isBarred = $scope.student.isBarred;
+
+                    //if ($rootScope.absentStudents.indexOf($scope.student) >= 0)
+                    //$rootScope.absentStudents[$rootScope.absentStudents.indexOf($scope.student)].observation = $scope.student.observation;
+
+                    $rootScope.classrooms_view[classroomIndex].students[studentIndex].observation = $scope.student.observation;
+                    $rootScope.classrooms_view[classroomIndex].students[studentIndex].isBarred = $scope.student.isBarred;
+
+
+                    $window.localStorage['hdr.classrooms_view'] = angular.toJson($rootScope.classrooms_view);
+                    //localstorage ends
                     $scope.switchObservationUpateMode();
 
                 }, function (err) {
@@ -33,7 +59,7 @@ angular.module('hdrApp')
         $scope.$on('$ionicView.enter', function () {
             if (ionic.Platform.isWebView()) {
 
-                hdrdbx.selectRows('student', "massar_number='" + $stateParams.student.massar_number + "'")
+                hdrdbx.selectRows('student', "massar_number='" + $scope.student.massar_number + "'")
                     .then(function (students) {
                         $scope.student = students[0];
 

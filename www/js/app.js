@@ -14,7 +14,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
 
         $ionicConfigProvider.tabs.position('bottom');
         $ionicConfigProvider.navBar.alignTitle('center');
-        $ionicConfigProvider.views.transition('none');
+        $ionicConfigProvider.views.transition('android');
         $ionicConfigProvider.form.checkbox('square');
         //$ionicConfigProvider.form.toggle('large');
 
@@ -80,7 +80,7 @@ angular.module('hdrApp', ['ionic', 'hdrFilters', 'ngCordova'])
             })
             .state('tab.sessionshistory', {
                 url: '/sessionshistory',
-                cache: false,
+                cache: true,
                 views: {
                     'tab-sessionshistory': {
                         templateUrl: 'views/sessionshistory/view.html',

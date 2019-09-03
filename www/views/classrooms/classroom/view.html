@@ -98,7 +98,7 @@
         عدد التلاميذ : {{classroom.students.length}}
       </div>
  -->
-      <hdr-student ng-repeat="student in classroom.students" ng-init="showborder=true;showtitle=false;mode='simple';student.title=classroom.title" id="hdr-student-item{{student.id}}"
+      <hdr-student ng-repeat="student in classroom.students|orderBy:'queuing_number'" ng-init="showborder=true;showtitle=false;mode='simple';student.title=classroom.title" id="hdr-student-item{{student.id}}"
         on-double-tap="selectElement(student)"></hdr-student>
 
 

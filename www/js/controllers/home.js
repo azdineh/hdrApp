@@ -9,11 +9,14 @@ angular.module('hdrApp')
 
         $rootScope.classrooms_view = $window.localStorage['hdr.classrooms_view'] ? angular.fromJson($window.localStorage['hdr.classrooms_view']) : [];
         $rootScope.students_count_global = $window.localStorage['hdr.students_count_global'] ? angular.fromJson($window.localStorage['hdr.students_count_global']) : 0;
+
+        //$rootScope.currentVersionCode = $window.localStorage['hdr.currentVersionCode'] ? angular.fromJson($window.localStorage['hdr.currentVersionCode']) : 0;
         $rootScope.daies = [];
 
 
         $rootScope.hideTab = false;
         $scope.thereAreSessions = false;
+        $scope.isthereNewVersion = false;
         // if($state.current.name==""
 
         window.addEventListener('keyboardDidShow', function (event) {
@@ -40,11 +43,11 @@ angular.module('hdrApp')
         $scope.$on('$ionicView.enter', function () {
             $rootScope.today = Date.now();
             // getStudentsView();
-
         })
         $scope.$on('$ionicView.afterEnter', function () {
-            if ($rootScope.isDBThere)
+            if ($rootScope.isDBThere) {
                 getStudentsView();
+            }
         })
         /* 
                 $rootScope.academy = $window.localStorage['hdr.academy'] ? angular.fromJson($window.localStorage['hdr.academy']) : {};
@@ -59,9 +62,9 @@ angular.module('hdrApp')
         var wind;
 
         var getStudentsView = function () {
-            hdrdbx.getStudentsAbsencesCount("", 1)
+            hdrdbx.getStudentsAbsencesCount("", 2)
                 .then(function (students_view) {
-                    
+
                     if (students_view.length > 0) {
                         $scope.mostabsentStudents = students_view;
                         $scope.isthereAreAbsent = true;
@@ -69,6 +72,10 @@ angular.module('hdrApp')
                     else {
                         $scope.isthereAreAbsent = false;
                     }
+                }, function (err) {
+                    console.log(err);
+                    $scope.mostabsentStudents = null;
+                    $scope.isthereAreAbsent = false;
                 });
 
             hdrdbx.getRemarkablesStudents()
@@ -80,8 +87,10 @@ angular.module('hdrApp')
                     else {
                         $scope.isthereAreRemarkableStudents = false;
                     }
-                },function(err){
+                }, function (err) {
                     console.log(err)
+                    $scope.remarkablesStudents = null;
+                    $scope.isthereAreRemarkableStudents = false;
                 })
         }
 
@@ -91,20 +100,61 @@ angular.module('hdrApp')
 
         if (ionic.Platform.isWebView()) {
             $ionicPlatform.ready(function () {
+
+                /*                 document.addEventListener("pause", function () {
+                                    console.log("App is in pause state");
+                                    hdrdbx.exportDbToFile("data.7dr");
+                                }, false); */
+
                 hdrdbx.openDB();
                 $rootScope.isDBThere = true;
                 getStudentsView();
 
-                /*                 $timeout(function () {
-                                }, 225) */
+                cordova.getAppVersion.getVersionCode(function (currentVersionCode) {
+                    //console.log(version);
+                    $rootScope.nextVersionCode = $window.localStorage['hdr.nextVersionCode'] ? angular.fromJson($window.localStorage['hdr.nextVersionCode']) : currentVersionCode;
+                    console.log("current version code " + currentVersionCode);
+
+                    console.log("next version " + $rootScope.nextVersionCode);
+
+                    if ($rootScope.nextVersionCode != currentVersionCode) {
+                        $scope.isthereNewVersion = true;
+                    }
+                    else {
+                        $scope.isthereNewVersion = false;
+                    }
+                });
+
+                window.FirebasePlugin.getToken(function (token) {
+                    // save this server-side and use it to push notifications to this device
+                    //console.log(token);
+                }, function (error) {
+                    console.error(error);
+                });
+                window.FirebasePlugin.onTokenRefresh(function (token) {
+                    // save this server-side and use it to push notifications to this device
+                    //console.log(token);
+                }, function (error) {
+                    console.error(error);
+                });
+
+                window.FirebasePlugin.onNotificationOpen(function (notification) {
+                    //console.log(notification);
+                    $scope.isthereNewVersion = true;
+                    $window.localStorage['hdr.nextVersionCode'] = angular.toJson(notification.versioncode);
+                }, function (error) {
+                    console.error(error);
+                });
+
 
             });
 
 
         }
         else {// browser 
-
+            console.log(ionic.Platform.version());
             $scope.isthereAreAbsent = true;
+            $scope.isthereNewVersion = true;
             $scope.mostabsentStudents = [
                 {
                     full_name: 'الرياحي منير',
@@ -142,6 +192,9 @@ angular.module('hdrApp')
 
         $scope.goToBlog = function () {
             cordova.InAppBrowser.open("http://7odoor.blogspot.com/", '_system');
+        }
+        $scope.goToPlayStore = function () {
+            cordova.InAppBrowser.open("https://goo.gl/bZz1sD", '_system');
         }
 
 

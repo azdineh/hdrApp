@@ -61,25 +61,29 @@ angular.module('hdrApp')
 
         }
 
+        $scope.goToForms = function () {
+            cordova.InAppBrowser.open("https://goo.gl/forms/qBJw6Jdi0sjGlF1E2", '_system');
+        }
 
         $scope.clearStorage = function (flag) {
 
             //hdrdbx.hdrdbtest();
-            if (flag) {
 
-                $window.localStorage.removeItem("hdr.classrooms_view");
-                $window.localStorage.removeItem("hdr.students_count_global");
-                $window.localStorage.removeItem("hdr.teacher_view");
-                $window.localStorage.removeItem("hdr.helpPopupShown");
-                $rootScope.classrooms_view = [];
-                $rootScope.daies=[];
-                $rootScope.students_view = [];
-            }
-            else {
-                $window.localStorage['hdr.classrooms_view'] = angular.toJson([]);
-                $window.localStorage['hdr.students_count_global'] = angular.toJson(0);
-                $rootScope.classrooms_view = [];
-            }
+            $window.localStorage.removeItem("hdr.classrooms_view");
+            $window.localStorage.removeItem("hdr.students_count_global");
+            $window.localStorage.removeItem("hdr.teacher_view");
+            $window.localStorage.removeItem("hdr.helpPopupShown");
+
+            /*             $window.localStorage['hdr.classrooms_view'] = angular.toJson([]);
+                        $window.localStorage['hdr.students_count_global'] = angular.toJson(0);
+                        $window.localStorage['hdr.teacher_view'] = angular.toJson(null);
+                        $window.localStorage['hdr.helpPopupShown'] = angular.toJson(0); */
+
+            $rootScope.classrooms_view = [];
+            $rootScope.daies = [];
+            $rootScope.students_view = [];
+            $scope.teacher_view = null;
+
 
             $ionicViewService.clearHistory();
         };
@@ -90,13 +94,13 @@ angular.module('hdrApp')
                 } */
 
         $scope.showConfirm = function () {
-            var template = "";
-            if ($scope.removeAllFlag.status == true) {
-                template = '<p dir="rtl">هل أنت متأكد من مسح الكل ؟</p>';
-            }
-            else {
-                template = '<p dir="rtl">هل أنت متأكد من مسح لوائح التلاميذ الحالية ؟</p>';
-            }
+
+            template = '<p dir="rtl">هل أنت متأكد ؟</p>';
+            /*             if ($scope.removeAllFlag.status == true) {
+                        }
+                        else {
+                            template = '<p dir="rtl">هل أنت متأكد من مسح لوائح التلاميذ الحالية ؟</p>';
+                        } */
             var confirmPopup = $ionicPopup.confirm({
                 title: 'تأكيد',
                 template: template,
@@ -107,10 +111,13 @@ angular.module('hdrApp')
             confirmPopup.then(function (res) {
                 if (res) {
                     console.log('You are sure');
-                    $scope.clearStorage($scope.removeAllFlag.status);
-                    hdrdbx.removedata($scope.removeAllFlag.status);
-                    $scope.teacher_view = null;
-                    $ionicScrollDelegate.resize();
+                    hdrdbx.wipeDB(function () {
+                        $scope.clearStorage();
+                        $ionicScrollDelegate.resize();
+                    });
+
+
+                    //ionic.Platform.exitApp();
                 } else {
                     console.log('You are not sure');
                 }

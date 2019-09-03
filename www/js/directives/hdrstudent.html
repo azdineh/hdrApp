@@ -40,49 +40,9 @@
   <div>
 
     <div style="font-size: 1em" class="hdr-student-mode_m3">
+      <div class="assertive" ng-if="student.queuing_number>0">{{student.queuing_number|hdrnumber}}</div>
       <div ng-style="student.is_student_fix_problem==0?{}:{'text-decoration': 'line-through','opacity': '0.6'}"> {{student.full_name}} </div>
-
-      <div ng-if="flagMessage">
-        <!-- eleve a une classe -->
-        <span ng-if="studentQN>0">
-          <!-- meme classe -->
-          <span ng-if="currentClassroomTitle==student.classroom_title">
-            <!-- eleve change de numro d ordre-->
-            <span ng-if="studentQN!=student.queuing_number">
-              <div> {{student.queuing_number|hdrnumber}}</div>
-              <div class="icon ion-arrow-left-c" style="zoom: 1.2"></div>
-              <div>{{studentQN|hdrnumber}}</div>
-            </span>
-            <!-- else, eleve ne change pas de num d ordre -->
-            <span ng-if="studentQN==student.queuing_number">
-              <div>{{studentQN|hdrnumber}}</div>
-            </span>
-          </span>
-          <!-- else, pas de meme classe-->
-          <span ng-if="currentClassroomTitle!=student.classroom_title">
-            <!-- <div>{{student.classroom_title}}</div> -->
-            <div>{{student.queuing_number|hdrnumber}}</div>
-            <div>
-              <!--  <small style="color: red"> إنتقل الى</small> -->
-              <div class="icon ion-reply assertive" style="zoom: 1.6"></div>
-              <div>{{currentClassroomTitle}} </div>
-            </div>
-            <div class="icon ion-arrow-left-b" style="zoom: 1.2"></div>
-            <div>{{studentQN|hdrnumber}}</div>
-
-          </span>
-
-        </span>
-        <!--eleve pas de classe -->
-        <span ng-if="studentQN==0">
-          <span ng-show="flagMessage">
-            <div>{{student.queuing_number|hdrnumber}}</div>
-            <div class="icon ion-close-round assertive" style="zoom: 1.3"></div>
-            <!--  <small style="color: red"> (حُذف من لائحة القسم) </small> -->
-          </span>
-        </span>
-      </div>
-
+      <div class="assertive" ng-if="student.queuing_number==0">حذف من القسم</div>
     </div>
 
   </div>
@@ -93,8 +53,8 @@
 
   <table class="classroom_item" style="width:inherit" id="ggh">
     <tr>
-      <td style="text-align: center;height: 6vh;font-size: 18px;width: 10%" ng-show="shomeqn">
-        <div>{{student.queuing_number|hdrnumber}} </div>
+      <td style="text-align: center;height: 6vh;font-size: 18px;width: 10%;" ng-show="shomeqn">
+        <div class="assertive">{{student.queuing_number|hdrnumber}} </div>
       </td>
       <td style="padding-right: 14px;width: 50%;">
         <div>
@@ -148,8 +108,8 @@
 
     <table class="classroom_item" style="width:inherit" id="ggh">
       <tr>
-        <td style="text-align: center;height: 6vh;font-size: 18px;width: 10%">
-          <div>{{student.queuing_number|hdrnumber}} </div>
+        <td style="text-align: center;height: 6vh;font-size: 18px;width: 10%;">
+          <div class="assertive">{{student.queuing_number|hdrnumber}} </div>
         </td>
         <td style="padding-right: 14px;width: 50%">
           <div>
@@ -188,7 +148,10 @@
       <tr ng-if="student.observation.length>0">
         <td colspan="4" style="padding-right: 4px">
           <span class="icon ion-compose"></span>
-          {{student.observation}}
+          <span style="color: rgb(36, 33, 33)">
+            {{student.observation}}
+
+          </span>
         </td>
       </tr>
     </table>

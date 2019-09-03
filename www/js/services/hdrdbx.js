@@ -20,7 +20,7 @@ angular.module('hdrApp')
 
         var student_table_query = "CREATE TABLE IF NOT EXISTS student(id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "full_name TEXT(255), registration_number TEXT(255), massar_number TEXT(255)," +
-            "birth_date TEXT(255), queuing_number INTEGER,observation TEXT(1020) , id_classroom INTEGER," +
+            "birth_date TEXT(255), queuing_number INTEGER,observation TEXT(1020) ,isBarred INTEGER, id_classroom INTEGER," +
             "foreign key (id_classroom) references classroom(id));";
 
         var teacher_table_query = "CREATE TABLE IF NOT EXISTS teacher(id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -34,10 +34,12 @@ angular.module('hdrApp')
             "foreign key (id_teacher) references teacher(id));";
 
         var absenceline_table_query = "CREATE TABLE IF NOT EXISTS absenceline(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "id_student INTEGER,id_session INTEGER,massar_number TEXT(255),full_name TEXT(255),queuing_number INTEGER,birth_date TEXT(255),classroom_title TEXT(255)," +
+            "id_student INTEGER,id_session INTEGER,massar_number TEXT(255)," +
             "is_student_fix_problem INTEGER," +
             "foreign key (id_session) references session(id)," +
             "foreign key (id_student) references student(id));";
+
+
 
         var create_tables_query_sql = academy_table_query + rd_table_query + school_table_query + classroom_table_query +
             student_table_query + teacher_table_query + session_table_query + absenceline_table_query;
@@ -98,6 +100,7 @@ angular.module('hdrApp')
                 birth_date: "", // format 18/06/1998
                 queuing_number: "",
                 observation: "",
+                isBarred: 0,
                 id_classroom: ""
             };
             vm.absenceline = {
@@ -113,15 +116,19 @@ angular.module('hdrApp')
             };
 
             vm.openDB = function () {
-                vm.db = $window.sqlitePlugin.openDatabase({ name: 'hdrdb1986.db', location: 'default' },
+                vm.db = $window.sqlitePlugin.openDatabase({ name: 'hdrdb1987.db', location: 'default' },
                     function (db) {
+
                         console.log("DB opend..");
                     },
                     function (error) {
                         console.log("Error while opening DB" + JSON.stringify(error));
                     });
+
             };
+
             vm.initDB = function () {
+
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, create_tables_query_sql, {
                     successFn: function (count) {
                         console.log("Successfully create " + count + " tables");
@@ -134,13 +141,14 @@ angular.module('hdrApp')
                         console.log(current + "/" + total);
                     }
                 });
+
             };
 
             /**
              * @param flag a boolean param, if true, drop absenceline table also.
              */
             /*             vm.cleardb = function (flag) {
-            
+             
                             vm.db.executeSql("drop table if exists session", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
                             vm.db.executeSql("drop table if exists student", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
                             vm.db.executeSql("drop table if exists teacher", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
@@ -151,16 +159,20 @@ angular.module('hdrApp')
                             if (flag == true) {
                                 vm.db.executeSql("drop table if exists absenceline", [], function () { console.log("drop table") }, function (err) { console.log("error while drop table" + err) });
                             }
-            
-            
+             
+             
                         }; */
             /**
              * remove all tables
              */
-            vm.wipeDB = function () {
+            vm.wipeDB = function (callBack) {
+
                 cordova.plugins.sqlitePorter.wipeDb(vm.db, {
                     successFn: function (count) {
                         console.log("Successfully wiped " + count + " tables");
+                        //remove 7dr.db
+                        vm.removeExportedFile("data.7dr");
+                        callBack();
                     },
                     errorFn: function (error) {
                         alert("The following error occurred: " + error.message);
@@ -269,6 +281,7 @@ angular.module('hdrApp')
 
                             }, function (error) {
                                 console.log("Error in transaction in insertRow ok");
+                                console.log(error);
                             }, function () {
                                 console.log("transaction in insertRow ok" + table);
                                 console.log(tmpobj);
@@ -417,7 +430,7 @@ angular.module('hdrApp')
                 var iterator = 1;
                 students.forEach(function (student) {
                     sql = sql + "insert into student values(null,'" + student.issmKamel + "','" + student.ra9mTasjiil + "','" + student.ra9mMasar + "','" +
-                        student.tari5Izdiad + "','" + iterator + "', '', '" + id_classroom + "');";
+                        student.tari5Izdiad + "','" + iterator + "', '', 0,'" + id_classroom + "');";
                     iterator++;
                 }, this);
                 //console.log(sql);
@@ -456,11 +469,15 @@ angular.module('hdrApp')
                                 var query_absentStudents = "";
 
                                 absentStudents.forEach(function (absentStudent) {
-                                    query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "','" + session.classroom_title + "',0);";
+                                    //query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "','" + absentStudent.full_name + "'," + absentStudent.queuing_number + ",'" + absentStudent.birth_date + "','" + session.classroom_title + "',0);";
+                                    query_absentStudents = query_absentStudents + "insert into absenceline values(null, " + absentStudent.id + "," + session.id + ",'" + absentStudent.massar_number + "',0);";
+
+                                    // id, id_student, id_session, massar_number, is_student_fix_problem
                                 }, this);
 
                                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
                                     successFn: function (count) {
+                                        vm.postAction();
                                         q.resolve(count);
                                     },
                                     errorFn: function (err) {
@@ -488,6 +505,7 @@ angular.module('hdrApp')
 
                         cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query_absentStudents, {
                             successFn: function (count) {
+
                                 q.resolve(count);
                             },
                             errorFn: function (err) {
@@ -608,14 +626,25 @@ angular.module('hdrApp')
                     students: []
                 }
 
-                var sql = "select a.full_name as full_name, a.queuing_number as queuing_number, a.massar_number as massar_number, a.birth_date as birth_date, a.classroom_title as classroom_title," +
+                /*                 var sql = "select a.full_name as full_name, a.queuing_number as queuing_number, a.massar_number as massar_number, a.birth_date as birth_date, a.classroom_title as classroom_title," +
+                                    "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
+                                    "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
+                                    "from " +
+                                    "(session s inner join classroom c on s.id_classroom=c.id)" +
+                                    "left join " +
+                                    "absenceline a on a.id_session = s.id " +
+                                    "where s.id=? order by queuing_number asc"; */
+
+                var sql = "select st.full_name as full_name, st.queuing_number as queuing_number, st.massar_number as massar_number, st.birth_date as birth_date," +
                     "s.id as sessionId, s.unix_time as unix_time, s.title as sessionTitle, s.students_count as students_count,s.parity as parity, s.isExamSession as isExamSession, s.observation as observation," +
                     "c.id as classroomId, c.title as classroomTitle, a.is_student_fix_problem as is_student_fix_problem " +
                     "from " +
-                    "(session s inner join classroom c on s.id_classroom=c.id)" +
+                    "(session s inner join classroom c on s.id_classroom=c.id) " +
                     "left join " +
-                    "absenceline a on a.id_session = s.id " +
+                    "(absenceline a inner join student st on a.massar_number=st.massar_number) " +
+                    "on a.id_session = s.id " +
                     "where s.id=? order by queuing_number asc";
+
                 vm.db.transaction(function (tx) {
                     tx.executeSql(sql, [session.id],
                         function (tx, res) {
@@ -847,7 +876,6 @@ angular.module('hdrApp')
 
                         if (index + 1 < aksaam.length) {
                             vm.fillDB(aksaam, index + 1, callBack);
-
                         }
                         else {
                             console.log("fill database is done");
@@ -993,8 +1021,8 @@ angular.module('hdrApp')
 
                 var query = "";
                 query = "select c.title as title, s.birth_date as birth_date, s.queuing_number as queuing_number,s.observation as observation, count(al.id) as absences_count, " +
-                "s.full_name as full_name, s.massar_number as massar_number, al.is_student_fix_problem as is_student_fix_problem from student s left join absenceline al on al.massar_number=s.massar_number " +
-                "inner join classroom c on s.id_classroom =c.id where observation !='' group by s.massar_number order by absences_count desc ";
+                    "s.full_name as full_name, s.massar_number as massar_number, al.is_student_fix_problem as is_student_fix_problem from student s left join absenceline al on al.massar_number=s.massar_number " +
+                    "inner join classroom c on s.id_classroom =c.id where observation !='' group by s.massar_number order by absences_count desc ";
 
                 var q = $q.defer();
 
@@ -1043,6 +1071,7 @@ angular.module('hdrApp')
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query1 + ";" + query2, {
                     successFn: function (count) {
                         console.log("Successfully delete lines frome " + count + " tables");
+                        vm.postAction();
                         q.resolve(count);
                     },
                     errorFn: function (err) {
@@ -1073,6 +1102,7 @@ angular.module('hdrApp')
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query1 + ";" + query2, {
                     successFn: function (count) {
                         console.log("Successfully delete lines frome " + count + " tables");
+                        vm.postAction();
                         q.resolve(count);
                     },
                     errorFn: function (err) {
@@ -1098,6 +1128,7 @@ angular.module('hdrApp')
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [observation],
                         function (tx, res) {
+                            vm.postAction();
                             q.resolve(1);
                         }, function (err) {
                             q.reject(err);
@@ -1126,6 +1157,7 @@ angular.module('hdrApp')
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [newTitle],
                         function (tx, res) {
+                            vm.postAction();
                             q.resolve(1);
                         }, function (err) {
                             q.reject(err);
@@ -1138,8 +1170,6 @@ angular.module('hdrApp')
                 });
 
                 return q.promise;
-
-
             }
 
             vm.updateSessionParity = function (session_id, newParity) {
@@ -1154,6 +1184,7 @@ angular.module('hdrApp')
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [newParity],
                         function (tx, res) {
+                            vm.postAction();
                             q.resolve(1);
                         }, function (err) {
                             q.reject(err);
@@ -1166,9 +1197,9 @@ angular.module('hdrApp')
                 });
 
                 return q.promise;
-
-
             }
+
+
             vm.updateSessionisExamSession = function (session_id, newFlag) {
 
 
@@ -1181,6 +1212,7 @@ angular.module('hdrApp')
                 vm.db.transaction(function (tx) {
                     tx.executeSql(query, [newFlag],
                         function (tx, res) {
+                            vm.postAction();
                             q.resolve(1);
                         }, function (err) {
                             q.reject(err);
@@ -1211,6 +1243,7 @@ angular.module('hdrApp')
                     cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
                         successFn: function (count) {
                             console.log("delete " + absentStudents_to_remove.length + " absent students from session " + session.id);
+                            vm.postAction();
                             q.resolve(count);
                         },
                         errorFn: function (err) {
@@ -1234,6 +1267,7 @@ angular.module('hdrApp')
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
                     successFn: function (count) {
                         console.log("Successfully delete line from absenceline ");
+                        vm.postAction();
                         q.resolve(count);
                     },
                     errorFn: function (err) {
@@ -1272,6 +1306,7 @@ angular.module('hdrApp')
 
                                     //vm.updateAbsenceLine("queuing_number", 0, " massar_number ='" + student.massar_number + "'");
                                 }, function (err) { });
+                            vm.postAction();
                             q.resolve(1);
                         }, function (err) {
                             q.reject(err);
@@ -1306,6 +1341,7 @@ angular.module('hdrApp')
                 //console.log(sql);
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, sqlStudent, {
                     successFn: function (count) {
+                        vm.postAction();
                         q.resolve(count);
                     },
                     errorFn: function (err) { console.log("***Error whiile updating students QN: " + err.message); console.log(err); q.reject(err) }
@@ -1323,6 +1359,7 @@ angular.module('hdrApp')
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
                     successFn: function (count) {
                         console.log("Successfully update line from absenceline ");
+                        vm.postAction();
                         q.resolve(count);
                     },
                     errorFn: function (err) {
@@ -1350,6 +1387,7 @@ angular.module('hdrApp')
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
                     successFn: function (count) {
                         console.log("Successfully update line from absenceline ");
+                        vm.postAction();
                         q.resolve(count);
                     },
                     errorFn: function (err) {
@@ -1373,6 +1411,7 @@ angular.module('hdrApp')
                 cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
                     successFn: function (count) {
                         console.log("Successfully update line from student ");
+                        vm.postAction();
                         q.resolve(count);
                     },
                     errorFn: function (err) {
@@ -1385,51 +1424,183 @@ angular.module('hdrApp')
                 return q.promise;
 
             }
+            vm.updateStudentIsBarred = function (student, newValueOfIsBarred) {
 
+                var q = $q.defer();
+                var query = "update student set isBarred='" + newValueOfIsBarred + "' where id=" + student.id + ";";
 
-            vm.removedata = function (removAllFalg) {
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
+                    successFn: function (count) {
+                        console.log("Successfully update isBarred field from student ");
+                        vm.postAction();
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while updating isBarred line from student table ;" + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
 
-
-                if (removAllFalg) {
-                    vm.wipeDB();
-                } else {
-
-                    var q = $q.defer();
-
-                    /**
-                     * remove all tables 
-                     * execption:
-                     * classroom table
-                     * session table
-                     * student table
-                     * 
-                     */
-
-
-                    var query = "";
-                    query += "drop table if exists student;";
-                    query += "drop table if exists teacher;";
-                    query += "drop table if exists school;";
-                    query += "drop table if exists rd;";
-                    query += "drop table if exists academy;";
-
-                    cordova.plugins.sqlitePorter.importSqlToDb(vm.db, query, {
-                        successFn: function (count) {
-                            console.log("Successfully drop tables");
-                            q.resolve(count);
-                        },
-                        errorFn: function (err) {
-                            console.log("***Error while droping tables " + err.message);
-                            console.log(err);
-                            q.reject(err);
-                        }
-                    });
-
-                    return q.promise;
-                }
-
+                return q.promise;
 
             }
+
+
+            /* vm.removedata = function () {
+                vm.wipeDB();
+            } */
+
+
+            //to excute when the data.7drapp file exist
+            //data.7drapp contains sql queries in text mode
+            vm.importSqlToDb = function (sql) {
+                var q = $q.defer();
+
+                cordova.plugins.sqlitePorter.importSqlToDb(vm.db, sql, {
+                    successFn: function (count) {
+                        console.log("Successfully importing sql to DB");
+
+                        //id user import data from file, the app must add isBarred column in student table, if not exist
+
+                        vm.db.transaction(function (tx) {
+
+                            var query = "select isBarred from student";
+                            tx.executeSql(query, [],
+                                function (tx, res) {
+                                    // res.rows
+                                    console.log("isBarred column exist..")
+                                }, function (err) {
+                                    // isBarred column not exist
+                                    console.log("Error while selecting isBarred columne");
+                                    console.log(err);
+
+                                    cordova.plugins.sqlitePorter.importSqlToDb(vm.db, "alter table student add column isBarred INTEGER", {
+                                        successFn: function (count) {
+                                            console.log("Add isBarred column in student table");
+
+                                        },
+                                        errorFn: function (err) {
+                                            console.log("***Error while addinf isBarred column in student table" + err.message);
+                                            console.log(err);
+                                        }
+                                    });
+                                });
+
+                        }, function (tx, err) {
+                            console.log(err);
+                        }, function () {
+                            console.log();
+                        });
+
+
+
+
+
+
+                        q.resolve(count);
+                    },
+                    errorFn: function (err) {
+                        console.log("***Error while importing sql to DB " + err.message);
+                        console.log(err);
+                        q.reject(err);
+                    }
+                });
+
+                return q.promise;
+
+            }
+
+            //to execute each time db change.
+            vm.exportDbToFile = function (filename) {
+
+                var q = $q.defer();
+
+                cordova.plugins.sqlitePorter.exportDbToSql(vm.db, {
+                    successFn: function (sql, count) {
+
+                        //console.log(sql);
+                        //window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+                        window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (dirEntry) {
+
+                            //externalRootDirectory : /
+
+                            // Creates a new file or returns the file if it already exists.
+                            //console.log(dirEntry);
+                            dirEntry.getFile(filename, { create: true, exclusive: false }, function (fileEntry) {
+
+                                //console.log("fileEntry is file?" + fileEntry.isFile.toString());
+                                //console.log(fileEntry);
+                                // fileEntry.name == 'someFile.txt'
+                                // fileEntry.fullPath == '/someFile.txt'
+                                fileEntry.createWriter(function (fileWriter) {
+
+                                    fileWriter.onwriteend = function () {
+                                        //console.log("Successful file write...");
+                                        console.log("Db expported to  : " + filename)
+                                        q.resolve(1);
+                                    };
+
+                                    fileWriter.onerror = function (e) {
+                                        console.log("Failed file write: " + e.toString());
+                                        q.reject(e);
+                                    };
+
+
+                                    if (sql) {
+                                        fileWriter.write(sql);
+                                    }
+
+                                });
+
+                            }, function (err) {
+                                console.log("error while create file")
+                                console.log(err);
+                                q.reject(err);
+                            });
+                        }, function (err) {
+                            console.log('error while request of file system');
+                            console.log(err);
+                            q.reject(err);
+                        });
+                    }
+                });
+
+
+
+                return q.promise;
+            }
+
+
+            vm.removeExportedFile = function (filename) {
+                var q = $q.defer();
+
+                window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (dir) {
+
+                    dir.getFile(filename, { create: false }, function (fileEntry) {
+                        fileEntry.remove(function (file) {
+                            console.log(filename + "file removed!");
+                            q.resolve(file);
+                        }, function (error) {
+                            console.log("error occurred: " + error.code);
+                            q.reject(err);
+                        }, function () {
+                            alert("file does not exist");
+                            q.reject(err);
+                        });
+                    });
+
+                });
+
+                return q.promise;
+
+            }
+
+            vm.postAction = function () {
+                vm.exportDbToFile("data.7dr");
+            }
+
+
 
 
 
